@@ -45,7 +45,7 @@ void yyerror(const char []);
 program	    :	 PROGRAM {line_no++;} variables START {line_no++;} statement_list END PERIOD {line_no++;} 
 		;
 variables   :	SEMICOLON {line_no++;}
-		 | VAR d_list COLON INTEGER SEMICOLON {line_no++;}
+		 | VAR INTEGER d_list SEMICOLON {line_no++;}
 		;
 d_list      :   ident  { decl_id($1); }
 		 | d_list COMMA ident  { decl_id($3); }
