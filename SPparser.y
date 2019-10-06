@@ -26,8 +26,9 @@ void yyerror(const char []);
 %union{
        int ival;
        char * sval;
+       float fval;
        }
-%token PROGRAM VAR START END READ WRITE ASSIGNOP INTEGER INTLITERAL
+%token PROGRAM VAR START END READ WRITE ASSIGNOP INTEGER INTLITERAL REAL EXPONENT EXPDESIGNATOR CHARACTER
 %token LPAREN RPAREN COMMA PERIOD SEMICOLON COLON PLUSOP MINUSOP ID
 
 %left PLUSOP MINUSOP
@@ -62,7 +63,7 @@ statement  :	WRITE lparen expr_list rparen SEMICOLON {line_no++;}
 statement  :    SEMICOLON {line_no++;}
 		;
 id_list    :	ident      {read_id($1);}
-  		| id_list COMMA ident {read_id($3);}
+		| id_list COMMA ident {read_id($3);}
 		;
 expr_list  :	expression   {write_expr($1);}
                 | expr_list COMMA expression {write_expr($3);}
@@ -128,7 +129,7 @@ void error( const char msg[] )
 }
 
 void yyerror(const char s[]) {
-  std::cout << "EEK, parse error!  Message: " << s << std::endl;
+  std::cout << "Parse error during compilation. Error Message: " << s << std::endl;
   // might as well halt now:
   exit(-1);
 } 
