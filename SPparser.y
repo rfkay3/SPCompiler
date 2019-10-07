@@ -53,8 +53,13 @@ d_list      :   d_list declaration
 		;
 declaration :	INTEGER int_var_list SEMICOLON {line_no++;} 
 		| REAL real_var_list SEMICOLON {line_no++;}
+<<<<<<< HEAD
 		| CHARACTER char_var_list SEMICOLON {line_no++;}
 		;
+=======
+		;
+
+>>>>>>> 15fbac1bfcbac98e31e00ac7e6390ac1ef8e42c5
 int_var_list:   ident  { decl_id($1, "integer"); }
 		| ident {decl_id($1, "integer");} ASSIGNOP INTLITERAL {assign($1, yylval.sval);}             
 		| int_var_list COMMA ident  { decl_id($3, "integer"); }
@@ -64,11 +69,14 @@ real_var_list:	ident {decl_id($1, "real");}
 		| ident {decl_id($1, "real");} ASSIGNOP REALLITERAL {assign($1, yylval.sval);}
 		| real_var_list COMMA ident {decl_id($3, "real");}
 		| real_var_list COMMA ident {decl_id($3, "real");} ASSIGNOP REALLITERAL {assign($3, yylval.sval);}
+<<<<<<< HEAD
 		;
 char_var_list:	ident {decl_id($1, "character");}
 		| ident {decl_id($1, "character");} ASSIGNOP CHARLITERAL {assign($1, yylval.sval);}
 		| char_var_list COMMA ident {decl_id($3, "character");}
 		| char_var_list COMMA ident {decl_id($3, "character");} ASSIGNOP CHARLITERAL {assign($3, yylval.sval);}
+=======
+>>>>>>> 15fbac1bfcbac98e31e00ac7e6390ac1ef8e42c5
 		;
 statement_list  :   statement
                  | statement_list statement
