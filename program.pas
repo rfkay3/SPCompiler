@@ -1,6 +1,6 @@
 program
 var
-integer a:=2, b, c:=4, d:=4;
+real x, y:=2.2, z:=1.0;
 begin
 ;
 end.

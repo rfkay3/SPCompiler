@@ -15,7 +15,7 @@ int line_no = 1;
 std::ofstream outFile;
 
 void assign (char [], char []);
-void decl_id ( char [] );
+void decl_id ( char [], const char [] );
 void finish();
 char * gen_infix(char [], char [], char []);
 void read_id (char []);
@@ -55,15 +55,15 @@ declaration :	INTEGER int_var_list SEMICOLON {line_no++;}
 		| REAL real_var_list SEMICOLON {line_no++;}
 		;
 
-int_var_list:   ident  { decl_id($1); }
-		| ident {decl_id($1);} ASSIGNOP INTLITERAL {assign($1, yylval.sval);}             
-		| int_var_list COMMA ident  { decl_id($3); }
-		| int_var_list COMMA ident {decl_id($3);} ASSIGNOP INTLITERAL {assign($3, yylval.sval);}
+int_var_list:   ident  { decl_id($1, "integer"); }
+		| ident {decl_id($1, "integer");} ASSIGNOP INTLITERAL {assign($1, yylval.sval);}             
+		| int_var_list COMMA ident  { decl_id($3, "integer"); }
+		| int_var_list COMMA ident {decl_id($3, "integer");} ASSIGNOP INTLITERAL {assign($3, yylval.sval);}
 		;
-real_var_list:	ident {decl_id($1);}
-		| ident ASSIGNOP REALLITERAL
-		| real_var_list COMMA ident {decl_id($3);}
-		| real_var_list COMMA ident {decl_id($3);} ASSIGNOP INTLITERAL {assign($3, yylval.sval);}
+real_var_list:	ident {decl_id($1, "real");}
+		| ident {decl_id($1, "real");} ASSIGNOP REALLITERAL {assign($1, yylval.sval);}
+		| real_var_list COMMA ident {decl_id($3, "real");}
+		| real_var_list COMMA ident {decl_id($3, "real");} ASSIGNOP REALLITERAL {assign($3, yylval.sval);}
 		;
 statement_list  :   statement
                  | statement_list statement
