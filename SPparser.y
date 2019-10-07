@@ -28,7 +28,7 @@ void yyerror(const char []);
        char * sval;
        float fval;
        }
-%token PROGRAM VAR START END READ WRITE ASSIGNOP INTEGER INTLITERAL REAL EXPONENT EXPDESIGNATOR CHARACTER
+%token PROGRAM VAR START END READ WRITE ASSIGNOP INTEGER REAL INTLITERAL REALLITERAL EXPONENT EXPDESIGNATOR CHARACTER
 %token LPAREN RPAREN COMMA PERIOD SEMICOLON COLON PLUSOP MINUSOP ID
 
 %left PLUSOP MINUSOP
@@ -46,10 +46,24 @@ void yyerror(const char []);
 program	    :	 PROGRAM {line_no++;} variables START {line_no++;} statement_list END PERIOD {line_no++;} 
 		;
 variables   :	SEMICOLON {line_no++;}
-		 | VAR INTEGER d_list SEMICOLON {line_no++;}
+		 | VAR {line_no++;} d_list
 		;
-d_list      :   ident  { decl_id($1); }
-		 | d_list COMMA ident  { decl_id($3); }
+d_list      :   d_list declaration 
+		| declaration
+		;
+declaration :	INTEGER int_var_list SEMICOLON {line_no++;} 
+		| REAL real_var_list SEMICOLON {line_no++;}
+		;
+
+int_var_list:   ident  { decl_id($1); }
+		| ident {decl_id($1);} ASSIGNOP INTLITERAL {assign($1, yylval.sval);}             
+		| int_var_list COMMA ident  { decl_id($3); }
+		| int_var_list COMMA ident {decl_id($3);} ASSIGNOP INTLITERAL {assign($3, yylval.sval);}
+		;
+real_var_list:	ident {decl_id($1);}
+		| ident ASSIGNOP REALLITERAL
+		| real_var_list COMMA ident {decl_id($3);}
+		| real_var_list COMMA ident {decl_id($3);} ASSIGNOP INTLITERAL {assign($3, yylval.sval);}
 		;
 statement_list  :   statement
                  | statement_list statement
