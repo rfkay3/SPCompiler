@@ -6,3 +6,6 @@ lex.yy.c: SPscanner.l
 SPparser.tab.c:  SPparser.y
 	bison --defines=pascal.tab.h SPparser.y 
 parser.y.c:g++ -c  $<
+
+clean :
+	rm pascal *.o
