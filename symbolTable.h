@@ -5,8 +5,8 @@
 class ScopeNode{
 public:
 	ScopeNode();
-	bool lookup(const char* symbol);
-	void insert(const char* symbol,const char* type);
+	bool lookup(const char symbol[]);
+	void insert(const char symbol[],const char type[]);
 
 	std::unordered_map<std::string, std::string> scopeTable;
 	ScopeNode* next;
@@ -15,8 +15,8 @@ public:
 class SymbolTable{
 public:
 	SymbolTable();
-	bool lookupSymbol(const char* symbol);
-	void insertSymbol(const char* symbol, const char* type);
+	bool lookupSymbol(const char symbol[]);
+	void insertSymbol(const char symbol[], const char[] type);
 	void enterScope();
 	void exitScope();
 
