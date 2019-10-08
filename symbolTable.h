@@ -16,7 +16,7 @@ class SymbolTable{
 public:
 	SymbolTable();
 	bool lookupSymbol(const char symbol[]);
-	void insertSymbol(const char symbol[], const char[] type);
+	void insertSymbol(const char symbol[], const char type[]);
 	void enterScope();
 	void exitScope();
 

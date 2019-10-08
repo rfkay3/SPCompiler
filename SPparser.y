@@ -6,6 +6,7 @@
 #include <string>
 #include <iostream>
 #include <fstream>
+#include <sstream>
 #include "symbolTable.h"
 
 extern "C" int yylex();
@@ -22,6 +23,7 @@ void finish();
 char * gen_infix(char [], char [], char []);
 void read_id (char []);
 void write_expr(char []);
+void verify_sym_decl(char []);
 void error(const char []);
 void yyerror(const char []);
 void printSymbolTable();
@@ -137,7 +139,7 @@ char_var_list:	ident {decl_id($1, "character"); symTable.insertSymbol($1, "chara
 statement_list  :   statement
                  | statement_list statement
 		;
-statement  :	ident ASSIGNOP expression {assign($1,$3);} SEMICOLON {line_no++;}
+statement  :	ident ASSIGNOP expression {verify_sym_decl($1); assign($1,$3);} SEMICOLON {line_no++;}
 		;
 statement  :	READ lparen id_list rparen SEMICOLON {line_no++;}
 		;
@@ -145,8 +147,8 @@ statement  :	WRITE lparen expr_list rparen SEMICOLON {line_no++;}
 		;
 statement  :    SEMICOLON {line_no++;}
 		;
-id_list    :	ident      {read_id($1);}
-		| id_list COMMA ident {read_id($3);}
+id_list    :	ident      {verify_sym_decl($1); read_id($1);}
+		| id_list COMMA ident {verify_sym_decl($3); read_id($3);}
 		;
 expr_list  :	expression   {write_expr($1);}
                 | expr_list COMMA expression {write_expr($3);}
@@ -159,7 +161,7 @@ expr       :    term {strcpy($$,$1);}
 		;
 term      :	lparen expression rparen   {strcpy($$,$2);}
 		;
-term      :	ident      {strcpy($$,$1);}
+term      :	ident      {verify_sym_decl($1); strcpy($$,$1);}
 		;
 term      :	INTLITERAL {strcpy($$, yylval.sval);}    
 		| {error("NUMERIC VALUE EXPECTED, BUT FOUND");}
@@ -217,9 +219,19 @@ void printSymbolTable(){
 	}
 }
 
+void verify_sym_decl(char symbol[]){
+	if(!symTable.lookupSymbol(symbol)){
+		std::stringstream ss;
+		ss << "Symbol " << symbol << " not declared in this scope";
+		std::string msg = ss.str();
+		error(msg.c_str());
+	}
+	//Don't need to do anything if the symbol is found
+}
+
 void error( const char msg[] )
 {
-	std::cout << "LINE " << line_no << " : " << msg << std::endl;
+	std::cout << "ERROR : LINE " << line_no << " : " << msg << std::endl;
 	exit( -1 );
 }
 
