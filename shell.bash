@@ -6,8 +6,11 @@ clear
 echo "Running the make file..."
 
 make
-echo "running Executable with file program.asm..."
-./pascal program.pas
+echo "running executable with file: program.asm..."
+
 echo "output of the program is below..."
 echo "__________________________________________"
+./pascal program.pas
+
+echo "Here is the contents of the .asm file..."
 cat program.asm
