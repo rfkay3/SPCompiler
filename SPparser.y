@@ -6,6 +6,7 @@
 #include <string>
 #include <iostream>
 #include <fstream>
+#include "symbolTable.h"
 
 extern "C" int yylex();
 extern "C" int yyparse();
@@ -13,6 +14,7 @@ extern FILE * yyin;
 
 int line_no = 1;
 std::ofstream outFile;
+SymbolTable symTable;
 
 void assign (char [], char []);
 void decl_id ( char [], const char [] );
@@ -44,6 +46,67 @@ void yyerror(const char []);
 
 
 program	    :	 PROGRAM {line_no++;} variables START {line_no++;} statement_list END PERIOD {line_no++;} 
+		| COLON {
+				// Use this section as a sendbox for testing any external functions
+				// To sun this section use use the following commands:
+				// $ echo : >> test.pas
+				// $ ./pascal test.pas
+
+				symTable.enterScope();
+				std::string sym("symbol1");
+				std::string type("type");
+				symTable.insertSymbol(sym.c_str(), type.c_str());
+				if(symTable.lookupSymbol(sym.c_str())){
+					std::cout << "FOUND '" << sym << "'!" << std::endl;
+				}else{
+					std::cout << "Did not find '" << sym << "'" << std::endl;
+				}
+
+				std::cout << std::endl << std::endl;
+				
+				std::string notsym("notsym");
+
+				if(symTable.lookupSymbol(notsym.c_str())){
+				        std::cout << "FOUND '" << notsym << "'!" << std::endl;
+				}else{
+				        std::cout << "Did not find '" << notsym << "'" << std::endl;
+				}
+
+				std::cout << std::endl << "Entering sub scope" << std::endl << std::endl;
+				           
+				symTable.enterScope();
+
+				std::string sym2("symbol2");
+
+				symTable.insertSymbol(sym2.c_str(), type.c_str());
+
+				if(symTable.lookupSymbol(sym2.c_str())){
+					std::cout << "FOUND '" << sym2 << "'!" << std::endl;
+				}else{
+				        std::cout << "Did not find '" << sym2 << "'" << std::endl;
+				}
+
+				if(symTable.lookupSymbol(sym.c_str())){
+				        std::cout << "FOUND '" << sym << "'!" << std::endl;
+				}else{
+					std::cout << "Did not find '" << sym << "'" << std::endl;
+				}
+
+				std::cout << std::endl << "Exiting sub scope" << std::endl << std::endl;
+				symTable.exitScope();
+
+				if(symTable.lookupSymbol(sym2.c_str())){
+					std::cout << "FOUND '" << sym2 << "'!" << std::endl;
+				}else{
+					std::cout << "Did not find '" << sym2 << "'" << std::endl;
+				}
+
+				if(symTable.lookupSymbol(sym.c_str())){
+					std::cout << "FOUND '" << sym << "'!" << std::endl;
+				}else{
+					std::cout << "Did not find '" << sym << "'" << std::endl;
+				}				
+			} 
 		;
 variables   :	SEMICOLON {line_no++;}
 		 | VAR {line_no++;} d_list

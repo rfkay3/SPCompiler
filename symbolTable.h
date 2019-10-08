@@ -1,12 +1,25 @@
-// implement a linked list of hash tables
 #include <unordered_map>
+#include <string>
+#include <iostream>
+
+class ScopeNode{
+public:
+	ScopeNode();
+	bool lookup(const char* symbol);
+	void insert(const char* symbol,const char* type);
+
+	std::unordered_map<std::string, std::string> scopeTable;
+	ScopeNode* next;
+};
 
 class SymbolTable{
 public:
-lookupSymbol(char* symbol);
-insertSymbol(char* symbol, char* type);
+	SymbolTable();
+	bool lookupSymbol(const char* symbol);
+	void insertSymbol(const char* symbol, const char* type);
+	void enterScope();
+	void exitScope();
 
-private:
-std:unordered_map<std::string, std::string> table;
-}
+	ScopeNode* head;
+};
 
