@@ -3,7 +3,10 @@
 #include <string.h>
 #include <iostream>
 #include <fstream>
+#include "SymbolTable.h"
+
 extern std::ofstream outFile;
+extern SymbolTable symTable;
 
 char * gen_infix(char operandl[], char op[], char operand2[])
 {
