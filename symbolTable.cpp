@@ -12,7 +12,6 @@ bool ScopeNode::lookup(const char* symbol){
 void ScopeNode::insert(const char* symbol, const char* type){
 	std::string sym_str(symbol);
 	std::string type_str(type);
-	std::cout << "inserting " << sym_str << "into scope" << std::endl;
 	scopeTable.insert({symbol, type});
 }
 
@@ -22,7 +21,6 @@ SymbolTable::SymbolTable(){
 }
 
 bool SymbolTable::lookupSymbol(const char* symbol){
-	std::cout << "looking up " << symbol << std::endl;
 	bool found = false;
 	ScopeNode* curr = head;
 
@@ -41,15 +39,10 @@ void SymbolTable::insertSymbol(const char* symbol, const char* type){
 
 void SymbolTable::enterScope(){
 	ScopeNode* newScope = new ScopeNode();
-
 	newScope->next = head;
-
 	head = newScope;
-
 }
 
 void SymbolTable::exitScope(){
-	//set head to next node
 	head = head->next;
-
 }

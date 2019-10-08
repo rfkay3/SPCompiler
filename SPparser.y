@@ -24,6 +24,7 @@ void read_id (char []);
 void write_expr(char []);
 void error(const char []);
 void yyerror(const char []);
+void printSymbolTable();
 %}
 %union{
        int ival;
@@ -45,7 +46,7 @@ void yyerror(const char []);
 %%
 
 
-program	    :	 PROGRAM {line_no++;} variables START {line_no++;} statement_list END PERIOD {line_no++;} 
+program	    :	 PROGRAM {line_no++; symTable.enterScope();} variables START {line_no++;} statement_list END PERIOD {line_no++; printSymbolTable();} 
 		| COLON {
 				// Use this section as a sendbox for testing any external functions
 				// To sun this section use use the following commands:
@@ -118,20 +119,20 @@ declaration :	INTEGER int_var_list SEMICOLON {line_no++;}
 		| REAL real_var_list SEMICOLON {line_no++;}
 		| CHARACTER char_var_list SEMICOLON {line_no++;}
 		;
-int_var_list:   ident  { decl_id($1, "integer"); }
-		| ident {decl_id($1, "integer");} ASSIGNOP INTLITERAL {assign($1, yylval.sval);}             
-		| int_var_list COMMA ident  { decl_id($3, "integer"); }
-		| int_var_list COMMA ident {decl_id($3, "integer");} ASSIGNOP INTLITERAL {assign($3, yylval.sval);}
+int_var_list:   ident  { decl_id($1, "integer"); symTable.insertSymbol($1, "integer");}
+		| ident {decl_id($1, "integer"); symTable.insertSymbol($1, "integer");} ASSIGNOP INTLITERAL {assign($1, yylval.sval);}             
+		| int_var_list COMMA ident { decl_id($3, "integer"); symTable.insertSymbol($3, "integer");}
+		| int_var_list COMMA ident { decl_id($3, "integer"); symTable.insertSymbol($3, "integer");} ASSIGNOP INTLITERAL {assign($3, yylval.sval);}
 		;
-real_var_list:	ident {decl_id($1, "real");}
-		| ident {decl_id($1, "real");} ASSIGNOP REALLITERAL {assign($1, yylval.sval);}
-		| real_var_list COMMA ident {decl_id($3, "real");}
-		| real_var_list COMMA ident {decl_id($3, "real");} ASSIGNOP REALLITERAL {assign($3, yylval.sval);}
+real_var_list:	ident {decl_id($1, "real"); symTable.insertSymbol($1, "real");}
+		| ident {decl_id($1, "real"); symTable.insertSymbol($1, "real");} ASSIGNOP REALLITERAL {assign($1, yylval.sval);}
+		| real_var_list COMMA ident {decl_id($3, "real"); symTable.insertSymbol($3, "real");}
+		| real_var_list COMMA ident {decl_id($3, "real"); symTable.insertSymbol($3, "real");} ASSIGNOP REALLITERAL {assign($3, yylval.sval);}
 		;
-char_var_list:	ident {decl_id($1, "character");}
-		| ident {decl_id($1, "character");} ASSIGNOP CHARLITERAL {assign($1, yylval.sval);}
-		| char_var_list COMMA ident {decl_id($3, "character");}
-		| char_var_list COMMA ident {decl_id($3, "character");} ASSIGNOP CHARLITERAL {assign($3, yylval.sval);}
+char_var_list:	ident {decl_id($1, "character"); symTable.insertSymbol($1, "character");}
+		| ident {decl_id($1, "character"); symTable.insertSymbol($1, "character");} ASSIGNOP CHARLITERAL {assign($1, yylval.sval);}
+		| char_var_list COMMA ident {decl_id($3, "character"); symTable.insertSymbol($3, "character");}
+		| char_var_list COMMA ident {decl_id($3, "character"); symTable.insertSymbol($3, "character");} ASSIGNOP CHARLITERAL {assign($3, yylval.sval);}
 		;
 statement_list  :   statement
                  | statement_list statement
@@ -201,6 +202,18 @@ int main( int argc, char **argv )
 		yyparse();
 		fclose( yyin );
 		outFile.close();
+	}
+}
+
+void printSymbolTable(){
+	ScopeNode* curr = symTable.head;
+	std::cout << "printing table" << std::endl;
+	while(curr!=NULL){
+		for(auto const& pair : curr->scopeTable){
+			std::cout << "{" << pair.first << ", " << pair.second << "}" << std::endl;
+		}
+
+		curr = curr->next;
 	}
 }
 
