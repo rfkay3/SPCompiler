@@ -1,9 +1,9 @@
 #include <iostream>
 #include <fstream>
-#include "SymbolTable.h"
+#include "symbolTable.h"
 
 extern std::ofstream outFile;
-extern SymbolTable symTable
+extern SymbolTable symTable;
 
 void assign (char target[], char source[])
 {

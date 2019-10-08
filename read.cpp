@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <iostream>
 #include <fstream>
-#include "SymbolTable.h"
+#include "symbolTable.h"
 
 extern std::ofstream outFile;
 extern SymbolTable symTable;
