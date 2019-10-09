@@ -17,6 +17,7 @@ class SymbolTable{
 public:
 	SymbolTable();
 	bool lookupSymbol(const char symbol[]);
+	bool lookupType(const char symbol[], const std::string& type);
 	void insertSymbol(const char symbol[], const char type[]);
 	void enterScope();
 	void exitScope();
