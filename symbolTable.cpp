@@ -9,6 +9,11 @@ bool ScopeNode::lookup(const char symbol[]){
 	return scopeTable.count(sym_str) > 0;
 }
 
+bool ScopeNode::isType(const char symbol[], const std::string& type){
+	std::string sym_str(symbol);
+	return scopeTable[sym_str] == type;
+}
+
 void ScopeNode::insert(const char symbol[], const char type[]){
 	std::string sym_str(symbol);
 	std::string type_str(type);

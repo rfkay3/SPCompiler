@@ -6,7 +6,8 @@ class ScopeNode{
 public:
 	ScopeNode();
 	bool lookup(const char symbol[]);
-	void insert(const char symbol[],const char type[]);
+	bool isType(const char symbol[], const std::string& type);
+	void insert(const char symbol[], const char type[]);
 
 	std::unordered_map<std::string, std::string> scopeTable;
 	ScopeNode* next;
