@@ -9,9 +9,9 @@ bool ScopeNode::lookup(const char symbol[]){
 	return scopeTable.count(sym_str) > 0;
 }
 
-bool ScopeNode::isType(const char symbol[], const std::string& type){
+std::string ScopeNode::getType(const char symbol[]){
 	std::string sym_str(symbol);
-	return scopeTable.at(sym_str) == type;
+	return scopeTable.at(sym_str);
 }
 
 void ScopeNode::insert(const char symbol[], const char type[]){
@@ -39,16 +39,17 @@ bool SymbolTable::lookupSymbol(const char symbol[]){
 }
 
 
-bool SymbolTable::lookupType(const char symbol[], const std::string& type){
-	bool typeMatch = false;
+std::string SymbolTable::typeOf(const char symbol[]){
 	ScopeNode* curr = head;
 
 	// Uses search method from lookupSymbol
-	while(!typeMatch && curr != NULL){
-		typeMatch = curr->isType(symbol, type);
+	while(curr != NULL){
+		if(curr->lookup(symbol)){
+			return curr->getType(symbol);
+		}
 		curr = curr->next;
 	}
-	return typeMatch;
+	return NULL;
 }
 
 void SymbolTable::insertSymbol(const char symbol[], const char type[]){
