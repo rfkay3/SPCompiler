@@ -236,7 +236,7 @@ void error( const char msg[] )
 }
 
 void yyerror(const char s[]) {
-  std::cout << "Parse error during compilation. Error Message: " << s << std::endl;
+  std::cout << "Parse error during compilation at line " << std::to_string(line_no) <<". Error Message: " << s << std::endl;
   // might as well halt now:
   exit(-1);
 } 
