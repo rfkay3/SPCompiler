@@ -46,7 +46,7 @@ id              ({letter}|{underscore})({letter}|{digit}|{underscore})*
 {plusop}                                        {return PLUSOP;}
 {minusop}                                       {return MINUSOP;}
 {multop}					{return MULTOP;}
-{divop}						{return DIVOP}
+{divop}						{return DIVOP;}
 {modop}						{return MODOP;}
 {intliteral}                                    {yylval.sval = strdup(yytext); return INTLITERAL;}
 {realliteral}					{yylval.sval = strdup(yytext); return REALLITERAL;}

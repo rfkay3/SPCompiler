@@ -70,7 +70,10 @@ extern int yydebug;
     COLON = 276,
     PLUSOP = 277,
     MINUSOP = 278,
-    ID = 279
+    MULTOP = 279,
+    DIVOP = 280,
+    MODOP = 281,
+    ID = 282
   };
 #endif
 
@@ -85,7 +88,7 @@ union YYSTYPE
        float fval;
        
 
-#line 89 "pascal.tab.h"
+#line 92 "pascal.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;
