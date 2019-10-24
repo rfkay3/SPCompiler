@@ -55,60 +55,7 @@ program	    :	 PROGRAM {line_no++; symTable.enterScope();} variables START {line
 				// $ echo : >> test.pas
 				// $ ./pascal test.pas
 
-				symTable.enterScope();
-				std::string sym("symbol1");
-				std::string type("type");
-				symTable.insertSymbol(sym.c_str(), type.c_str());
-				if(symTable.lookupSymbol(sym.c_str())){
-					std::cout << "FOUND '" << sym << "'!" << std::endl;
-				}else{
-					std::cout << "Did not find '" << sym << "'" << std::endl;
-				}
-
-				std::cout << std::endl << std::endl;
-				
-				std::string notsym("notsym");
-
-				if(symTable.lookupSymbol(notsym.c_str())){
-				        std::cout << "FOUND '" << notsym << "'!" << std::endl;
-				}else{
-				        std::cout << "Did not find '" << notsym << "'" << std::endl;
-				}
-
-				std::cout << std::endl << "Entering sub scope" << std::endl << std::endl;
-				           
-				symTable.enterScope();
-
-				std::string sym2("symbol2");
-
-				symTable.insertSymbol(sym2.c_str(), type.c_str());
-
-				if(symTable.lookupSymbol(sym2.c_str())){
-					std::cout << "FOUND '" << sym2 << "'!" << std::endl;
-				}else{
-				        std::cout << "Did not find '" << sym2 << "'" << std::endl;
-				}
-
-				if(symTable.lookupSymbol(sym.c_str())){
-				        std::cout << "FOUND '" << sym << "'!" << std::endl;
-				}else{
-					std::cout << "Did not find '" << sym << "'" << std::endl;
-				}
-
-				std::cout << std::endl << "Exiting sub scope" << std::endl << std::endl;
-				symTable.exitScope();
-
-				if(symTable.lookupSymbol(sym2.c_str())){
-					std::cout << "FOUND '" << sym2 << "'!" << std::endl;
-				}else{
-					std::cout << "Did not find '" << sym2 << "'" << std::endl;
-				}
-
-				if(symTable.lookupSymbol(sym.c_str())){
-					std::cout << "FOUND '" << sym << "'!" << std::endl;
-				}else{
-					std::cout << "Did not find '" << sym << "'" << std::endl;
-				}				
+							
 			} 
 		;
 variables   :	SEMICOLON {line_no++;}
@@ -156,7 +103,7 @@ expr_list  :	expression   {write_expr($1);}
 expression :	expr   {strcpy($$,$1);}
                 ;
 expr       :    term {strcpy($$,$1);}
-		| expr add_op term {strcpy($$,gen_infix($1,$2,$3));}
+		| expr math_op term {strcpy($$,gen_infix($1,$2,$3));}
 		| {error("EXPRESSION EXPECTED, BUT FOUND");}
 		;
 term      :	lparen expression rparen   {strcpy($$,$2);}
@@ -172,10 +119,11 @@ lparen    :	LPAREN
 rparen    :	RPAREN
 		| {error(") EXPECTED , BUT FOUND");}
 		;
-add_op    :	PLUSOP {strcpy ($$,"Add");}
-		;
-add_op    :	MINUSOP {strcpy ($$,"Sub");}
-		;
+math_op   :     PLUSOP    {strcpy($$,"Add");}
+		| MINUSOP {strcpy($$,"Sub");}
+		| MULTOP  {strcpy($$, "Mult");}
+		| DIVOP   {strcpy($$, "Div");}
+		| MODOP   {strcpy($$, "Mod");}
 ident     :	ID {strcpy($$, yylval.sval);}
 		| {error("IDENTIFIER EXPECTED, BUT FOUND");}
 		;
