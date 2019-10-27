@@ -65,11 +65,11 @@ std::string storeRealTemp(char source[]){
  * @param target - A char[] representing the assignment target
  * @param source - A char[] representinf the source for assignment.
  */
-void realToInteger(char target[], char source[]){
+std::string realToInteger(char target[], char source[]){
 	std::string firstTemp = storeRealTemp(source);
 	std::string secondTemp = createTempIntegerAddress();
 	outFile << "rtoi " << firstTemp << ", " << secondTemp << std::endl;
-	outFile << "store " << secondTemp << ", " << target << std::endl;
+	return secondTemp;
 }
 
 
@@ -80,14 +80,45 @@ void realToInteger(char target[], char source[]){
  * @param target - A char[] representing the assignment target
  * @param source - A char[] representinf the source for assignment.
  */
-void integerToReal(char target[], char source[]){
+std::string integerToReal(char target[], char source[]){
 	std::string firstTemp = storeIntegerTemp(source);
 	std::string secondTemp = createTempRealAddress();
 	outFile << "itor " << firstTemp << ", " << secondTemp << std::endl;
-	outFile << "store " << secondTemp << ", " << target << std::endl;
+	return secondTemp;
+}
+
+bool isReal(char value[]){
+	for(int i = 0; value[i] != '\0'; i++) {
+		if(value[i] == '.'){
+			return true;
+		}
+	}
+	return false;
 }
 
 void assign (char target[], char source[])
 {
-    	outFile << "store " << source << ", " << target << std::endl;
+	std::string sourceAddr(source);
+	if (symTable.typeOf(target) == "real") {
+		if(symTable.lookupSymbol(source)) {
+			if(symTable.typeOf(source) == "integer"){
+				sourceAddr = integerToReal(target, source);	
+			}
+		} else {
+			if(!isReal(source)) {
+				sourceAddr = integerToReal(target, source);
+			}	
+		}
+	} else if (symTable.typeOf(target) == "integer") {
+                if(symTable.lookupSymbol(source)) {
+                        if(symTable.typeOf(source) == "real"){
+                                sourceAddr = realToInteger(target, source);
+                        }
+                } else {
+                        if(isReal(source)) {
+                                sourceAddr = realToInteger(target, source);
+                        }
+                }
+        }
+    	outFile << "store " << sourceAddr << ", " << target << std::endl;
 }
