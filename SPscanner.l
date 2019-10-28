@@ -11,11 +11,13 @@ colon		[:]
 underscore	[_]
 lparen		[(]
 rparen		[)]
+fslash		[/]
 comma           [,]
 period		[\.]
 assignop        [:][=]
 plusop		[+]
 minusop  	[-]
+comment  	({fslash}{fslash}.*)
 intliteral      (0|([1-9]{digit}*))
 realliteral	({intliteral}{period}(0|{digit}*[1-9]))
 charliteral	('.')
@@ -23,7 +25,7 @@ id              ({letter}|{underscore})({letter}|{digit}|{underscore})*
 %%
 
 [ \t]+                                          {/* do nothing */}
-[\n]                                            {/* new line*/}
+[\n]                                            {yylineno++;}
 [Pp][Rr][Oo][Gg][Rr][Aa][Mm]			{return PROGRAM;}
 [Vv][Aa][Rr]					{return VAR;}
 [Ii][Nn][Tt][Ee][Gg][Ee][Rr]			{return INTEGER;}
@@ -42,6 +44,7 @@ id              ({letter}|{underscore})({letter}|{digit}|{underscore})*
 {assignop}                                      {return ASSIGNOP;}
 {plusop}                                        {return PLUSOP;}
 {minusop}                                       {return MINUSOP;}
+{comment}                                       {/* do nothing */}
 {intliteral}                                    {yylval.sval = strdup(yytext); return INTLITERAL;}
 {realliteral}					{yylval.sval = strdup(yytext); return REALLITERAL;}
 {charliteral}					{yylval.sval = strdup(yytext); return CHARLITERAL;}
