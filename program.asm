@@ -19,8 +19,7 @@ store '-', l
 declare m, character
 store '.', m
 declare n, character
-declare x, real
-declare y, real
-store 2.2, y
-declare z, real
-store 1.0, z
+isub Add, a, &tempi
+iadd &tempi, d, &tempi
+store &tempi, b
+halt

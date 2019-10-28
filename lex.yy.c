@@ -881,7 +881,7 @@ YY_RULE_SETUP
 case 22:
 YY_RULE_SETUP
 #line 49 "SPscanner.l"
-{return DIVOP}
+{return DIVOP;}
 	YY_BREAK
 case 23:
 YY_RULE_SETUP

@@ -33,16 +33,18 @@ void printSymbolTable();
        char * sval;
        float fval;
        }
+
 %token PROGRAM VAR START END READ WRITE ASSIGNOP INTEGER REAL CHARACTER INTLITERAL REALLITERAL CHARLITERAL
 %token LPAREN RPAREN COMMA PERIOD SEMICOLON COLON PLUSOP MINUSOP MULTOP DIVOP MODOP ID
 
 %left PLUSOP MINUSOP
+%left MULTOP DIVOP MODOP
 
 %type <sval>ident
 %type <sval>expression
 %type <sval>expr
 %type <sval>term
-%type <sval>add_op
+%type <sval>math_op
 
 %start system_goal
 %%
@@ -111,6 +113,7 @@ term      :	lparen expression rparen   {strcpy($$,$2);}
 term      :	ident      {verify_sym_decl($1); strcpy($$,$1);}
 		;
 term      :	INTLITERAL {strcpy($$, yylval.sval);}    
+		| REALLITERAL {strcpy($$, yylval.sval);}
 		| {error("NUMERIC VALUE EXPECTED, BUT FOUND");}
 		;
 lparen    :	LPAREN
@@ -119,11 +122,12 @@ lparen    :	LPAREN
 rparen    :	RPAREN
 		| {error(") EXPECTED , BUT FOUND");}
 		;
-math_op   :     PLUSOP    {strcpy($$,"Add");}
-		| MINUSOP {strcpy($$,"Sub");}
+math_op   :     PLUSOP    {strcpy($$, "Add");}
+		| MINUSOP {strcpy($$, "Sub");}
 		| MULTOP  {strcpy($$, "Mult");}
 		| DIVOP   {strcpy($$, "Div");}
 		| MODOP   {strcpy($$, "Mod");}
+		;
 ident     :	ID {strcpy($$, yylval.sval);}
 		| {error("IDENTIFIER EXPECTED, BUT FOUND");}
 		;
