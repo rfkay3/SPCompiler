@@ -11,11 +11,13 @@ colon		[:]
 underscore	[_]
 lparen		[(]
 rparen		[)]
+fslash		[/]
 comma           [,]
 period		[\.]
 assignop        [:][=]
 plusop		[+]
 minusop  	[-]
+comment  	({fslash}{fslash}.*)
 intliteral      (0|([1-9]{digit}*))
 realliteral	({intliteral}{period}(0|{digit}*[1-9]))
 charliteral	('.')
@@ -42,6 +44,7 @@ id              ({letter}|{underscore})({letter}|{digit}|{underscore})*
 {assignop}                                      {return ASSIGNOP;}
 {plusop}                                        {return PLUSOP;}
 {minusop}                                       {return MINUSOP;}
+{comment}                                       {return COMMENT;}
 {intliteral}                                    {yylval.sval = strdup(yytext); return INTLITERAL;}
 {realliteral}					{yylval.sval = strdup(yytext); return REALLITERAL;}
 {charliteral}					{yylval.sval = strdup(yytext); return CHARLITERAL;}
