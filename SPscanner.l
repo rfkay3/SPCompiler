@@ -22,6 +22,7 @@ modop		[%]
 intliteral      (0|([1-9]{digit}*))
 realliteral	({intliteral}{period}(0|{digit}*[1-9]))
 charliteral	('.')
+boolliteral	(true|false)
 id              ({letter}|{underscore})({letter}|{digit}|{underscore})*
 %%
 
@@ -36,6 +37,7 @@ id              ({letter}|{underscore})({letter}|{digit}|{underscore})*
 [Ee][Nn][Dd]                                    {return END;}
 [Rr][Ee][Aa][Dd]                                {return READ;}
 [Ww][Rr][Ii][Tt][Ee]                            {return WRITE;}
+[Bb][Oo][Ll][Ee][Aa][Nn]			{return BOOLEAN;}
 {comma}                                         {return COMMA;}
 {period}					{return PERIOD;}
 {semicolon}                                     {return SEMICOLON;}
@@ -51,6 +53,7 @@ id              ({letter}|{underscore})({letter}|{digit}|{underscore})*
 {intliteral}                                    {yylval.sval = strdup(yytext); return INTLITERAL;}
 {realliteral}					{yylval.sval = strdup(yytext); return REALLITERAL;}
 {charliteral}					{yylval.sval = strdup(yytext); return CHARLITERAL;}
+{boolliteral}					{yylval.sval = strdup(yytext); return BOOLLITERAL;}
 {id}                                            {yylval.sval = strdup(yytext); return ID;}
 
 [^,]		{std::cout << "SYNTAX ERROR: " << yytext << " IS ILLEGAL" << std::endl;}

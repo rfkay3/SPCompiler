@@ -34,7 +34,7 @@ void printSymbolTable();
        float fval;
        }
 
-%token PROGRAM VAR START END READ WRITE ASSIGNOP INTEGER REAL CHARACTER INTLITERAL REALLITERAL CHARLITERAL
+%token PROGRAM VAR START END READ WRITE ASSIGNOP INTEGER REAL CHARACTER BOOLEAN INTLITERAL REALLITERAL CHARLITERAL BOOLLITERAL
 %token LPAREN RPAREN COMMA PERIOD SEMICOLON COLON PLUSOP MINUSOP MULTOP DIVOP MODOP ID
 
 %left PLUSOP MINUSOP
@@ -69,6 +69,7 @@ d_list      :   d_list declaration
 declaration :	INTEGER int_var_list SEMICOLON {line_no++;} 
 		| REAL real_var_list SEMICOLON {line_no++;}
 		| CHARACTER char_var_list SEMICOLON {line_no++;}
+		| BOOLEAN bool_var_list {line_no++;}
 		;
 int_var_list:   ident  { decl_id($1, "integer"); symTable.insertSymbol($1, "integer");}
 		| ident {decl_id($1, "integer"); symTable.insertSymbol($1, "integer");} ASSIGNOP INTLITERAL {assign($1, yylval.sval);}             
@@ -84,6 +85,11 @@ char_var_list:	ident {decl_id($1, "character"); symTable.insertSymbol($1, "chara
 		| ident {decl_id($1, "character"); symTable.insertSymbol($1, "character");} ASSIGNOP CHARLITERAL {assign($1, yylval.sval);}
 		| char_var_list COMMA ident {decl_id($3, "character"); symTable.insertSymbol($3, "character");}
 		| char_var_list COMMA ident {decl_id($3, "character"); symTable.insertSymbol($3, "character");} ASSIGNOP CHARLITERAL {assign($3, yylval.sval);}
+		;
+bool_var_list:  ident {decl_id($1, "bool"); symTable.insertSymbol($1, "bool");}
+		| ident {decl_id($1, "bool"); symTable.insertSymbol($1, "bool");} ASSIGNOP BOOLLITERAL {assign($1, yylval.sval);}
+		| bool_var_list COMMA ident {decl_id($3, "bool"); symTable.insertSymbol($3, "bool");} 
+		| bool_var_list COMMA ident {decl_id($3, "bool"); symTable.insertSymbol($3, "bool");} ASSIGNOP BOOLLITERAL {assign($3, yylval.sval);}
 		;
 statement_list  :   statement
                  | statement_list statement
