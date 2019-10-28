@@ -33,7 +33,7 @@ void printSymbolTable();
        char * sval;
        float fval;
        }
-%token PROGRAM VAR START END READ WRITE ASSIGNOP INTEGER REAL CHARACTER INTLITERAL REALLITERAL CHARLITERAL STRINGLITERAL
+%token PROGRAM VAR START END READ WRITE ASSIGNOP INTEGER REAL CHARACTER STRING INTLITERAL REALLITERAL CHARLITERAL STRINGLITERAL
 %token LPAREN RPAREN COMMA PERIOD SEMICOLON COLON PLUSOP MINUSOP ID
 
 %left PLUSOP MINUSOP
@@ -140,7 +140,7 @@ char_var_list:	ident {decl_id($1, "character"); symTable.insertSymbol($1, "chara
 string_var_list: ident {decl_id($1, "string"); symTable.insertSymbol($1, "string");}
 		| ident {decl_id($1, "string"); symTable.insertSymbol($1, "string");} ASSIGNOP STRINGLITERAL {assign($1, yylval.sval);}
 		| string_var_list COMMA ident {decl_id($3, "string"); symTable.insertSymbol($3, "string");}
-		| string_var_list COMMA ident {decl_id($3, "string"); symTable.insertSymbol($3, "string"); ASSIGNOP STRINGLITERAL {assign($3, yylval.sval);}
+		| string_var_list COMMA ident {decl_id($3, "string"); symTable.insertSymbol($3, "string");} ASSIGNOP STRINGLITERAL {assign($3, yylval.sval);}
 		;
 statement_list  :   statement
                  | statement_list statement
