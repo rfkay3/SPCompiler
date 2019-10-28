@@ -123,10 +123,14 @@ rparen    :	RPAREN
 		| {error(") EXPECTED , BUT FOUND");}
 		;
 math_op   :     PLUSOP    {strcpy($$, "Add");}
-		| MINUSOP {strcpy($$, "Sub");}
-		| MULTOP  {strcpy($$, "Mult");}
-		| DIVOP   {strcpy($$, "Div");}
-		| MODOP   {strcpy($$, "Mod");}
+		;
+math_op   :	MINUSOP {strcpy($$, "Sub");}
+		;
+math_op   :     MULTOP  {strcpy($$, "Mult");}
+		;
+math_op   :     DIVOP   {strcpy($$, "Div");}
+		;
+math_op   :     MODOP   {strcpy($$, "Mod");}
 		;
 ident     :	ID {strcpy($$, yylval.sval);}
 		| {error("IDENTIFIER EXPECTED, BUT FOUND");}

@@ -10,6 +10,9 @@ extern SymbolTable symTable;
 
 char * gen_infix(char operandl[], char op[], char operand2[])
 {
+
+  std::cout << op << " | " << operandl << " | " << operand2 << std::endl;
+  std::cout << (void*)op << " | " << (void*)operandl << " | " << (void*)operand2 << std::endl;
   static int max_temp=0;
   static char tempname[30];
 
@@ -26,7 +29,10 @@ char * gen_infix(char operandl[], char op[], char operand2[])
   else if (strcmp(op, "Mod"))
 	strcpy(tempop, "imod");
   max_temp++;
-  sprintf(tempname, "&tempi" ,max_temp);
+  sprintf(tempname, "&tempi%d" ,max_temp);
   outFile << tempop << " " << operandl << ", " << operand2 << ", " << tempname << std::endl;
+
+  symTable.insertSymbol(tempname, "integer");
+
   return (tempname);
 }

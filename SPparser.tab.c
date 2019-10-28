@@ -488,8 +488,8 @@ static const yytype_uint8 yyrline[] =
       78,    79,    79,    80,    81,    81,    83,    84,    84,    85,
       86,    86,    88,    89,    91,    91,    93,    95,    97,    99,
      100,   102,   103,   105,   107,   108,   109,   111,   113,   115,
-     116,   117,   119,   120,   122,   123,   125,   126,   127,   128,
-     129,   131,   132,   134
+     116,   117,   119,   120,   122,   123,   125,   127,   129,   131,
+     133,   135,   136,   138
 };
 #endif
 
@@ -1628,43 +1628,43 @@ yyreduce:
     break;
 
   case 57:
-#line 126 "SPparser.y"
+#line 127 "SPparser.y"
     {strcpy((yyval.sval), "Sub");}
 #line 1634 "SPparser.tab.c"
     break;
 
   case 58:
-#line 127 "SPparser.y"
+#line 129 "SPparser.y"
     {strcpy((yyval.sval), "Mult");}
 #line 1640 "SPparser.tab.c"
     break;
 
   case 59:
-#line 128 "SPparser.y"
+#line 131 "SPparser.y"
     {strcpy((yyval.sval), "Div");}
 #line 1646 "SPparser.tab.c"
     break;
 
   case 60:
-#line 129 "SPparser.y"
+#line 133 "SPparser.y"
     {strcpy((yyval.sval), "Mod");}
 #line 1652 "SPparser.tab.c"
     break;
 
   case 61:
-#line 131 "SPparser.y"
+#line 135 "SPparser.y"
     {strcpy((yyval.sval), yylval.sval);}
 #line 1658 "SPparser.tab.c"
     break;
 
   case 62:
-#line 132 "SPparser.y"
+#line 136 "SPparser.y"
     {error("IDENTIFIER EXPECTED, BUT FOUND");}
 #line 1664 "SPparser.tab.c"
     break;
 
   case 63:
-#line 134 "SPparser.y"
+#line 138 "SPparser.y"
     { finish(); }
 #line 1670 "SPparser.tab.c"
     break;
@@ -1902,7 +1902,7 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 136 "SPparser.y"
+#line 140 "SPparser.y"
 
 int main( int argc, char **argv )
 {

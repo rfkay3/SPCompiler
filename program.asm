@@ -19,7 +19,8 @@ store '-', l
 declare m, character
 store '.', m
 declare n, character
-isub Add, a, &tempi
-iadd &tempi, d, &tempi
-store &tempi, b
+iadd Mult, a, &tempi1
+isub Add, d, &tempi2
+iadd &tempi1, &tempi2, &tempi3
+store &tempi3, b
 halt
