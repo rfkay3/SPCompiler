@@ -33,8 +33,9 @@ void printSymbolTable();
        char * sval;
        float fval;
        }
-%token PROGRAM VAR START END READ WRITE ASSIGNOP INTEGER REAL CHARACTER STRING INTLITERAL REALLITERAL CHARLITERAL STRINGLITERAL
-%token LPAREN RPAREN COMMA PERIOD SEMICOLON COLON PLUSOP MINUSOP ID
+
+%token PROGRAM VAR START END READ WRITE ASSIGNOP INTEGER REAL CHARACTER INTLITERAL REALLITERAL CHARLITERAL STRINGLITERAL
+%token LPAREN RPAREN COMMA PERIOD SEMICOLON COLON PLUSOP MINUSOP COMMENT ID
 
 %left PLUSOP MINUSOP
 
@@ -242,7 +243,7 @@ void error( const char msg[] )
 }
 
 void yyerror(const char s[]) {
-  std::cout << "Parse error during compilation. Error Message: " << s << std::endl;
+  std::cout << "Parse error during compilation at line " << std::to_string(line_no) <<". Error Message: " << s << std::endl;
   // might as well halt now:
   exit(-1);
 } 
