@@ -21,6 +21,7 @@ comment  	({fslash}{fslash}.*)
 intliteral      (0|([1-9]{digit}*))
 realliteral	({intliteral}{period}(0|{digit}*[1-9]))
 charliteral	('.')
+stringliteral	(\"(\\.|[^"\\])*\")
 id              ({letter}|{underscore})({letter}|{digit}|{underscore})*
 %%
 
@@ -31,6 +32,7 @@ id              ({letter}|{underscore})({letter}|{digit}|{underscore})*
 [Ii][Nn][Tt][Ee][Gg][Ee][Rr]			{return INTEGER;}
 [Rr][Ee][Aa][Ll]                                {return REAL;}
 [Cc][Hh][Aa][Rr][Aa][Cc][Tt][Ee][Rr]		{return CHARACTER;}
+[Ss][Tt][Rr][Ii][Nn][Gg]			{return STRING;}
 [Bb][Ee][Gg][Ii][Nn]                            {return START;}
 [Ee][Nn][Dd]                                    {return END;}
 [Rr][Ee][Aa][Dd]                                {return READ;}
@@ -48,6 +50,7 @@ id              ({letter}|{underscore})({letter}|{digit}|{underscore})*
 {intliteral}                                    {yylval.sval = strdup(yytext); return INTLITERAL;}
 {realliteral}					{yylval.sval = strdup(yytext); return REALLITERAL;}
 {charliteral}					{yylval.sval = strdup(yytext); return CHARLITERAL;}
+{stringliteral}					{yylval.sval = strdup(yytext); return STRINGLITERAL;}
 {id}                                            {yylval.sval = strdup(yytext); return ID;}
 
 [^,]		{std::cout << "SYNTAX ERROR: " << yytext << " IS ILLEGAL" << std::endl;}
