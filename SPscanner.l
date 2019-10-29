@@ -4,10 +4,10 @@
 #include "pascal.tab.h"
 extern "C" int yylex();
 %}
-letter  [a-zA-Z]
-digit   [0-9]
+letter 		[a-zA-Z]
+digit  		[0-9]
 semicolon	[;]
-colon		[:]
+colon	 	[:]
 underscore	[_]
 lparen		[(]
 rparen		[)]
@@ -56,6 +56,5 @@ id              ({letter}|{underscore})({letter}|{digit}|{underscore})*
 {boolliteral}					{yylval.sval = strdup(yytext); return BOOLLITERAL;}
 {id}                                            {yylval.sval = strdup(yytext); return ID;}
 
-[^,]		{std::cout << "SYNTAX ERROR: " << yytext << " IS ILLEGAL" << std::endl;}
+[^,]	{std::cout << "SYNTAX ERROR: " << yytext << " IS ILLEGAL" << std::endl;}
 %%
-
