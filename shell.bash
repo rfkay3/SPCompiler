@@ -5,6 +5,7 @@ clear
 
 echo "Running the make file..."
 
+make clean
 make
 echo "running executable with file: program.asm..."
 
