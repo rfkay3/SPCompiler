@@ -9,5 +9,5 @@ begin
 { This is a
 multi line comment!!
 }
-x:=a;
+x:=a * a + (d + d);
 end.

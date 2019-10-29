@@ -15,3 +15,4 @@ echo "__________________________________________"
 
 echo "Here is the contents of the .asm file..."
 cat program.asm
+cat program.pas

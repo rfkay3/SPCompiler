@@ -13,7 +13,7 @@ char * gen_infix(char operandl[], char op[], char operand2[])
   static int max_temp=0;
   static char tempname[30];
   
-  char tempop[16];
+  char tempop[8];
 
   if ( strcmp( op, "Add")==0 ){
      strcpy(tempop,"iadd" );
