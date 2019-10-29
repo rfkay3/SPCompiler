@@ -13,12 +13,23 @@ char * gen_infix(char operandl[], char op[], char operand2[])
   static int max_temp=0;
   static char tempname[30];
   
-  char tempop[8];
+  char tempop[16];
 
-  if ( strcmp( op, "Add") )
-    strcpy(tempop,"iadd" );
-  else
-	strcpy(tempop,"isub" );
+  if ( strcmp( op, "Add")==0 ){
+     strcpy(tempop,"iadd" );
+   }
+   else if ( strcmp(op, "Sub")==0){
+     strcpy(tempop,"isub" );
+   }
+   else if ( strcmp(op, "Mult")==0){
+     strcpy(tempop, "imult");
+   }
+   else if (strcmp(op, "Div")==0){
+     strcpy(tempop, "idiv");
+   }
+   else if (strcmp(op, "Mod")==0){
+    strcpy(tempop, "imod");
+   }
   max_temp++;
   sprintf(tempname, "&tempi" ,max_temp);
   outFile << tempop << " " << operandl << ", " << operand2 << ", " << tempname << std::endl;

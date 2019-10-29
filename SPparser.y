@@ -43,7 +43,7 @@ void printSymbolTable();
 %type <sval>expression
 %type <sval>expr
 %type <sval>term
-%type <sval>add_op
+%type <sval>math_op
 
 %start system_goal
 %%
@@ -163,7 +163,7 @@ expr_list  :	expression   {write_expr($1);}
 expression :	expr   {strcpy($$,$1);}
                 ;
 expr       :    term {strcpy($$,$1);}
-		| expr add_op term {strcpy($$,gen_infix($1,$2,$3));}
+		| expr math_op term {strcpy($$,gen_infix($1,$2,$3));}
 		| {error("EXPRESSION EXPECTED, BUT FOUND");}
 		;
 term      :	lparen expression rparen   {strcpy($$,$2);}
@@ -179,9 +179,15 @@ lparen    :	LPAREN
 rparen    :	RPAREN
 		| {error(") EXPECTED , BUT FOUND");}
 		;
-add_op    :	PLUSOP {strcpy ($$,"Add");}
+math_op   :     PLUSOP    {strcpy($$, "Add");}
 		;
-add_op    :	MINUSOP {strcpy ($$,"Sub");}
+math_op   :	MINUSOP {strcpy($$, "Sub");}
+		;
+math_op   :     MULTOP  {strcpy($$, "Mult");}
+		;
+math_op   :     DIVOP   {strcpy($$, "Div");}
+		;
+math_op   :     MODOP   {strcpy($$, "Mod");}
 		;
 ident     :	ID {strcpy($$, yylval.sval);}
 		| {error("IDENTIFIER EXPECTED, BUT FOUND");}
