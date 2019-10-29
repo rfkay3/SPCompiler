@@ -6,5 +6,8 @@ character i:='1', j, k:='f', l:='-', m:='.', n;
 string p:="this is a string";
 // This is a comment.
 begin
-;
+{ This is a
+multi line comment!!
+}
+x:=a;
 end.
