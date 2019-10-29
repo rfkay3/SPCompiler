@@ -28,7 +28,6 @@ realliteral	({intliteral}{period}(0|{digit}*[1-9]))
 charliteral	('.')
 stringliteral	(\"(\\.|[^"\\])*\")
 id              ({letter}|{underscore})({letter}|{digit}|{underscore})*
-%x		MULTICOMMENT
 %%
 
 [ \t]+                                          {/* do nothing */}
@@ -61,11 +60,6 @@ id              ({letter}|{underscore})({letter}|{digit}|{underscore})*
 {charliteral}					{yylval.sval = strdup(yytext); return CHARLITERAL;}
 {stringliteral}					{yylval.sval = strdup(yytext); return STRINGLITERAL;}
 {id}                                            {yylval.sval = strdup(yytext); return ID;}
-
-{lbracket}					{ BEGIN(MULTICOMMENT);}
-<MULTICOMMENT>{rbracket}			{ BEGIN(INITIAL);}
-<MULTICOMMENT>(.|\n)				;
-<MULTICOMMENT><<EOF>>				{ perror("End Of File reached within comment."); }
 
 [^,]		{std::cout << "SYNTAX ERROR: " << yytext << " IS ILLEGAL" << std::endl;}
 %%

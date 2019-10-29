@@ -49,7 +49,7 @@ void printSymbolTable();
 %%
 
 
-program	    :	 PROGRAM {line_no++; symTable.enterScope();} variables START {line_no++;} statement_list END PERIOD {line_no++; printSymbolTable();} 
+program	    :	 PROGRAM {line_no++; symTable.enterScope();} variables START {line_no++;} statement_list END PERIOD {line_no++;} 
 		| COLON {
 				// Use this section as a sendbox for testing any external functions
 				// To sun this section use use the following commands:
