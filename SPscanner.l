@@ -28,6 +28,7 @@ realliteral	({intliteral}{period}(0|{digit}*[1-9]))
 charliteral	('.')
 stringliteral	(\"(\\.|[^"\\])*\")
 id              ({letter}|{underscore})({letter}|{digit}|{underscore})*
+%x		MULTILINE
 %%
 
 [ \t]+                                          {/* do nothing */}
@@ -61,6 +62,10 @@ id              ({letter}|{underscore})({letter}|{digit}|{underscore})*
 {stringliteral}					{yylval.sval = strdup(yytext); return STRINGLITERAL;}
 {id}                                            {yylval.sval = strdup(yytext); return ID;}
 
+{lbracket}					{BEGIN(MULTILINE);}
+<MULTILINE>{rbracket}				{BEGIN(INITIAL);}
+<MULTILINE>(.|\n)				;
+<MULTILINE><<EOF>>				{return *yytext;}
 [^,]		{std::cout << "SYNTAX ERROR: " << yytext << " IS ILLEGAL" << std::endl;}
 %%
 
