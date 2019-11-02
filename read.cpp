@@ -8,5 +8,9 @@ extern SymbolTable symTable;
 
 void read_id (char id_name[])
 {
+     // TODO:
+     // needs to take type of symbol and append instead of
+     // hardcoded Integer
+
      outFile << "read " << id_name << ", integer" << std::endl;;
 }

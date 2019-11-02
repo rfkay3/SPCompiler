@@ -8,5 +8,5 @@ extern SymbolTable symTable;
 
 void write_expr(char id_name[])
 {
-   outFile << "write " << id_name << ", " << "__TYPE__" << std::endl;
+   outFile << "write " << id_name << std::endl;
 }
