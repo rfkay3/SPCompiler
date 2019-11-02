@@ -17,6 +17,8 @@ int line_no = 1;
 std::ofstream outFile;
 SymbolTable symTable;
 
+std::string createTempIntegerAddress();
+std::string createTempRealAddress();
 void assign (char [], char []);
 void decl_id ( char [], const char [] );
 void finish();
@@ -27,6 +29,7 @@ void verify_sym_decl(char []);
 void error(const char []);
 void yyerror(const char []);
 void printSymbolTable();
+
 %}
 %union{
        int ival;
