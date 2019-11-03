@@ -174,7 +174,8 @@ term      :	lparen expression rparen   {strcpy($$,$2);}
 		;
 term      :	ident      {verify_sym_decl($1); strcpy($$,$1);}
 		;
-term      :	INTLITERAL {strcpy($$, yylval.sval);}    
+term      :	INTLITERAL {strcpy($$, yylval.sval);}  
+		| REALLITERAL {strcpy($$, yylval.sval);} 
 		| {error("NUMERIC VALUE EXPECTED, BUT FOUND");}
 		;
 lparen    :	LPAREN
@@ -184,14 +185,10 @@ rparen    :	RPAREN
 		| {error(") EXPECTED , BUT FOUND");}
 		;
 math_op   :     PLUSOP    {strcpy($$, "Add");}
-		;
-math_op   :		MINUSOP {strcpy($$, "Sub");}
-		;
-math_op   :     MULTOP  {strcpy($$, "Mult");}
-		;
-math_op   :     DIVOP   {strcpy($$, "Div");}
-		;
-math_op   :     MODOP   {strcpy($$, "Mod");}
+		| MINUSOP {strcpy($$, "Sub");}
+		| MULTOP  {strcpy($$, "Mult");}
+		| DIVOP   {strcpy($$, "Div");}
+		| MODOP   {strcpy($$, "Mod");}
 		;
 ident     :	ID {strcpy($$, yylval.sval);}
 		| {error("IDENTIFIER EXPECTED, BUT FOUND");}

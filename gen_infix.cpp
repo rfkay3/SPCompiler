@@ -7,16 +7,28 @@
 
 extern std::ofstream outFile;
 extern SymbolTable symTable;
-std::string createTempIntegerAddress();
-std::string createTempRealAddress();
+extern std::string createTempIntegerAddress();
+extern std::string createTempRealAddress();
+extern bool isReal(char value[]);
+extern void yyerror(const char s[]);
 
-char * gen_infix(char operandl[], char op[], char operand2[])
+char * gen_infix(char operand1[], char op[], char operand2[])
 {
+  //TODO:
+  /* 
+  * Currently, operand1 contains the math op instead of the first operand provided
+  * in the expression. Need to take a look at the grammar and figure out why the
+  * args are passed this way instead of the correct way.
+  */
   static int max_temp=0;
   static char tempname[30];
-  
   char tempop[8];
 
+  /*TODO: sun upon fixing of the argument problem.
+  if(isReal(operand1) != isReal(operand2)){
+    yyerror("Type mismatch in expression.");
+  }
+  */
 
   //have to type check, add different prefixes to 
   if ( strcmp( op, "Add")==0 ){
@@ -36,6 +48,6 @@ char * gen_infix(char operandl[], char op[], char operand2[])
    }
   max_temp++;
   sprintf(tempname, "&tempi" ,max_temp);
-  outFile << tempop << " " << operandl << ", " << operand2 << ", " << tempname << std::endl;
+  outFile << tempop << " " << operand1 << ", " << operand2 << ", " << tempname << std::endl;
   return (tempname);
 }
