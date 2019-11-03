@@ -7,6 +7,8 @@
 
 extern std::ofstream outFile;
 extern SymbolTable symTable;
+std::string createTempIntegerAddress();
+std::string createTempRealAddress();
 
 char * gen_infix(char operandl[], char op[], char operand2[])
 {
@@ -15,6 +17,8 @@ char * gen_infix(char operandl[], char op[], char operand2[])
   
   char tempop[8];
 
+
+  //have to type check, add different prefixes to 
   if ( strcmp( op, "Add")==0 ){
      strcpy(tempop,"iadd" );
    }

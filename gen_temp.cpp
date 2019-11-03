@@ -8,8 +8,8 @@
  */
 std::string createTempIntegerAddress(){
 	static int tempIntCount = 1;
-	static char tempIntName [30];
-	sprintf(tempIntName, "tempi%d", tempIntCount);
+	static char tempIntName [8];
+	sprintf(tempIntName, "&tempi%d", tempIntCount);
 	tempIntCount++;
 	return std::string(tempIntName);
 }
@@ -22,8 +22,8 @@ std::string createTempIntegerAddress(){
  */
 std::string createTempRealAddress(){
 	static int tempRealCount = 1;
-	static char tempRealName [30];
-	sprintf(tempRealName, "tempr%d", tempRealCount);
+	static char tempRealName [8];
+	sprintf(tempRealName, "&tempr%d", tempRealCount);
 	tempRealCount++;
 	return std::string(tempRealName);
 }

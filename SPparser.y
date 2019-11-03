@@ -17,6 +17,7 @@ int line_no = 1;
 std::ofstream outFile;
 SymbolTable symTable;
 
+bool isReal(char value[]);
 std::string createTempIntegerAddress();
 std::string createTempRealAddress();
 void assign (char [], char []);
@@ -184,7 +185,7 @@ rparen    :	RPAREN
 		;
 math_op   :     PLUSOP    {strcpy($$, "Add");}
 		;
-math_op   :	MINUSOP {strcpy($$, "Sub");}
+math_op   :		MINUSOP {strcpy($$, "Sub");}
 		;
 math_op   :     MULTOP  {strcpy($$, "Mult");}
 		;

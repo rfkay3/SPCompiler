@@ -6,6 +6,7 @@ extern std::ofstream outFile;
 extern SymbolTable symTable;
 extern std::string createTempIntegerAddress();
 extern std::string createTempRealAddress();
+extern bool isReal(char value[]);
 
 
 /**
@@ -60,15 +61,6 @@ std::string integerToReal(char target[], char source[]){
 	std::string secondTemp = createTempRealAddress();
 	outFile << "itor " << firstTemp << ", " << secondTemp << std::endl;
 	return secondTemp;
-}
-
-bool isReal(char value[]){
-	for(int i = 0; value[i] != '\0'; i++) {
-		if(value[i] == '.'){
-			return true;
-		}
-	}
-	return false;
 }
 
 void assign (char target[], char source[])
