@@ -60,23 +60,25 @@ extern int yydebug;
     REAL = 266,
     CHARACTER = 267,
     STRING = 268,
-    INTLITERAL = 269,
-    REALLITERAL = 270,
-    CHARLITERAL = 271,
-    STRINGLITERAL = 272,
-    LPAREN = 273,
-    RPAREN = 274,
-    COMMA = 275,
-    PERIOD = 276,
-    SEMICOLON = 277,
-    COLON = 278,
-    PLUSOP = 279,
-    MINUSOP = 280,
-    MULTOP = 281,
-    DIVOP = 282,
-    MODOP = 283,
-    COMMENT = 284,
-    ID = 285
+    BOOLEAN = 269,
+    BOOL = 270,
+    INTLITERAL = 271,
+    REALLITERAL = 272,
+    CHARLITERAL = 273,
+    STRINGLITERAL = 274,
+    LPAREN = 275,
+    RPAREN = 276,
+    COMMA = 277,
+    PERIOD = 278,
+    SEMICOLON = 279,
+    COLON = 280,
+    PLUSOP = 281,
+    MINUSOP = 282,
+    MULTOP = 283,
+    DIVOP = 284,
+    MODOP = 285,
+    COMMENT = 286,
+    ID = 287
   };
 #endif
 
@@ -91,7 +93,7 @@ union YYSTYPE
        float fval;
        
 
-#line 95 "pascal.tab.h"
+#line 97 "pascal.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;

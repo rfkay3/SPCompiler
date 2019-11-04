@@ -23,6 +23,7 @@ multop		[\*]
 divop		[\\]
 modop		[%]
 comment  	({fslash}{fslash}.*)
+boolean     ([Tt][Rr][Uu][Ee]|[Ff][Aa][Ll][Ss][Ee])
 intliteral      (0|([1-9]{digit}*))
 realliteral	({intliteral}{period}(0|{digit}*[1-9]))
 charliteral	('.')
@@ -43,6 +44,7 @@ id              ({letter}|{underscore})({letter}|{digit}|{underscore})*
 [Ee][Nn][Dd]                                    {return END;}
 [Rr][Ee][Aa][Dd]                                {return READ;}
 [Ww][Rr][Ii][Tt][Ee]                            {return WRITE;}
+[Bb][Oo][Oo][Ll][Ee][Aa][Nn]                    {return BOOLEAN;}
 {comma}                                         {return COMMA;}
 {period}					{return PERIOD;}
 {semicolon}                                     {return SEMICOLON;}
@@ -56,6 +58,7 @@ id              ({letter}|{underscore})({letter}|{digit}|{underscore})*
 {divop}						{return DIVOP;}
 {modop}						{return MODOP;}
 {comment}                                       {/* do nothing */}
+{boolean}                                       {yylval.sval = strdup(yytext); return BOOL;}
 {intliteral}                                    {yylval.sval = strdup(yytext); return INTLITERAL;}
 {realliteral}					{yylval.sval = strdup(yytext); return REALLITERAL;}
 {charliteral}					{yylval.sval = strdup(yytext); return CHARLITERAL;}

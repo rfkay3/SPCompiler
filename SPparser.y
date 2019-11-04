@@ -18,8 +18,8 @@ std::ofstream outFile;
 SymbolTable symTable;
 
 bool isReal(char value[]);
-std::string createTempIntegerAddress();
-std::string createTempRealAddress();
+char * createTempIntegerAddress();
+char * createTempRealAddress();
 void assign (char [], char []);
 void decl_id ( char [], const char [] );
 void finish();
@@ -38,9 +38,10 @@ void printSymbolTable();
        float fval;
        }
 
-%token PROGRAM VAR START END READ WRITE ASSIGNOP INTEGER REAL CHARACTER STRING INTLITERAL REALLITERAL CHARLITERAL STRINGLITERAL
-%token LPAREN RPAREN COMMA PERIOD SEMICOLON COLON PLUSOP MINUSOP MULTOP DIVOP MODOP COMMENT ID
+%token PROGRAM VAR START END READ WRITE ASSIGNOP INTEGER REAL CHARACTER STRING BOOLEAN BOOL INTLITERAL 
+%token REALLITERAL CHARLITERAL STRINGLITERAL LPAREN RPAREN COMMA PERIOD SEMICOLON COLON PLUSOP MINUSOP MULTOP DIVOP MODOP COMMENT ID
 
+%left MULTOP DIVOP MODOP
 %left PLUSOP MINUSOP
 
 %type <sval>ident
@@ -126,6 +127,12 @@ declaration :	INTEGER int_var_list SEMICOLON {line_no++;}
 		| REAL real_var_list SEMICOLON {line_no++;}
 		| CHARACTER char_var_list SEMICOLON {line_no++;}
 		| STRING string_var_list SEMICOLON {line_no++;}
+		| BOOLEAN bool_var_list SEMICOLON {line_no++;}
+		;
+bool_var_list:   ident  { decl_id($1, "boolean"); symTable.insertSymbol($1, "boolean");}
+		| ident {decl_id($1, "boolean"); symTable.insertSymbol($1, "boolean");} ASSIGNOP BOOL {assign($1, yylval.sval);}             
+		| bool_var_list COMMA ident { decl_id($3, "boolean"); symTable.insertSymbol($3, "boolean");}
+		| bool_var_list COMMA ident { decl_id($3, "boolean"); symTable.insertSymbol($3, "boolean");} ASSIGNOP BOOL {assign($3, yylval.sval);}
 		;
 int_var_list:   ident  { decl_id($1, "integer"); symTable.insertSymbol($1, "integer");}
 		| ident {decl_id($1, "integer"); symTable.insertSymbol($1, "integer");} ASSIGNOP INTLITERAL {assign($1, yylval.sval);}             
@@ -166,7 +173,7 @@ expr_list  :	expression   {write_expr($1);}
 		;
 expression :	expr   {strcpy($$,$1);}
                 ;
-expr       :    term {strcpy($$,$1);}
+expr       :    term {$$ = strdup($1);}
 		| expr math_op term {strcpy($$,gen_infix($1,$2,$3));}
 		| {error("EXPRESSION EXPECTED, BUT FOUND");}
 		;
@@ -185,10 +192,14 @@ rparen    :	RPAREN
 		| {error(") EXPECTED , BUT FOUND");}
 		;
 math_op   :     PLUSOP    {strcpy($$, "Add");}
-		| MINUSOP {strcpy($$, "Sub");}
-		| MULTOP  {strcpy($$, "Mult");}
-		| DIVOP   {strcpy($$, "Div");}
-		| MODOP   {strcpy($$, "Mod");}
+		;
+math_op   :     MINUSOP {strcpy($$, "Sub");}
+		;
+math_op   : 	MULTOP  {strcpy($$, "Mult");}
+		;
+math_op   :		DIVOP   {strcpy($$, "Div");}
+		;
+math_op   :		MODOP   {strcpy($$, "Mod");}
 		;
 ident     :	ID {strcpy($$, yylval.sval);}
 		| {error("IDENTIFIER EXPECTED, BUT FOUND");}

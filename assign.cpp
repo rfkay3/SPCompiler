@@ -4,8 +4,8 @@
 
 extern std::ofstream outFile;
 extern SymbolTable symTable;
-extern std::string createTempIntegerAddress();
-extern std::string createTempRealAddress();
+extern char * createTempIntegerAddress();
+extern char * createTempRealAddress();
 extern bool isReal(char value[]);
 
 
