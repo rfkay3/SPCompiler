@@ -14,30 +14,31 @@ extern void yyerror(const char s[]);
 
 char *gen_infix(char * operand1, char * op, char * operand2)
 {
+  std::cout << operand1 << " " << op << " " << operand2 << std::endl;
   char tempop[8];
   static char tempname[30];
   
   // hacky
   strcpy(tempname, createTempIntegerAddress());
   
-  if(isReal(operand1) != isReal(operand2)){
-    yyerror("Type mismatch in expression.");
-  }
+  // if(isReal(operand1) != isReal(operand2)){
+  //   yyerror("Type mismatch in expression.");
+  // }
 
   //have to type check, add different prefixes to 
-  if ( strcmp( op, "Add")==0 ){
+  if ( strcmp( op, "add")==0 ){
      strcpy(tempop,"iadd");
    }
-   else if ( strcmp(op, "Sub")==0){
+   else if ( strcmp(op, "sub")==0){
      strcpy(tempop,"isub" );
    }
-   else if ( strcmp(op, "Mult")==0){
+   else if ( strcmp(op, "mult")==0){
      strcpy(tempop, "imult");
    }
-   else if (strcmp(op, "Div")==0){
+   else if (strcmp(op, "div")==0){
      strcpy(tempop, "idiv");
    }
-   else if (strcmp(op, "Mod")==0){
+   else if (strcmp(op, "mod")==0){
     strcpy(tempop, "imod");
    }
   outFile << tempop << " " << operand1 << ", " << operand2 << ", " << tempname << std::endl;

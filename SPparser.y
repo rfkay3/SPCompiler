@@ -41,14 +41,14 @@ void printSymbolTable();
 %token PROGRAM VAR START END READ WRITE ASSIGNOP INTEGER REAL CHARACTER STRING BOOLEAN BOOL INTLITERAL 
 %token REALLITERAL CHARLITERAL STRINGLITERAL LPAREN RPAREN COMMA PERIOD SEMICOLON COLON PLUSOP MINUSOP MULTOP DIVOP MODOP COMMENT ID
 
-%left MULTOP DIVOP MODOP
-%left PLUSOP MINUSOP
+%left MULTOP DIVOP MODOP PLUSOP MINUSOP
 
 %type <sval>ident
 %type <sval>expression
 %type <sval>expr
 %type <sval>term
-%type <sval>math_op
+%type <sval>add_op
+%type <sval>mult_op
 
 %start system_goal
 %%
@@ -172,16 +172,15 @@ expr_list  :	expression   {write_expr($1);}
                 | expr_list COMMA expression {write_expr($3);}
 		;
 expression :	expr   {strcpy($$,$1);}
-                ;
+		| expression add_op expr {strcpy($$,gen_infix($1,$2,$3));}
+        ;
 expr       :    term {$$ = strdup($1);}
-		| expr math_op term {strcpy($$,gen_infix($1,$2,$3));}
+		| expr mult_op term {strcpy($$,gen_infix($1,$2,$3));}
 		| {error("EXPRESSION EXPECTED, BUT FOUND");}
 		;
-term      :	lparen expression rparen   {strcpy($$,$2);}
-		;
-term      :	ident      {verify_sym_decl($1); strcpy($$,$1);}
-		;
-term      :	INTLITERAL {strcpy($$, yylval.sval);}  
+term      :	lparen expression rparen   {$$ = strdup($2);}
+		| ident      {verify_sym_decl($1); strcpy($$,$1);}
+		| INTLITERAL {strcpy($$, yylval.sval);}  
 		| REALLITERAL {strcpy($$, yylval.sval);} 
 		| {error("NUMERIC VALUE EXPECTED, BUT FOUND");}
 		;
@@ -191,15 +190,12 @@ lparen    :	LPAREN
 rparen    :	RPAREN
 		| {error(") EXPECTED , BUT FOUND");}
 		;
-math_op   :     PLUSOP    {strcpy($$, "Add");}
+add_op	  : PLUSOP    {strcpy($$, "add");}
+		| MINUSOP {strcpy($$, "sub");}
 		;
-math_op   :     MINUSOP {strcpy($$, "Sub");}
-		;
-math_op   : 	MULTOP  {strcpy($$, "Mult");}
-		;
-math_op   :		DIVOP   {strcpy($$, "Div");}
-		;
-math_op   :		MODOP   {strcpy($$, "Mod");}
+mult_op   : MULTOP  {strcpy($$, "mult");}
+		| DIVOP   {strcpy($$, "div");}
+		| MODOP   {strcpy($$, "mod");}
 		;
 ident     :	ID {strcpy($$, yylval.sval);}
 		| {error("IDENTIFIER EXPECTED, BUT FOUND");}
