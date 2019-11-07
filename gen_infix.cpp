@@ -14,11 +14,11 @@ extern void yyerror(const char s[]);
 
 char *gen_infix(char * operand1, char * op, char * operand2)
 {
-  std::cout << operand1 << " " << op << " " << operand2 << std::endl;
+  // std::cout << operand1 << " " << op << " " << operand2 << std::endl;
   char tempop[8];
   static char tempname[30];
   
-  // hacky
+  // hacky/doesnt check for type 
   strcpy(tempname, createTempIntegerAddress());
   
   // if(isReal(operand1) != isReal(operand2)){
