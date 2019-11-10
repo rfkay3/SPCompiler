@@ -78,7 +78,16 @@ extern int yydebug;
     DIVOP = 284,
     MODOP = 285,
     COMMENT = 286,
-    ID = 287
+    ID = 287,
+    GT_OP = 288,
+    LT_OP = 289,
+    GTEQUAL_OP = 290,
+    LTEQUAL_OP = 291,
+    EQUALOP = 292,
+    NOTEQUALOP = 293,
+    ANDOP = 294,
+    OR_OP = 295,
+    NOTOP = 296
   };
 #endif
 
@@ -93,7 +102,7 @@ union YYSTYPE
        float fval;
        
 
-#line 97 "pascal.tab.h"
+#line 106 "pascal.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;
