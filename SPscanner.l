@@ -57,6 +57,15 @@ id              ({letter}|{underscore})({letter}|{digit}|{underscore})*
 {multop}					{return MULTOP;}
 {divop}						{return DIVOP;}
 {modop}						{return MODOP;}
+{gt}                        {return GT_OP;}
+{lt}                        {return LT_OP;}
+{gtequal}                   {return GTEQUAL_OP;}
+{ltequal}                   {return LTEQUAL_OP;}
+{equal}                     {return EQUALOP;}
+{notequal}                  {return NOTEQUALOP;}
+{bool_and}                  {return ANDOP;}
+{bool_or}                   {return OR_OP;}
+{bool_not}                  {return NOTOP;}
 {comment}                                       {/* do nothing */}
 {boolean}                                       {yylval.sval = strdup(yytext); return BOOL;}
 {intliteral}                                    {yylval.sval = strdup(yytext); return INTLITERAL;}
