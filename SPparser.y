@@ -165,9 +165,6 @@ statement  :	READ lparen id_list rparen SEMICOLON {line_no++;}
 		;
 statement  :	WRITE lparen expr_list rparen SEMICOLON {line_no++;}
 		;
-statement	:	IF statement_list THEN {line_no++;}
-		| IF statement_list THEN {line_no++;} ELSE {line_no++}
-		;
 statement  :    SEMICOLON {line_no++;}
 		;
 id_list    :	ident      {verify_sym_decl($1); read_id($1);}
