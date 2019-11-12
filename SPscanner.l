@@ -82,6 +82,9 @@ id              ({letter}|{underscore})({letter}|{digit}|{underscore})*
 {charliteral}					{yylval.sval = strdup(yytext); return CHARLITERAL;}
 {stringliteral}					{yylval.sval = strdup(yytext); return STRINGLITERAL;}
 {id}                                            {yylval.sval = strdup(yytext); return ID;}
+{if}                        {return IF;}        
+{then}                      {return THEN;}
+{else}                      {return ELSE;}
 
 {lbracket}					{BEGIN(MULTILINE);}
 <MULTILINE>{rbracket}				{BEGIN(INITIAL);}
