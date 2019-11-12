@@ -22,6 +22,15 @@ minusop  	[-]
 multop		[\*]
 divop		[\\]
 modop		[%]
+gt          [>]
+lt          [<]
+gtequal     ([>][=])
+ltequal     ([<][=])
+equal       [=]
+notequal    ([<][>])
+bool_and    ([Aa][Nn][Dd])
+bool_or     ([Oo][Rr])
+bool_not    ([Nn][Oo][Tt])
 comment  	({fslash}{fslash}.*)
 boolean     ([Tt][Rr][Uu][Ee]|[Ff][Aa][Ll][Ss][Ee])
 intliteral      (0|([1-9]{digit}*))
