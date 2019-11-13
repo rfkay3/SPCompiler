@@ -1,4 +1,4 @@
-OFILES= gen_temp.o assign.o read.o write.o gen_infix.o finish.o declare.o symbolTable.o type_check.o 
+OFILES= gen_temp.o assign.o read.o write.o gen_infix.o finish.o declare.o symbolTable.o type_check.o parsedValue.o
 pascal: SPparser.tab.c lex.yy.c $(OFILES)
 	g++ $(OFILES) SPparser.tab.c lex.yy.c -lfl -o pascal
 lex.yy.c: SPscanner.l

@@ -1,6 +1,8 @@
 #include <string>
 
 extern void decl_id(char id[], const char type[]);
+
+
 /**
  * Returns a temporary address to an integer. Increments
  * a static integer to make sure no same address is returned 
@@ -29,4 +31,22 @@ const char * createTempRealAddress(){
 	decl_id(tempRealName, "real");
 	tempRealCount++;
 	return tempRealName;
+}
+
+const char * createTempStringAddress(){
+	static int tempStringCount = 1;
+	static char tempStringName [30];
+	sprintf(tempStringName, "&temps%d", tempStringCount);
+	decl_id(tempStringName, "string");
+	tempStringCount++;
+	return tempStringName;
+}
+
+const char * createTempBooleanAddress(){
+	static int tempBooleanCount = 1;
+	static char tempBooleanName [30];
+	sprintf(tempBooleanName, "&tempb%d", tempBooleanCount);
+	decl_id(tempBooleanName, "boolean");
+	tempBooleanCount++;
+	return tempBooleanName;
 }

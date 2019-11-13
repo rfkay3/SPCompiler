@@ -1,13 +1,19 @@
 program
 var
-integer a:=2, b, c, d:=123234;
-real x, y:=2.2, z:=1.0;
-character i:='1', j, k:='f', l:='-', m:='.', n;
-string p:="this is a string";
-// This is a comment.
+integer a:=2, A;
+real f:=2.2, g:=9.864;
+string p:="this is a string", z:="and this is a string", str;
+boolean h := true;
 begin
-{ This is a
-multi line comment!!
-}
-x:=a * a + (d + d);
+
+p := p + z + "lol";
+
+A := 2.4 + 55 / (3 * 5 % 7) - 54;
+h := 1 < 2;
+h := 2 > 1;
+h := true;
+h := false;
+h := (55 >= 2) = (34 <= 2039);
+
+
 end.

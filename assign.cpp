@@ -8,15 +8,14 @@ extern char * createTempIntegerAddress();
 extern char * createTempRealAddress();
 extern bool isReal(char value[]);
 
-
 /**
  * Returns a string representing a temporary address to a stored
  * integer.
  * @param source - a char[] representing an initializing value or variable 
  * @return - a string representing a temporary address
  */
-std::string storeIntegerTemp(char source[]){
-	std::string tempAddr = createTempIntegerAddress();
+char * storeIntegerTemp(char source[]){
+	char * tempAddr = createTempIntegerAddress();
 	outFile << "store " << source << ", " << tempAddr << std::endl;
 	return tempAddr;
 }
@@ -27,8 +26,8 @@ std::string storeIntegerTemp(char source[]){
  * @param source - a char[] representing an initializing value or variable 
  * @return - a string representing a temporary address
  */
-std::string storeRealTemp(char source[]){
-	std::string tempAddr = createTempRealAddress();
+char * storeRealTemp(char source[]){
+	char * tempAddr = createTempRealAddress();
 	outFile << "store " << source << ", " << tempAddr << std::endl;
 	return tempAddr;
 }
@@ -41,9 +40,9 @@ std::string storeRealTemp(char source[]){
  * @param target - A char[] representing the assignment target
  * @param source - A char[] representinf the source for assignment.
  */
-std::string realToInteger(char target[], char source[]){
-	std::string firstTemp = storeRealTemp(source);
-	std::string secondTemp = createTempIntegerAddress();
+char * realToInteger(char source[]){
+	char * firstTemp = storeRealTemp(source);
+	char * secondTemp = createTempIntegerAddress();
 	outFile << "rtoi " << firstTemp << ", " << secondTemp << std::endl;
 	return secondTemp;
 }
@@ -56,36 +55,37 @@ std::string realToInteger(char target[], char source[]){
  * @param target - A char[] representing the assignment target
  * @param source - A char[] representinf the source for assignment.
  */
-std::string integerToReal(char target[], char source[]){
-	std::string firstTemp = storeIntegerTemp(source);
-	std::string secondTemp = createTempRealAddress();
+char * integerToReal(char source[]){
+	char * firstTemp = storeIntegerTemp(source);
+	char * secondTemp = createTempRealAddress();
 	outFile << "itor " << firstTemp << ", " << secondTemp << std::endl;
 	return secondTemp;
 }
 
 void assign (char target[], char source[])
 {
-	std::string sourceAddr(source);
+	char * sourceAddr = source;
 	if (symTable.typeOf(target) == "real") {
 		if(symTable.lookupSymbol(source)) {
 			if(symTable.typeOf(source) == "integer"){
-				sourceAddr = integerToReal(target, source);	
+				sourceAddr = integerToReal(source);	
 			}
 		} else {
 			if(!isReal(source)) {
-				sourceAddr = integerToReal(target, source);
+				sourceAddr = integerToReal(source);
 			}	
 		}
 	} else if (symTable.typeOf(target) == "integer") {
-                if(symTable.lookupSymbol(source)) {
-                        if(symTable.typeOf(source) == "real"){
-                                sourceAddr = realToInteger(target, source);
-                        }
-                } else {
-                        if(isReal(source)) {
-                                sourceAddr = realToInteger(target, source);
-                        }
+        if(symTable.lookupSymbol(source)) {
+                if(symTable.typeOf(source) == "real"){
+                        sourceAddr = realToInteger(source);
+                }
+        } else {
+                if(isReal(source)) {
+                        sourceAddr = realToInteger(source);
                 }
         }
-    	outFile << "store " << sourceAddr << ", " << target << std::endl;
+    }
+    outFile << "store " << sourceAddr << ", " << target << std::endl;
+	
 }

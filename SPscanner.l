@@ -1,7 +1,9 @@
 %{
 #include <iostream>
 #include <stdlib.h>
+#include "parsedValue.h"
 #include "pascal.tab.h"
+
 extern "C" int yylex();
 %}
 letter  [a-zA-Z]
@@ -32,7 +34,7 @@ bool_and    ([Aa][Nn][Dd])
 bool_or     ([Oo][Rr])
 bool_not    ([Nn][Oo][Tt])
 comment  	({fslash}{fslash}.*)
-boolean     ([Tt][Rr][Uu][Ee]|[Ff][Aa][Ll][Ss][Ee])
+boolean     (true|false)
 intliteral      (0|([1-9]{digit}*))
 realliteral	({intliteral}{period}(0|{digit}*[1-9]))
 charliteral	('.')
@@ -54,6 +56,9 @@ id              ({letter}|{underscore})({letter}|{digit}|{underscore})*
 [Rr][Ee][Aa][Dd]                                {return READ;}
 [Ww][Rr][Ii][Tt][Ee]                            {return WRITE;}
 [Bb][Oo][Oo][Ll][Ee][Aa][Nn]                    {return BOOLEAN;}
+[Ii][Ff]                                        {return IF;}
+[Tt][Hh][Ee][Nn]                                {return THEN;}
+[Ee][Ll][Ss][Ee]                                {return ELSE;}
 {comma}                                         {return COMMA;}
 {period}					{return PERIOD;}
 {semicolon}                                     {return SEMICOLON;}

@@ -8,6 +8,7 @@
 #include <fstream>
 #include <sstream>
 #include "symbolTable.h"
+#include "parsedValue.h"
 
 extern "C" int yylex();
 extern "C" int yyparse();
@@ -23,101 +24,43 @@ char * createTempRealAddress();
 void assign (char [], char []);
 void decl_id ( char [], const char [] );
 void finish();
-char * gen_infix(char [], char [], char []);
+ParsedValue* gen_infix(ParsedValue* o1, char op[], ParsedValue* o2);
+ParsedValue * relation_infix(ParsedValue * operand1, char * op, ParsedValue * operand2);
 void read_id (char []);
 void write_expr(char []);
 void verify_sym_decl(char []);
 void error(const char []);
 void yyerror(const char []);
 void printSymbolTable();
-
 %}
+
+
 %union{
-       int ival;
-       char * sval;
-       float fval;
-       }
+	int ival;
+	char * sval;
+	ParsedValue * rawval;
+}
 
 %token PROGRAM VAR START END READ WRITE ASSIGNOP INTEGER REAL CHARACTER STRING BOOLEAN BOOL INTLITERAL 
 %token REALLITERAL CHARLITERAL STRINGLITERAL LPAREN RPAREN COMMA PERIOD SEMICOLON COLON 
 %token PLUSOP MINUSOP MULTOP DIVOP MODOP COMMENT ID GT_OP LT_OP GTEQUAL_OP LTEQUAL_OP EQUALOP NOTEQUALOP
-%token ANDOP OR_OP NOTOP
+%token ANDOP OR_OP NOTOP IF THEN ELSE
 
 %left MULTOP DIVOP MODOP PLUSOP MINUSOP
 
-%type <sval>ident
-%type <sval>expression
-%type <sval>expr
-%type <sval>term
-%type <sval>add_op
-%type <sval>mult_op
+%type <sval>ident 
+%type <sval>and or not add_op mult_op relation
+
+%type <rawval>expression expr term
+%type <rawval>math_expr rel_expr boolean_and boolean_not
+%type <rawval>literal
+%type <rawval>if_then else_match
 
 %start system_goal
 %%
 
 
 program	    :	 PROGRAM {line_no++; symTable.enterScope();} variables START {line_no++;} statement_list END PERIOD {line_no++;} 
-		| COLON {
-				// Use this section as a sendbox for testing any external functions
-				// To sun this section use use the following commands:
-				// $ echo : >> test.pas
-				// $ ./pascal test.pas
-
-				symTable.enterScope();
-				std::string sym("symbol1");
-				std::string type("type");
-				symTable.insertSymbol(sym.c_str(), type.c_str());
-				if(symTable.lookupSymbol(sym.c_str())){
-					std::cout << "FOUND '" << sym << "'!" << std::endl;
-				}else{
-					std::cout << "Did not find '" << sym << "'" << std::endl;
-				}
-
-				std::cout << std::endl << std::endl;
-				
-				std::string notsym("notsym");
-
-				if(symTable.lookupSymbol(notsym.c_str())){
-				        std::cout << "FOUND '" << notsym << "'!" << std::endl;
-				}else{
-				        std::cout << "Did not find '" << notsym << "'" << std::endl;
-				}
-
-				std::cout << std::endl << "Entering sub scope" << std::endl << std::endl;
-				           
-				symTable.enterScope();
-
-				std::string sym2("symbol2");
-
-				symTable.insertSymbol(sym2.c_str(), type.c_str());
-
-				if(symTable.lookupSymbol(sym2.c_str())){
-					std::cout << "FOUND '" << sym2 << "'!" << std::endl;
-				}else{
-				        std::cout << "Did not find '" << sym2 << "'" << std::endl;
-				}
-
-				if(symTable.lookupSymbol(sym.c_str())){
-				        std::cout << "FOUND '" << sym << "'!" << std::endl;
-				}else{
-					std::cout << "Did not find '" << sym << "'" << std::endl;
-				}
-
-				std::cout << std::endl << "Exiting sub scope" << std::endl << std::endl;
-				symTable.exitScope();
-
-				if(symTable.lookupSymbol(sym2.c_str())){
-					std::cout << "FOUND '" << sym2 << "'!" << std::endl;
-				}else{
-					std::cout << "Did not find '" << sym2 << "'" << std::endl;
-				}
-
-				if(symTable.lookupSymbol(sym.c_str())){
-					std::cout << "FOUND '" << sym << "'!" << std::endl;
-				}else{
-					std::cout << "Did not find '" << sym << "'" << std::endl;
-				}				
-			} 
 		;
 variables   :	SEMICOLON {line_no++;}
 		 | VAR {line_no++;} d_list
@@ -156,48 +99,108 @@ string_var_list: ident {decl_id($1, "string"); symTable.insertSymbol($1, "string
 		| string_var_list COMMA ident {decl_id($3, "string"); symTable.insertSymbol($3, "string");}
 		| string_var_list COMMA ident {decl_id($3, "string"); symTable.insertSymbol($3, "string");} ASSIGNOP STRINGLITERAL {assign($3, yylval.sval);}
 		;
+
 statement_list  :   statement
                  | statement_list statement
 		;
-statement  :	ident ASSIGNOP expression {verify_sym_decl($1); assign($1,$3);} SEMICOLON {line_no++;}
+
+statement  :	matched_statement
+		|	unmatched_statement
 		;
-statement  :	READ lparen id_list rparen SEMICOLON {line_no++;}
+
+unmatched_statement :	if_then statement {/*Write a label to the assembly*/}
+		|	else_match unmatched_statement {/*Write a label to the assembly*/}
 		;
-statement  :	WRITE lparen expr_list rparen SEMICOLON {line_no++;}
+
+matched_statement  :	if_match
+		|	ident ASSIGNOP expression {verify_sym_decl($1); assign($1,$3->getValue());} SEMICOLON {line_no++;}
+		|	READ lparen id_list rparen SEMICOLON {line_no++;}
+		|	WRITE lparen expr_list rparen SEMICOLON {line_no++;}
+		|	SEMICOLON {line_no++;}
 		;
-statement  :    SEMICOLON {line_no++;}
-		;
+
 id_list    :	ident      {verify_sym_decl($1); read_id($1);}
 		| id_list COMMA ident {verify_sym_decl($3); read_id($3);}
 		;
-expr_list  :	expression   {write_expr($1);}
-                | expr_list COMMA expression {write_expr($3);}
+expr_list  :	expression   {write_expr($1->getValue());}
+                | expr_list COMMA expression {write_expr($3->getValue());}
 		;
-expression :	expr   {strcpy($$,$1);}
-		| expression add_op expr {strcpy($$,gen_infix($1,$2,$3));}
+
+if_then    : IF expression THEN {/*$$ is a conditional jump ParsedValue object on (false and the expression)*/}
+		;
+
+if_match   : else_match matched_statement {/*write label*/}
+		;
+
+else_match : if_then matched_statement ELSE {/*else_match = unconditional jump, then write label $1*/}
+		;
+
+expression :	boolean_and {$$ = $1;}
+		| expression or boolean_and {/* Might want to separate from math */$$ = gen_infix($1, $2, $3);}
+		;
+
+boolean_and :	boolean_not {$$ = $1;}
+		| boolean_and and boolean_not {$$ = gen_infix($1, $2, $3);}
+		;
+
+boolean_not :	rel_expr {$$ = $1;}
+		| not rel_expr {/* need to negate DONT USE BOOLEAN INFIX, USE SEPARATE*/ $$ = $2;}
+		;
+
+rel_expr :		math_expr {$$ = $1;}
+		| math_expr relation math_expr {$$ = relation_infix($1, $2, $3);}
+		;
+
+math_expr  :	expr   {$$ = $1;}
+		| math_expr add_op expr {$$ = gen_infix($1,$2,$3);}
         ;
-expr       :    term {$$ = strdup($1);}
-		| expr mult_op term {strcpy($$,gen_infix($1,$2,$3));}
+expr       :    term {$$ = $1;}
+		| expr mult_op term {$$ = gen_infix($1,$2,$3);}
 		| {error("EXPRESSION EXPECTED, BUT FOUND");}
 		;
-term      :	lparen expression rparen   {$$ = strdup($2);}
-		| ident      {verify_sym_decl($1); strcpy($$,$1);}
-		| INTLITERAL {strcpy($$, yylval.sval);}  
-		| REALLITERAL {strcpy($$, yylval.sval);} 
+term      :	lparen expression rparen   {$$ = $2;}
+		| ident      {verify_sym_decl($1); $$ = new ParsedValue($1, symTable.typeOf($1).c_str());}
+		| literal	{$$ = $1;}
+		;
+
+literal   : INTLITERAL {$$ = new ParsedValue(yylval.sval, "integer");}  
+		| REALLITERAL {$$ = new ParsedValue(yylval.sval, "real");} 
+		| STRINGLITERAL {$$ = new ParsedValue(yylval.sval, "string");}
+		| CHARLITERAL {$$ = new ParsedValue(yylval.sval, "char");}
+		| BOOL {$$ = new ParsedValue(yylval.sval, "boolean");}
 		| {error("NUMERIC VALUE EXPECTED, BUT FOUND");}
 		;
+
 lparen    :	LPAREN
 		| {error("( EXPECTED , BUT FOUND");}
 		;
 rparen    :	RPAREN
 		| {error(") EXPECTED , BUT FOUND");}
 		;
-add_op	  : PLUSOP    {strcpy($$, "add");}
-		| MINUSOP {strcpy($$, "sub");}
+
+or		  : OR_OP {$$ = strdup("or");}
 		;
-mult_op   : MULTOP  {strcpy($$, "mult");}
-		| DIVOP   {strcpy($$, "div");}
-		| MODOP   {strcpy($$, "mod");}
+
+and		  : ANDOP {strcpy($$, "and");}
+		;
+
+not		  : NOTOP {strcpy($$, "not");}
+		;
+
+relation  :	GT_OP {$$ = strdup("gt");}
+		| LT_OP	{$$ = strdup("lt");}
+		| GTEQUAL_OP {$$ = strdup("gtequal");}
+		| LTEQUAL_OP {$$ = strdup("ltequal");}
+		| EQUALOP	{$$ = strdup("equal");}
+		| NOTEQUALOP	{$$ = strdup("notequal");}
+		;
+
+add_op	  : PLUSOP    {$$ = strdup("add");}
+		| MINUSOP {$$ = strdup("sub");}
+		;
+mult_op   : MULTOP  {$$ = strdup("mult");}
+		| DIVOP   {$$ = strdup("div");}
+		| MODOP   {$$ = strdup("mod");}
 		;
 ident     :	ID {strcpy($$, yylval.sval);}
 		| {error("IDENTIFIER EXPECTED, BUT FOUND");}
