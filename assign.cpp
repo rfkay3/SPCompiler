@@ -1,12 +1,15 @@
 #include <iostream>
 #include <fstream>
+#include <string.h>
 #include "symbolTable.h"
+#include "parsedValue.h"
 
 extern std::ofstream outFile;
 extern SymbolTable symTable;
 extern char * createTempIntegerAddress();
 extern char * createTempRealAddress();
 extern bool isReal(char value[]);
+extern void yyerror(const char s[]);
 
 /**
  * Returns a string representing a temporary address to a stored
@@ -62,30 +65,33 @@ char * integerToReal(char source[]){
 	return secondTemp;
 }
 
-void assign (char target[], char source[])
+void assign (char target[], ParsedValue * source)
 {
-	char * sourceAddr = source;
-	if (symTable.typeOf(target) == "real") {
-		if(symTable.lookupSymbol(source)) {
-			if(symTable.typeOf(source) == "integer"){
-				sourceAddr = integerToReal(source);	
-			}
+	// Derive types of source and target.
+	const char * target_type = symTable.typeOf(target).c_str();
+	const char * source_type = source->getType();
+
+	// Types of source and target match, perform normal assignment.
+	if( strcmp(target_type, source_type) == 0) {
+    	outFile << "store " << source->getValue() /*Addr*/ << ", " << target << std::endl;
+	} else {
+
+		// Types of source and target are not the same and are of real or integer, perform type coercion.
+		if (strcmp(target_type, "real") == 0 && strcmp(source_type, "integer") == 0) {
+			char * convertAddr = integerToReal(source->getValue());
+			outFile << "store " << convertAddr << ", " << target << std::endl;
+
+		// Types of source and target are not the same and are of real or integer, perform type coercion.
+		} else if (strcmp(target_type, "integer") == 0 && strcmp(source_type, "real") == 0) {
+			char * convertAddr = realToInteger(source->getValue());
+			outFile << "store " << convertAddr << ", " << target << std::endl;
+
+		// Types of source and target are not the same, and are invalid for type coercion.
 		} else {
-			if(!isReal(source)) {
-				sourceAddr = integerToReal(source);
-			}	
+			char buff[128];
+			sprintf(buff, "Cannot store %s in %s.", source->getType(), symTable.typeOf(target).c_str());
+			yyerror(buff); 
 		}
-	} else if (symTable.typeOf(target) == "integer") {
-        if(symTable.lookupSymbol(source)) {
-                if(symTable.typeOf(source) == "real"){
-                        sourceAddr = realToInteger(source);
-                }
-        } else {
-                if(isReal(source)) {
-                        sourceAddr = realToInteger(source);
-                }
-        }
-    }
-    outFile << "store " << sourceAddr << ", " << target << std::endl;
+	}
 	
 }

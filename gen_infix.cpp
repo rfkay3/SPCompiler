@@ -17,7 +17,7 @@ extern void yyerror(const char s[]);
 extern char * integerToReal(char source[]);
 
 ParsedValue * gen_infix(ParsedValue * operand1, char * op, ParsedValue * operand2){
-  // std::cout << operand1->getValue() << " " << op << " " << operand2->getValue() << std::endl;
+  // std::cout << operand1->getType() << " " << op << " " << operand2->getType() << std::endl;
 
   if( strcmp(operand1->getType(), "string") == 0 && strcmp(operand2->getType(), "string") == 0) {
     if( strcmp(op, "add") == 0){
@@ -42,24 +42,18 @@ ParsedValue * gen_infix(ParsedValue * operand1, char * op, ParsedValue * operand
   if (strcmp(operand1->getType(), "real") == 0 && strcmp(operand2->getType(), "integer") == 0) {
     char * newVal = integerToReal(operand2->getValue());
     operand2 = new ParsedValue(strdup(newVal), "real");
-    tempname  = createTempRealAddress();
   } else if (strcmp(operand1->getType(), "integer") == 0 && strcmp(operand2->getType(), "real") == 0) {
     char * newVal = integerToReal(operand1->getValue());
     operand1 = new ParsedValue(strdup(newVal), "real");
-    tempname  = createTempRealAddress();
-  } else {
-    tempname = createTempIntegerAddress();
   }
-
-  
 
   if (strcmp(operand1->getType(), "real") == 0){
+    tempname = createTempRealAddress();
     outFile << "r";
   } else {
+    tempname = createTempIntegerAddress();
     outFile << "i";
   }
-
-  
 
   outFile << op << " " << operand1->getValue() << ", " << operand2->getValue() << ", " << tempname << std::endl;
   return (new ParsedValue(strdup(tempname), operand1->getType()));

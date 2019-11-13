@@ -90,10 +90,10 @@ SymbolTable symTable;
 bool isReal(char value[]);
 char * createTempIntegerAddress();
 char * createTempRealAddress();
-void assign (char [], char []);
+void assign (char [], ParsedValue *);
 void decl_id ( char [], const char [] );
 void finish();
-ParsedValue* gen_infix(ParsedValue* o1, char op[], ParsedValue* o2);
+ParsedValue * gen_infix(ParsedValue* o1, char op[], ParsedValue* o2);
 ParsedValue * relation_infix(ParsedValue * operand1, char * op, ParsedValue * operand2);
 ParsedValue * boolean_infix(ParsedValue * operand1, char * op, ParsedValue * operand2);
 ParsedValue * boolean_not(char * op, ParsedValue * operand1);
@@ -1487,7 +1487,7 @@ yyreduce:
 
   case 17:
 #line 80 "SPparser.y"
-    {assign((yyvsp[-3].sval), yylval.sval);}
+    {assign((yyvsp[-3].sval), new ParsedValue(yylval.sval, "boolean"));}
 #line 1492 "SPparser.tab.c"
     break;
 
@@ -1505,7 +1505,7 @@ yyreduce:
 
   case 20:
 #line 82 "SPparser.y"
-    {assign((yyvsp[-3].sval), yylval.sval);}
+    {assign((yyvsp[-3].sval), new ParsedValue(yylval.sval, "boolean"));}
 #line 1510 "SPparser.tab.c"
     break;
 
@@ -1523,7 +1523,7 @@ yyreduce:
 
   case 23:
 #line 85 "SPparser.y"
-    {assign((yyvsp[-3].sval), yylval.sval);}
+    {assign((yyvsp[-3].sval), new ParsedValue(yylval.sval, "integer"));}
 #line 1528 "SPparser.tab.c"
     break;
 
@@ -1541,7 +1541,7 @@ yyreduce:
 
   case 26:
 #line 87 "SPparser.y"
-    {assign((yyvsp[-3].sval), yylval.sval);}
+    {assign((yyvsp[-3].sval), new ParsedValue(yylval.sval, "integer"));}
 #line 1546 "SPparser.tab.c"
     break;
 
@@ -1559,7 +1559,7 @@ yyreduce:
 
   case 29:
 #line 90 "SPparser.y"
-    {assign((yyvsp[-3].sval), yylval.sval);}
+    {assign((yyvsp[-3].sval), new ParsedValue(yylval.sval, "real"));}
 #line 1564 "SPparser.tab.c"
     break;
 
@@ -1577,7 +1577,7 @@ yyreduce:
 
   case 32:
 #line 92 "SPparser.y"
-    {assign((yyvsp[-3].sval), yylval.sval);}
+    {assign((yyvsp[-3].sval), new ParsedValue(yylval.sval, "real"));}
 #line 1582 "SPparser.tab.c"
     break;
 
@@ -1595,7 +1595,7 @@ yyreduce:
 
   case 35:
 #line 95 "SPparser.y"
-    {assign((yyvsp[-3].sval), yylval.sval);}
+    {assign((yyvsp[-3].sval), new ParsedValue(yylval.sval, "char"));}
 #line 1600 "SPparser.tab.c"
     break;
 
@@ -1613,7 +1613,7 @@ yyreduce:
 
   case 38:
 #line 97 "SPparser.y"
-    {assign((yyvsp[-3].sval), yylval.sval);}
+    {assign((yyvsp[-3].sval), new ParsedValue(yylval.sval, "char"));}
 #line 1618 "SPparser.tab.c"
     break;
 
@@ -1631,7 +1631,7 @@ yyreduce:
 
   case 41:
 #line 100 "SPparser.y"
-    {assign((yyvsp[-3].sval), yylval.sval);}
+    {assign((yyvsp[-3].sval), new ParsedValue(yylval.sval, "string"));}
 #line 1636 "SPparser.tab.c"
     break;
 
@@ -1649,7 +1649,7 @@ yyreduce:
 
   case 44:
 #line 102 "SPparser.y"
-    {assign((yyvsp[-3].sval), yylval.sval);}
+    {assign((yyvsp[-3].sval), new ParsedValue(yylval.sval, "string"));}
 #line 1654 "SPparser.tab.c"
     break;
 
@@ -1667,7 +1667,7 @@ yyreduce:
 
   case 52:
 #line 118 "SPparser.y"
-    {verify_sym_decl((yyvsp[-2].sval)); assign((yyvsp[-2].sval),(yyvsp[0].rawval)->getValue());}
+    {verify_sym_decl((yyvsp[-2].sval)); assign((yyvsp[-2].sval),(yyvsp[0].rawval));}
 #line 1672 "SPparser.tab.c"
     break;
 

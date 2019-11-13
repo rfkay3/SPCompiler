@@ -1,13 +1,10 @@
 program
 var
-integer a:=2, A;
-real f:=2.2, g:=9.864;
-string p:="this is a string", z:="and this is a string", str;
-boolean h := true;
+real a := 1.5, b := 2.0, c := 2.5, d := 5.0;
+integer f := 4;
 begin
 
-// h := (1 < 2) or (66 <> 52);
-h := not ((77 = 8) or true);
-
+a := a + b + (c * f);
+f := a;
 
 end.
