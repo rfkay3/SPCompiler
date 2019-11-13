@@ -18,9 +18,6 @@ void write_label(const char * label) {
    outFile << label << std::endl;
 }
 
-// TODO: Labels currently output to assembly do not correctly represent
-//       desired control flow. Could be grammar problem. Fix it!!!!!!!!!
-
 ParsedValue * jump () {
    char * label = strdup(createTempLabel());
    outFile << "jmp " << label << std::endl;
@@ -28,7 +25,7 @@ ParsedValue * jump () {
 }
 
 ParsedValue * conditionalJump(const char * jump_if, ParsedValue * cond) {
-   if ( strcmp(cond->getType(), "boolean") != 0){
+   if ( strcmp(cond->getType(), "integer") != 0){
     yyerror("Conditional must evaluate to boolean.");
    }
 

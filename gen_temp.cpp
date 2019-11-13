@@ -29,15 +29,6 @@ const char * createTempStringAddress(){
 	return tempStringName;
 }
 
-const char * createTempBooleanAddress(){
-	static int tempBooleanCount = 1;
-	static char tempBooleanName [30];
-	sprintf(tempBooleanName, "&tempb%d", tempBooleanCount);
-	decl_id(tempBooleanName, "boolean");
-	tempBooleanCount++;
-	return tempBooleanName;
-}
-
 const char * createTempLabel(){
 	static int tempLabelCount = 1;
 	static char tempLabelName [30];

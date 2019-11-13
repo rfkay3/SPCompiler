@@ -61,6 +61,7 @@ ParsedValue * jump ();
 %type <rawval>literal
 %type <rawval>if_then else_match
 
+// TODO: Set precedence of relational/boolean operators!
 %start system_goal
 %%
 
@@ -172,7 +173,7 @@ literal   : INTLITERAL {$$ = new ParsedValue(yylval.sval, "integer");}
 		| REALLITERAL {$$ = new ParsedValue(yylval.sval, "real");} 
 		| STRINGLITERAL {$$ = new ParsedValue(yylval.sval, "string");}
 		| CHARLITERAL {$$ = new ParsedValue(yylval.sval, "char");}
-		| BOOL {$$ = new ParsedValue(yylval.sval, "boolean");}
+		| BOOL {$$ = new ParsedValue(yylval.sval, "integer");}
 		| {error("NUMERIC VALUE EXPECTED, BUT FOUND");}
 		;
 

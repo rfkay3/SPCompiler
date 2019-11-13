@@ -11,7 +11,6 @@ extern SymbolTable symTable;
 extern char * createTempIntegerAddress();
 extern char * createTempRealAddress();
 extern char * createTempStringAddress();
-extern char * createTempBooleanAddress();
 extern bool isReal(char value[]);
 extern void yyerror(const char s[]);
 extern char * integerToReal(char source[]);
@@ -31,10 +30,6 @@ ParsedValue * gen_infix(ParsedValue * operand1, char * op, ParsedValue * operand
 
   if ( strcmp(operand1->getType(), "char") == 0 || strcmp(operand2->getType(), "char") == 0){
     yyerror("Unsupported operator for type: character.");
-  }
-
-  if ( strcmp(operand1->getType(), "boolean") == 0 || strcmp(operand2->getType(), "boolean") == 0){
-    yyerror("Unsupported operator for type: boolean.");
   }
 
   char * tempname;
@@ -71,7 +66,7 @@ ParsedValue * relation_infix(ParsedValue * operand1, char * op, ParsedValue * op
   }
   
   //Initialize tempname to a new temporary boolean
-  char * tempname = strdup(createTempBooleanAddress());
+  char * tempname = strdup(createTempIntegerAddress());
 
   if (strcmp(operand1->getType(), "real") == 0 && strcmp(operand2->getType(), "integer") == 0) {
     char * newVal = integerToReal(operand2->getValue());
@@ -83,28 +78,28 @@ ParsedValue * relation_infix(ParsedValue * operand1, char * op, ParsedValue * op
 
   if(strcmp(op, "gt") == 0) {
     outFile << "high " << operand1->getValue() << ", " << operand2->getValue() << ", " << tempname << std::endl;
-    return new ParsedValue(strdup(tempname), "boolean");
+    return new ParsedValue(strdup(tempname), "integer");
   } else if(strcmp(op, "lt") == 0) {
     outFile << "low " << operand1->getValue() << ", " << operand2->getValue() << ", " << tempname << std::endl;
-    return new ParsedValue(strdup(tempname), "boolean");
+    return new ParsedValue(strdup(tempname), "integer");
   } else if(strcmp(op, "ltequal") == 0) {
     outFile << "high " << operand1->getValue() << ", " << operand2->getValue() << ", " << tempname << std::endl;
-    char * tempname2 = strdup(createTempBooleanAddress());
+    char * tempname2 = strdup(createTempIntegerAddress());
     outFile << "not " << tempname << ", " << tempname2 << std::endl;
-    return new ParsedValue(strdup(tempname2), "boolean");
+    return new ParsedValue(strdup(tempname2), "integer");
   } else if(strcmp(op, "gtequal") == 0) {
     outFile << "low " << operand1->getValue() << ", " << operand2->getValue() << ", " << tempname << std::endl;
-    char * tempname2 = strdup(createTempBooleanAddress());
+    char * tempname2 = strdup(createTempIntegerAddress());
     outFile << "not " << tempname << ", " << tempname2 << std::endl;
-    return new ParsedValue(strdup(tempname2), "boolean");
+    return new ParsedValue(strdup(tempname2), "integer");
   } else if(strcmp(op, "equal") == 0) {
-    outFile << "equal " << operand1->getValue() << ", " << operand2->getValue() << ", " << tempname << std::endl;
-    return new ParsedValue(strdup(tempname), "boolean");
+    outFile << "equ " << operand1->getValue() << ", " << operand2->getValue() << ", " << tempname << std::endl;
+    return new ParsedValue(strdup(tempname), "integer");
   } else if(strcmp(op, "notequal") == 0) {
-    outFile << "equal " << operand1->getValue() << ", " << operand2->getValue() << ", " << tempname << std::endl;
-    char * tempname2 = strdup(createTempBooleanAddress());
+    outFile << "equ " << operand1->getValue() << ", " << operand2->getValue() << ", " << tempname << std::endl;
+    char * tempname2 = strdup(createTempIntegerAddress());
     outFile << "not " << tempname << ", " << tempname2 << std::endl;
-    return new ParsedValue(strdup(tempname2), "boolean");
+    return new ParsedValue(strdup(tempname2), "integer");
   } else {
     yyerror("Unsupported relational operator.");
   }
@@ -117,19 +112,19 @@ ParsedValue * boolean_infix(ParsedValue * operand1, char * op, ParsedValue * ope
   IMPLEMENT AND & OR
   */
   // Type check for disallowed types. If found, raise an error.
-  if ( strcmp(operand1->getType(), "boolean") != 0 || strcmp(operand2->getType(), "boolean") != 0){
+  if ( strcmp(operand1->getType(), "integer") != 0 || strcmp(operand2->getType(), "integer") != 0){
     yyerror("Unsupported operator for type: character.");
   }
 
   //Initialize tempname to a new temporary boolean
-  char * tempname = strdup(createTempBooleanAddress());
+  char * tempname = strdup(createTempIntegerAddress());
 
   if(strcmp(op, "and") == 0) {
     outFile << "and " << operand1->getValue() << ", " << operand2->getValue() << ", " << tempname << std::endl;
-    return new ParsedValue(strdup(tempname), "boolean");
+    return new ParsedValue(strdup(tempname), "integer");
   } else if(strcmp(op, "or") == 0) {
     outFile << "or " << operand1->getValue() << ", " << operand2->getValue() << ", " << tempname << std::endl;
-    return new ParsedValue(strdup(tempname), "boolean");
+    return new ParsedValue(strdup(tempname), "integer");
   } else {
     yyerror("Unsupported boolean operator.");
   }
@@ -137,12 +132,12 @@ ParsedValue * boolean_infix(ParsedValue * operand1, char * op, ParsedValue * ope
 }
 
 ParsedValue * boolean_not(char * op, ParsedValue * operand1) {
-  if ( strcmp(operand1->getType(), "boolean") != 0 ){
+  if ( strcmp(operand1->getType(), "integer") != 0 ){
     yyerror("Unsupported operator for type: character.");
   }
 
   //Initialize tempname to a new temporary boolean
-  char * tempname = strdup(createTempBooleanAddress());
+  char * tempname = strdup(createTempIntegerAddress());
   outFile << "not " << operand1->getValue() << ", " << tempname << std::endl;
-  return new ParsedValue(strdup(tempname), "boolean");
+  return new ParsedValue(strdup(tempname), "integer");
 }
