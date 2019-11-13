@@ -67,7 +67,6 @@ ParsedValue * gen_infix(ParsedValue * operand1, char * op, ParsedValue * operand
 
 
 ParsedValue * relation_infix(ParsedValue * operand1, char * op, ParsedValue * operand2) {
-  
   // Type check for disallowed types. If found, raise an error.
   if ( strcmp(operand1->getType(), "string") == 0 || strcmp(operand2->getType(), "string") == 0){
     yyerror("Unsupported operator for type: character.");
@@ -77,6 +76,7 @@ ParsedValue * relation_infix(ParsedValue * operand1, char * op, ParsedValue * op
     yyerror("Unsupported operator for type: character.");
   }
   
+  //Initialize tempname to a new temporary boolean
   char * tempname = strdup(createTempBooleanAddress());
 
   if (strcmp(operand1->getType(), "real") == 0 && strcmp(operand2->getType(), "integer") == 0) {
@@ -122,9 +122,33 @@ ParsedValue * boolean_infix(ParsedValue * operand1, char * op, ParsedValue * ope
   ONLY BOOLEANS
   IMPLEMENT AND & OR
   */
+  // Type check for disallowed types. If found, raise an error.
+  if ( strcmp(operand1->getType(), "boolean") != 0 || strcmp(operand2->getType(), "boolean") != 0){
+    yyerror("Unsupported operator for type: character.");
+  }
+
+  //Initialize tempname to a new temporary boolean
+  char * tempname = strdup(createTempBooleanAddress());
+
+  if(strcmp(op, "and") == 0) {
+    outFile << "and " << operand1->getValue() << ", " << operand2->getValue() << ", " << tempname << std::endl;
+    return new ParsedValue(strdup(tempname), "boolean");
+  } else if(strcmp(op, "or") == 0) {
+    outFile << "or " << operand1->getValue() << ", " << operand2->getValue() << ", " << tempname << std::endl;
+    return new ParsedValue(strdup(tempname), "boolean");
+  } else {
+    yyerror("Unsupported boolean operator.");
+  }
   
 }
 
 ParsedValue * boolean_not(char * op, ParsedValue * operand1) {
-  //IMPLEMENT NOT INSTRUCTION
+  if ( strcmp(operand1->getType(), "boolean") != 0 ){
+    yyerror("Unsupported operator for type: character.");
+  }
+
+  //Initialize tempname to a new temporary boolean
+  char * tempname = strdup(createTempBooleanAddress());
+  outFile << "not " << operand1->getValue() << ", " << tempname << std::endl;
+  return new ParsedValue(strdup(tempname), "boolean");
 }

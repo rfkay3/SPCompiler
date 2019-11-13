@@ -6,14 +6,8 @@ string p:="this is a string", z:="and this is a string", str;
 boolean h := true;
 begin
 
-p := p + z + "lol";
-
-A := 2.4 + 55 / (3 * 5 % 7) - 54;
-h := 1 < 2;
-h := 2 > 1;
-h := true;
-h := false;
-h := (55 >= 2) = (34 <= 2039);
+// h := (1 < 2) or (66 <> 52);
+h := not ((77 = 8) or true);
 
 
 end.

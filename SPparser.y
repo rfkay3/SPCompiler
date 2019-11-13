@@ -26,6 +26,8 @@ void decl_id ( char [], const char [] );
 void finish();
 ParsedValue* gen_infix(ParsedValue* o1, char op[], ParsedValue* o2);
 ParsedValue * relation_infix(ParsedValue * operand1, char * op, ParsedValue * operand2);
+ParsedValue * boolean_infix(ParsedValue * operand1, char * op, ParsedValue * operand2);
+ParsedValue * boolean_not(char * op, ParsedValue * operand1);
 void read_id (char []);
 void write_expr(char []);
 void verify_sym_decl(char []);
@@ -136,15 +138,15 @@ else_match : if_then matched_statement ELSE {/*else_match = unconditional jump, 
 		;
 
 expression :	boolean_and {$$ = $1;}
-		| expression or boolean_and {/* Might want to separate from math */$$ = gen_infix($1, $2, $3);}
+		| expression or boolean_and {$$ = boolean_infix($1, $2, $3);}
 		;
 
 boolean_and :	boolean_not {$$ = $1;}
-		| boolean_and and boolean_not {$$ = gen_infix($1, $2, $3);}
+		| boolean_and and boolean_not {$$ = boolean_infix($1, $2, $3);}
 		;
 
 boolean_not :	rel_expr {$$ = $1;}
-		| not rel_expr {/* need to negate DONT USE BOOLEAN INFIX, USE SEPARATE*/ $$ = $2;}
+		| not rel_expr {$$ = boolean_not($1, $2);}
 		;
 
 rel_expr :		math_expr {$$ = $1;}
@@ -181,10 +183,10 @@ rparen    :	RPAREN
 or		  : OR_OP {$$ = strdup("or");}
 		;
 
-and		  : ANDOP {strcpy($$, "and");}
+and		  : ANDOP {$$ = strdup("and");}
 		;
 
-not		  : NOTOP {strcpy($$, "not");}
+not		  : NOTOP {$$ = strdup("not");}
 		;
 
 relation  :	GT_OP {$$ = strdup("gt");}
