@@ -2,13 +2,6 @@
 
 extern void decl_id(char id[], const char type[]);
 
-
-/**
- * Returns a temporary address to an integer. Increments
- * a static integer to make sure no same address is returned 
- * to two calls of this method.
- * @return - A char * representing the generated temp address
- */
 const char * createTempIntegerAddress(){
 	static int tempIntCount = 1;
 	static char tempIntName [30];
@@ -18,12 +11,6 @@ const char * createTempIntegerAddress(){
 	return tempIntName;
 }
 
-/**
- * Returns a temporary address to a real number. Increments
- * a static integer to make sure no same address is returned 
- * to two calls of this method.
- * @return - A char * representing the generated temp address
- */
 const char * createTempRealAddress(){
 	static int tempRealCount = 1;
 	static char tempRealName [30];
@@ -49,4 +36,12 @@ const char * createTempBooleanAddress(){
 	decl_id(tempBooleanName, "boolean");
 	tempBooleanCount++;
 	return tempBooleanName;
+}
+
+const char * createTempLabel(){
+	static int tempLabelCount = 1;
+	static char tempLabelName [30];
+	sprintf(tempLabelName, ":&temp%d", tempLabelCount);
+	tempLabelCount++;
+	return tempLabelName;
 }

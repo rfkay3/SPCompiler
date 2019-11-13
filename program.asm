@@ -6,22 +6,26 @@ declare c, real
 store 2.5, c
 declare d, real
 store 5.0, d
-declare f, integer
-store 4, f
+declare &tempb1, boolean
+low a, b, &tempb1
+declare &tempb2, boolean
+equal c, d, &tempb2
+declare &tempb3, boolean
+and &tempb1, &tempb2, &tempb3
+declare &tempb4, boolean
+equal b, c, &tempb4
+declare &tempb5, boolean
+not &tempb4, &tempb5
+declare &tempb6, boolean
+or &tempb3, &tempb5, &tempb6
+jf &tempb6, :&temp1
 declare &tempr1, real
-radd a, b, &tempr1
-declare &tempi1, integer
-imult c, f, &tempi1
-declare &tempi2, integer
-store &tempi1, &tempi2
+rmult c, a, &tempr1
+store &tempr1, d
+jmp :&temp1
+:&temp1
 declare &tempr2, real
-itor &tempi2, &tempr2
-declare &tempr3, real
-radd &tempr1, &tempr2, &tempr3
-store &tempr3, a
-declare &tempr4, real
-store a, &tempr4
-declare &tempi3, integer
-rtoi &tempr4, &tempi3
-store &tempi3, f
+rmult d, a, &tempr2
+store &tempr2, b
+:&temp1
 halt

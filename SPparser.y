@@ -19,8 +19,8 @@ std::ofstream outFile;
 SymbolTable symTable;
 
 bool isReal(char value[]);
-char * createTempIntegerAddress();
-char * createTempRealAddress();
+const char * createTempIntegerAddress();
+const char * createTempRealAddress();
 void assign (char [], ParsedValue *);
 void decl_id ( char [], const char [] );
 void finish();
@@ -30,10 +30,13 @@ ParsedValue * boolean_infix(ParsedValue * operand1, char * op, ParsedValue * ope
 ParsedValue * boolean_not(char * op, ParsedValue * operand1);
 void read_id (char []);
 void write_expr(char []);
+void write_label(const char * label);
 void verify_sym_decl(char []);
 void error(const char []);
 void yyerror(const char []);
 void printSymbolTable();
+ParsedValue * conditionalJump(const char * jump_if, ParsedValue * cond);
+ParsedValue * jump (ParsedValue * label);
 %}
 
 
@@ -110,8 +113,8 @@ statement  :	matched_statement
 		|	unmatched_statement
 		;
 
-unmatched_statement :	if_then statement {/*Write a label to the assembly*/}
-		|	else_match unmatched_statement {/*Write a label to the assembly*/}
+unmatched_statement :	if_then statement {write_label($1->getValue());}
+		|	else_match unmatched_statement {write_label($1->getValue());}
 		;
 
 matched_statement  :	if_match
@@ -128,13 +131,13 @@ expr_list  :	expression   {write_expr($1->getValue());}
                 | expr_list COMMA expression {write_expr($3->getValue());}
 		;
 
-if_then    : IF expression THEN {/*$$ is a conditional jump ParsedValue object on (false and the expression)*/}
+if_then    : IF expression THEN {$$ = conditionalJump("false", $2);/*not tested (lol)*/}
 		;
 
-if_match   : else_match matched_statement {/*write label*/}
+if_match   : else_match matched_statement {write_label($1->getValue());}
 		;
 
-else_match : if_then matched_statement ELSE {/*else_match = unconditional jump, then write label $1*/}
+else_match : if_then matched_statement ELSE {$$ = jump($1); write_label($1->getValue());/*needs testing*/}
 		;
 
 expression :	boolean_and {$$ = $1;}
