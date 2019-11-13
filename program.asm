@@ -22,10 +22,12 @@ jf &tempi6, :&temp1
 declare &tempr1, real
 rmult c, a, &tempr1
 store &tempr1, d
+write d
 jmp :&temp2
 :&temp1
 declare &tempr2, real
 rmult d, a, &tempr2
 store &tempr2, b
+write b
 :&temp2
 halt

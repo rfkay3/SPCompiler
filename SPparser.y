@@ -62,6 +62,7 @@ ParsedValue * jump ();
 %type <rawval>if_then else_match
 
 // TODO: Set precedence of relational/boolean operators!
+//       Could actually be right
 %start system_goal
 %%
 
@@ -122,6 +123,7 @@ matched_statement  :	if_match
 		|	ident ASSIGNOP expression {verify_sym_decl($1); assign($1,$3);} SEMICOLON {line_no++;}
 		|	READ lparen id_list rparen SEMICOLON {line_no++;}
 		|	WRITE lparen expr_list rparen SEMICOLON {line_no++;}
+		|	START statement_list END
 		|	SEMICOLON {line_no++;}
 		;
 
