@@ -36,7 +36,7 @@ void error(const char []);
 void yyerror(const char []);
 void printSymbolTable();
 ParsedValue * conditionalJump(const char * jump_if, ParsedValue * cond);
-ParsedValue * jump (ParsedValue * label);
+ParsedValue * jump ();
 %}
 
 
@@ -137,7 +137,7 @@ if_then    : IF expression THEN {$$ = conditionalJump("false", $2);/*not tested 
 if_match   : else_match matched_statement {write_label($1->getValue());}
 		;
 
-else_match : if_then matched_statement ELSE {$$ = jump($1); write_label($1->getValue());/*needs testing*/}
+else_match : if_then matched_statement ELSE {$$ = jump(); write_label($1->getValue());/*needs testing*/}
 		;
 
 expression :	boolean_and {$$ = $1;}

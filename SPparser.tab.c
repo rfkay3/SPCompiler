@@ -105,7 +105,7 @@ void error(const char []);
 void yyerror(const char []);
 void printSymbolTable();
 ParsedValue * conditionalJump(const char * jump_if, ParsedValue * cond);
-ParsedValue * jump (ParsedValue * label);
+ParsedValue * jump ();
 
 #line 111 "SPparser.tab.c"
 
@@ -1736,7 +1736,7 @@ yyreduce:
 
   case 63:
 #line 140 "SPparser.y"
-    {(yyval.rawval) = jump((yyvsp[-2].rawval)); write_label((yyvsp[-2].rawval)->getValue());/*needs testing*/}
+    {(yyval.rawval) = jump(); write_label((yyvsp[-2].rawval)->getValue());/*needs testing*/}
 #line 1741 "SPparser.tab.c"
     break;
 

@@ -18,9 +18,13 @@ void write_label(const char * label) {
    outFile << label << std::endl;
 }
 
-ParsedValue * jump (ParsedValue * label) {
-   outFile << "jmp " << label->getValue() << std::endl;
-   return label;
+// TODO: Labels currently output to assembly do not correctly represent
+//       desired control flow. Could be grammar problem. Fix it!!!!!!!!!
+
+ParsedValue * jump () {
+   char * label = strdup(createTempLabel());
+   outFile << "jmp " << label << std::endl;
+   return new ParsedValue(label, "label");
 }
 
 ParsedValue * conditionalJump(const char * jump_if, ParsedValue * cond) {
