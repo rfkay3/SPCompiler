@@ -57,6 +57,11 @@ id              ({letter}|{underscore})({letter}|{digit}|{underscore})*
 [Rr][Ee][Aa][Dd]                                {return READ;}
 [Ww][Rr][Ii][Tt][Ee]                            {return WRITE;}
 [Bb][Oo][Oo][Ll][Ee][Aa][Nn]                    {return BOOLEAN;}
+[Bb][Ee][Gg][Ii][Nn]				{return BLOCK;}
+[Ee][Nn][Dd]					{return ENDBLOCK;}
+[Ii][Ff]					{return IF;}
+[Tt][Hh][Ee][Nn]				{return THEN;}
+[Ee][Ll][Ss][Ee]				{return ELSE;}
 {comma}                                         {return COMMA;}
 {period}					{return PERIOD;}
 {semicolon}                                     {return SEMICOLON;}

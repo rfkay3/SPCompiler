@@ -20,6 +20,7 @@ SymbolTable symTable;
 bool isReal(char value[]);
 char * createTempIntegerAddress();
 char * createTempRealAddress();
+char * createTempRealAddress();
 void assign (char [], char []);
 void decl_id ( char [], const char [] );
 void finish();
@@ -41,7 +42,7 @@ void printSymbolTable();
 %token PROGRAM VAR START END READ WRITE ASSIGNOP INTEGER REAL CHARACTER STRING BOOLEAN BOOL INTLITERAL 
 %token REALLITERAL CHARLITERAL STRINGLITERAL LPAREN RPAREN COMMA PERIOD SEMICOLON COLON 
 %token PLUSOP MINUSOP MULTOP DIVOP MODOP COMMENT ID GT_OP LT_OP GTEQUAL_OP LTEQUAL_OP EQUALOP NOTEQUALOP
-%token IF THEN ELSE
+%token IF THEN ELSE BLOCK ENDBLOCK
 %token ANDOP OR_OP NOTOP
 
 %left MULTOP DIVOP MODOP PLUSOP MINUSOP
@@ -166,10 +167,14 @@ statement  :	READ lparen id_list rparen SEMICOLON {line_no++;}
 		;
 statement  :	WRITE lparen expr_list rparen SEMICOLON {line_no++;}
 		;
-statement	:	IF statement_list THEN {line_no++;} BLOCK {block_no++}
-		| IF statement_list THEN {line_no++;} ELSE {line_no++;}
+statement  :	IF statement_list THEN {line_no++;} block {}
+		| IF statement_list THEN {line_no++;} block ELSE {line_no++;} block
 		;
 statement  :    SEMICOLON {line_no++;}
+		;
+block		: BLOCK statement_list ENDBLOCK {}
+		| statement {}
+		| {error("Block expected but not found");}
 		;
 id_list    :	ident      {verify_sym_decl($1); read_id($1);}
 		| id_list COMMA ident {verify_sym_decl($3); read_id($3);}

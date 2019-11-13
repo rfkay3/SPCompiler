@@ -351,8 +351,8 @@ static void yynoreturn yy_fatal_error ( const char* msg  );
 	(yy_hold_char) = *yy_cp; \
 	*yy_cp = '\0'; \
 	(yy_c_buf_p) = yy_cp;
-#define YY_NUM_RULES 49
-#define YY_END_OF_BUFFER 50
+#define YY_NUM_RULES 54
+#define YY_END_OF_BUFFER 55
 /* This struct is not used in this scanner,
    but its presence is necessary. */
 struct yy_trans_info
@@ -362,20 +362,20 @@ struct yy_trans_info
 	};
 static const flex_int16_t yy_accept[129] =
     {   0,
-        0,    0,    0,    0,   50,   48,    1,    2,   48,   25,
-       48,   18,   19,   23,   21,   14,   22,   15,   48,   37,
-       37,   17,   16,   27,   30,   26,   41,   41,   41,   41,
-       41,   41,   41,   41,   41,   41,   41,   41,   41,   41,
-       41,   24,   45,   47,   46,    1,    0,   40,    0,    0,
-       35,    0,   37,   20,   29,   31,   28,   41,   41,   41,
-       41,   41,   41,   41,   41,   41,   41,   41,   33,   41,
-       41,   41,   41,   41,   41,   41,   39,   35,   38,   32,
-       41,   41,   41,   41,   10,   41,   41,   34,   41,   41,
-       41,   41,   41,    4,   41,    0,   41,   41,   41,   41,
+        0,    0,    0,    0,   55,   53,    1,    2,   53,   30,
+       53,   23,   24,   28,   26,   19,   27,   20,   53,   42,
+       42,   22,   21,   32,   35,   31,   46,   46,   46,   46,
+       46,   46,   46,   46,   46,   46,   46,   46,   46,   46,
+       46,   29,   50,   52,   51,    1,    0,   45,    0,    0,
+       40,    0,   42,   25,   34,   36,   33,   46,   46,   46,
+       46,   46,   46,   46,   46,   16,   46,   46,   38,   46,
+       46,   46,   46,   46,   46,   46,   44,   40,   43,   37,
+       46,   46,   46,   46,   10,   46,   46,   39,   46,   46,
+       46,   46,   46,    4,   46,    0,   46,   46,   46,   18,
 
-       41,   41,   41,   11,    6,   41,   41,   36,   41,    9,
-       41,   41,   41,   41,   41,   12,   41,   41,   41,   41,
-        8,   13,   41,    5,    3,   41,    7,    0
+       46,   46,   46,   11,    6,   46,   17,   41,   46,    9,
+       46,   46,   46,   46,   46,   12,   46,   46,   46,   46,
+        8,   13,   46,    5,    3,   46,    7,    0
     } ;
 
 static const YY_CHAR yy_ec[256] =
@@ -878,191 +878,216 @@ YY_RULE_SETUP
 case 14:
 YY_RULE_SETUP
 #line 60 "SPscanner.l"
-{return COMMA;}
+{return BLOCK;}
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
 #line 61 "SPscanner.l"
-{return PERIOD;}
+{return ENDBLOCK;}
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
 #line 62 "SPscanner.l"
-{return SEMICOLON;}
+{return IF;}
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
 #line 63 "SPscanner.l"
-{return COLON;}
+{return THEN;}
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
 #line 64 "SPscanner.l"
-{return LPAREN;}
+{return ELSE;}
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
 #line 65 "SPscanner.l"
-{return RPAREN;}
+{return COMMA;}
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
 #line 66 "SPscanner.l"
-{return ASSIGNOP;}
+{return PERIOD;}
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
 #line 67 "SPscanner.l"
-{return PLUSOP;}
+{return SEMICOLON;}
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
 #line 68 "SPscanner.l"
-{return MINUSOP;}
+{return COLON;}
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
 #line 69 "SPscanner.l"
-{return MULTOP;}
+{return LPAREN;}
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
 #line 70 "SPscanner.l"
-{return DIVOP;}
+{return RPAREN;}
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
 #line 71 "SPscanner.l"
-{return MODOP;}
+{return ASSIGNOP;}
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
 #line 72 "SPscanner.l"
-{return GT_OP;}
+{return PLUSOP;}
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
 #line 73 "SPscanner.l"
-{return LT_OP;}
+{return MINUSOP;}
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
 #line 74 "SPscanner.l"
-{return GTEQUAL_OP;}
+{return MULTOP;}
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
 #line 75 "SPscanner.l"
-{return LTEQUAL_OP;}
+{return DIVOP;}
 	YY_BREAK
 case 30:
 YY_RULE_SETUP
 #line 76 "SPscanner.l"
-{return EQUALOP;}
+{return MODOP;}
 	YY_BREAK
 case 31:
 YY_RULE_SETUP
 #line 77 "SPscanner.l"
-{return NOTEQUALOP;}
+{return GT_OP;}
 	YY_BREAK
 case 32:
 YY_RULE_SETUP
 #line 78 "SPscanner.l"
-{return ANDOP;}
+{return LT_OP;}
 	YY_BREAK
 case 33:
 YY_RULE_SETUP
 #line 79 "SPscanner.l"
-{return OR_OP;}
+{return GTEQUAL_OP;}
 	YY_BREAK
 case 34:
 YY_RULE_SETUP
 #line 80 "SPscanner.l"
-{return NOTOP;}
+{return LTEQUAL_OP;}
 	YY_BREAK
 case 35:
 YY_RULE_SETUP
 #line 81 "SPscanner.l"
-{/* do nothing */}
+{return EQUALOP;}
 	YY_BREAK
 case 36:
 YY_RULE_SETUP
 #line 82 "SPscanner.l"
-{yylval.sval = strdup(yytext); return BOOL;}
+{return NOTEQUALOP;}
 	YY_BREAK
 case 37:
 YY_RULE_SETUP
 #line 83 "SPscanner.l"
-{yylval.sval = strdup(yytext); return INTLITERAL;}
+{return ANDOP;}
 	YY_BREAK
 case 38:
 YY_RULE_SETUP
 #line 84 "SPscanner.l"
-{yylval.sval = strdup(yytext); return REALLITERAL;}
+{return OR_OP;}
 	YY_BREAK
 case 39:
 YY_RULE_SETUP
 #line 85 "SPscanner.l"
-{yylval.sval = strdup(yytext); return CHARLITERAL;}
+{return NOTOP;}
 	YY_BREAK
 case 40:
-/* rule 40 can match eol */
 YY_RULE_SETUP
 #line 86 "SPscanner.l"
-{yylval.sval = strdup(yytext); return STRINGLITERAL;}
+{/* do nothing */}
 	YY_BREAK
 case 41:
 YY_RULE_SETUP
 #line 87 "SPscanner.l"
-{yylval.sval = strdup(yytext); return ID;}
+{yylval.sval = strdup(yytext); return BOOL;}
 	YY_BREAK
 case 42:
 YY_RULE_SETUP
 #line 88 "SPscanner.l"
-{return IF;}        
+{yylval.sval = strdup(yytext); return INTLITERAL;}
 	YY_BREAK
 case 43:
 YY_RULE_SETUP
 #line 89 "SPscanner.l"
-{return THEN;}
+{yylval.sval = strdup(yytext); return REALLITERAL;}
 	YY_BREAK
 case 44:
 YY_RULE_SETUP
 #line 90 "SPscanner.l"
-{return ELSE;}
+{yylval.sval = strdup(yytext); return CHARLITERAL;}
 	YY_BREAK
 case 45:
+/* rule 45 can match eol */
 YY_RULE_SETUP
-#line 92 "SPscanner.l"
-{BEGIN(MULTILINE);}
+#line 91 "SPscanner.l"
+{yylval.sval = strdup(yytext); return STRINGLITERAL;}
 	YY_BREAK
 case 46:
 YY_RULE_SETUP
-#line 93 "SPscanner.l"
-{BEGIN(INITIAL);}
+#line 92 "SPscanner.l"
+{yylval.sval = strdup(yytext); return ID;}
 	YY_BREAK
 case 47:
-/* rule 47 can match eol */
 YY_RULE_SETUP
-#line 94 "SPscanner.l"
-;
-	YY_BREAK
-case YY_STATE_EOF(MULTILINE):
-#line 95 "SPscanner.l"
-{return *yytext;}
+#line 93 "SPscanner.l"
+{return IF;}        
 	YY_BREAK
 case 48:
-/* rule 48 can match eol */
 YY_RULE_SETUP
-#line 96 "SPscanner.l"
-{std::cout << "SYNTAX ERROR: " << yytext << " IS ILLEGAL" << std::endl;}
+#line 94 "SPscanner.l"
+{return THEN;}
 	YY_BREAK
 case 49:
 YY_RULE_SETUP
+#line 95 "SPscanner.l"
+{return ELSE;}
+	YY_BREAK
+case 50:
+YY_RULE_SETUP
 #line 97 "SPscanner.l"
+{BEGIN(MULTILINE);}
+	YY_BREAK
+case 51:
+YY_RULE_SETUP
+#line 98 "SPscanner.l"
+{BEGIN(INITIAL);}
+	YY_BREAK
+case 52:
+/* rule 52 can match eol */
+YY_RULE_SETUP
+#line 99 "SPscanner.l"
+;
+	YY_BREAK
+case YY_STATE_EOF(MULTILINE):
+#line 100 "SPscanner.l"
+{return *yytext;}
+	YY_BREAK
+case 53:
+/* rule 53 can match eol */
+YY_RULE_SETUP
+#line 101 "SPscanner.l"
+{std::cout << "SYNTAX ERROR: " << yytext << " IS ILLEGAL" << std::endl;}
+	YY_BREAK
+case 54:
+YY_RULE_SETUP
+#line 102 "SPscanner.l"
 ECHO;
 	YY_BREAK
-#line 1066 "lex.yy.c"
+#line 1091 "lex.yy.c"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -2067,7 +2092,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 97 "SPscanner.l"
+#line 102 "SPscanner.l"
 
 
 

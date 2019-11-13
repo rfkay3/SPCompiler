@@ -30,3 +30,18 @@ const char * createTempRealAddress(){
 	tempRealCount++;
 	return tempRealName;
 }
+
+/**
+ * Returns a temporary address to a block. Increments
+ * a static integer to make sure no same address is returned 
+ * to two calls of this method.
+ * @return - A char * representing the generated temp address
+ */
+const char * createTempBlockAddress(){
+        static int tempBlockCount = 1;
+        static char tempBlockName [30];
+        sprintf(tempBlockName, "&temp%d", tempBlockCount);
+        decl_id(tempBlockName, "integer");
+        tempBlockCount++;
+        return tempBlockName;
+}

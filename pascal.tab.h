@@ -88,9 +88,11 @@ extern int yydebug;
     IF = 294,
     THEN = 295,
     ELSE = 296,
-    ANDOP = 297,
-    OR_OP = 298,
-    NOTOP = 299
+    BLOCK = 297,
+    ENDBLOCK = 298,
+    ANDOP = 299,
+    OR_OP = 300,
+    NOTOP = 301
   };
 #endif
 
@@ -98,14 +100,14 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 35 "SPparser.y"
+#line 36 "SPparser.y"
 
        int ival;
        char * sval;
        float fval;
        
 
-#line 109 "pascal.tab.h"
+#line 111 "pascal.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;
