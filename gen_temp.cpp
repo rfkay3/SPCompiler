@@ -1,3 +1,4 @@
+#include <string.h>
 #include <string>
 
 extern void decl_id(char id[], const char type[]);
@@ -27,6 +28,15 @@ const char * createTempStringAddress(){
 	decl_id(tempStringName, "string");
 	tempStringCount++;
 	return tempStringName;
+}
+
+const char * createTempCharacterAddress(){
+	static int tempCharCount = 1;
+	static char tempCharName [30];
+	sprintf(tempCharName, "&tempc%d", tempCharCount);
+	decl_id(tempCharName, "character");
+	tempCharCount++;
+	return tempCharName;
 }
 
 const char * createTempLabel(){

@@ -13,8 +13,10 @@ colon		[:]
 underscore	[_]
 lparen		[(]
 rparen		[)]
-lbracket	[{]
-rbracket	[}]
+lbrace  	[{]
+rbrace	    [}]
+lbracket    [\]]
+rbracket    [\[]
 fslash		[/]
 comma           [,]
 period		[\.]
@@ -65,6 +67,8 @@ id              ({letter}|{underscore})({letter}|{digit}|{underscore})*
 {colon}						{return COLON;}
 {lparen}                                        {return LPAREN;}
 {rparen}                                        {return RPAREN;}
+{lbracket}                                      {return LBRACKET;}
+{rbracket}                                      {return RBRACKET;}
 {assignop}                                      {return ASSIGNOP;}
 {plusop}                                        {return PLUSOP;}
 {minusop}                                       {return MINUSOP;}
@@ -88,8 +92,8 @@ id              ({letter}|{underscore})({letter}|{digit}|{underscore})*
 {stringliteral}					{yylval.sval = strdup(yytext); return STRINGLITERAL;}
 {id}                                            {yylval.sval = strdup(yytext); return ID;}
 
-{lbracket}					{BEGIN(MULTILINE);}
-<MULTILINE>{rbracket}				{BEGIN(INITIAL);}
+{lbrace}					{BEGIN(MULTILINE);}
+<MULTILINE>{rbrace}				{BEGIN(INITIAL);}
 <MULTILINE>(.|\n)				;
 <MULTILINE><<EOF>>				{return *yytext;}
 [^,]		{std::cout << "SYNTAX ERROR: " << yytext << " IS ILLEGAL" << std::endl;}

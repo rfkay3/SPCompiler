@@ -8,7 +8,6 @@ public:
 	bool lookup(const char symbol[]);
 	std::string getType(const char symbol[]);
 	void insert(const char symbol[], const char type[]);
-
 	std::unordered_map<std::string, std::string> scopeTable;
 	ScopeNode* next;
 };

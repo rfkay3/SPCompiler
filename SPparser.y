@@ -47,7 +47,7 @@ ParsedValue * jump ();
 }
 
 %token PROGRAM VAR START END READ WRITE ASSIGNOP INTEGER REAL CHARACTER STRING BOOLEAN BOOL INTLITERAL 
-%token REALLITERAL CHARLITERAL STRINGLITERAL LPAREN RPAREN COMMA PERIOD SEMICOLON COLON 
+%token REALLITERAL CHARLITERAL STRINGLITERAL LPAREN RPAREN LBRACKET RBRACKET COMMA PERIOD SEMICOLON COLON 
 %token PLUSOP MINUSOP MULTOP DIVOP MODOP COMMENT ID GT_OP LT_OP GTEQUAL_OP LTEQUAL_OP EQUALOP NOTEQUALOP
 %token ANDOP OR_OP NOTOP IF THEN ELSE
 
@@ -81,10 +81,10 @@ declaration :	INTEGER int_var_list SEMICOLON {line_no++;}
 		| STRING string_var_list SEMICOLON {line_no++;}
 		| BOOLEAN bool_var_list SEMICOLON {line_no++;}
 		;
-bool_var_list:   ident  { decl_id($1, "boolean"); symTable.insertSymbol($1, "boolean");}
-		| ident {decl_id($1, "boolean"); symTable.insertSymbol($1, "boolean");} ASSIGNOP BOOL {assign($1, new ParsedValue(yylval.sval, "boolean"));}             
-		| bool_var_list COMMA ident { decl_id($3, "boolean"); symTable.insertSymbol($3, "boolean");}
-		| bool_var_list COMMA ident { decl_id($3, "boolean"); symTable.insertSymbol($3, "boolean");} ASSIGNOP BOOL {assign($3, new ParsedValue(yylval.sval, "boolean"));}
+bool_var_list:   ident  { decl_id($1, "integer"); symTable.insertSymbol($1, "integer");}
+		| ident {decl_id($1, "integer"); symTable.insertSymbol($1, "integer");} ASSIGNOP BOOL {assign($1, new ParsedValue(yylval.sval, "integer"));}             
+		| bool_var_list COMMA ident { decl_id($3, "integer"); symTable.insertSymbol($3, "integer");}
+		| bool_var_list COMMA ident { decl_id($3, "integer"); symTable.insertSymbol($3, "integer");} ASSIGNOP BOOL {assign($3, new ParsedValue(yylval.sval, "integer"));}
 		;
 int_var_list:   ident  { decl_id($1, "integer"); symTable.insertSymbol($1, "integer");}
 		| ident {decl_id($1, "integer"); symTable.insertSymbol($1, "integer");} ASSIGNOP INTLITERAL {assign($1, new ParsedValue(yylval.sval, "integer"));}             
@@ -97,9 +97,9 @@ real_var_list:	ident {decl_id($1, "real"); symTable.insertSymbol($1, "real");}
 		| real_var_list COMMA ident {decl_id($3, "real"); symTable.insertSymbol($3, "real");} ASSIGNOP REALLITERAL {assign($3, new ParsedValue(yylval.sval, "real"));}
 		;
 char_var_list:	ident {decl_id($1, "character"); symTable.insertSymbol($1, "character");}
-		| ident {decl_id($1, "character"); symTable.insertSymbol($1, "character");} ASSIGNOP CHARLITERAL {assign($1, new ParsedValue(yylval.sval, "char"));}
+		| ident {decl_id($1, "character"); symTable.insertSymbol($1, "character");} ASSIGNOP CHARLITERAL {assign($1, new ParsedValue(yylval.sval, "character"));}
 		| char_var_list COMMA ident {decl_id($3, "character"); symTable.insertSymbol($3, "character");}
-		| char_var_list COMMA ident {decl_id($3, "character"); symTable.insertSymbol($3, "character");} ASSIGNOP CHARLITERAL {assign($3, new ParsedValue(yylval.sval, "char"));}
+		| char_var_list COMMA ident {decl_id($3, "character"); symTable.insertSymbol($3, "character");} ASSIGNOP CHARLITERAL {assign($3, new ParsedValue(yylval.sval, "character"));}
 		;
 string_var_list: ident {decl_id($1, "string"); symTable.insertSymbol($1, "string");}
 		| ident {decl_id($1, "string"); symTable.insertSymbol($1, "string");} ASSIGNOP STRINGLITERAL {assign($1, new ParsedValue(yylval.sval, "string"));}
@@ -167,7 +167,7 @@ expr       :    term {$$ = $1;}
 		| {error("EXPRESSION EXPECTED, BUT FOUND");}
 		;
 term      :	lparen expression rparen   {$$ = $2;}
-		| ident      {verify_sym_decl($1); $$ = new ParsedValue($1, symTable.typeOf($1).c_str());}
+		| ident     {verify_sym_decl($1); $$ = new ParsedValue($1, symTable.typeOf($1).c_str());}
 		| literal	{$$ = $1;}
 		;
 
@@ -210,7 +210,7 @@ mult_op   : MULTOP  {$$ = strdup("mult");}
 		| DIVOP   {$$ = strdup("div");}
 		| MODOP   {$$ = strdup("mod");}
 		;
-ident     :	ID {strcpy($$, yylval.sval);}
+ident     :	ID {$$ = strdup(yylval.sval);}
 		| {error("IDENTIFIER EXPECTED, BUT FOUND");}
 		;
 system_goal :	program  { finish(); }

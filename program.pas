@@ -1,11 +1,18 @@
 program
 var
-real a := 1.5, b := 2.0, c := 2.5, d := 5.0;
+BOOLEAN less := true, more;
+real a := 1.5, b := 2.0, c := 2.5, d := 5.0, x := 22.4;
+character f := 'a';
+integer g, j := 2, m := 92;
 begin
 
-IF ((a < b) AND (c = d)) OR (b <> c) THEN
+// b := 2;
+
+more := j-m >= x;
+
+IF ((a <= b) AND (c = d)) OR (b <> c) THEN
 BEGIN
-d := c * a;
+g := c * a;
 WRITE(d);
 END
 ELSE

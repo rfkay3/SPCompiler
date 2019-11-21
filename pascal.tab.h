@@ -68,29 +68,31 @@ extern int yydebug;
     STRINGLITERAL = 274,
     LPAREN = 275,
     RPAREN = 276,
-    COMMA = 277,
-    PERIOD = 278,
-    SEMICOLON = 279,
-    COLON = 280,
-    PLUSOP = 281,
-    MINUSOP = 282,
-    MULTOP = 283,
-    DIVOP = 284,
-    MODOP = 285,
-    COMMENT = 286,
-    ID = 287,
-    GT_OP = 288,
-    LT_OP = 289,
-    GTEQUAL_OP = 290,
-    LTEQUAL_OP = 291,
-    EQUALOP = 292,
-    NOTEQUALOP = 293,
-    ANDOP = 294,
-    OR_OP = 295,
-    NOTOP = 296,
-    IF = 297,
-    THEN = 298,
-    ELSE = 299
+    LBRACKET = 277,
+    RBRACKET = 278,
+    COMMA = 279,
+    PERIOD = 280,
+    SEMICOLON = 281,
+    COLON = 282,
+    PLUSOP = 283,
+    MINUSOP = 284,
+    MULTOP = 285,
+    DIVOP = 286,
+    MODOP = 287,
+    COMMENT = 288,
+    ID = 289,
+    GT_OP = 290,
+    LT_OP = 291,
+    GTEQUAL_OP = 292,
+    LTEQUAL_OP = 293,
+    EQUALOP = 294,
+    NOTEQUALOP = 295,
+    ANDOP = 296,
+    OR_OP = 297,
+    NOTOP = 298,
+    IF = 299,
+    THEN = 300,
+    ELSE = 301
   };
 #endif
 
@@ -104,7 +106,7 @@ union YYSTYPE
 	char * sval;
 	ParsedValue * rawval;
 
-#line 108 "pascal.tab.h"
+#line 110 "pascal.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;
