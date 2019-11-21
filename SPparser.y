@@ -49,7 +49,7 @@ ParsedValue * jump ();
 %token PROGRAM VAR START END READ WRITE ASSIGNOP INTEGER REAL CHARACTER STRING BOOLEAN BOOL INTLITERAL 
 %token REALLITERAL CHARLITERAL STRINGLITERAL LPAREN RPAREN LBRACKET RBRACKET COMMA PERIOD SEMICOLON COLON 
 %token PLUSOP MINUSOP MULTOP DIVOP MODOP COMMENT ID GT_OP LT_OP GTEQUAL_OP LTEQUAL_OP EQUALOP NOTEQUALOP
-%token ANDOP OR_OP NOTOP IF THEN ELSE
+%token ANDOP OR_OP NOTOP IF THEN ELSE WHILE DO REPEAT UNTIL
 
 %left MULTOP DIVOP MODOP PLUSOP MINUSOP
 
@@ -59,7 +59,7 @@ ParsedValue * jump ();
 %type <rawval>expression expr term
 %type <rawval>math_expr rel_expr boolean_and boolean_not
 %type <rawval>literal
-%type <rawval>if_then else_match
+%type <rawval>if_then else_match while_do repeat_until
 
 // TODO: Set precedence of relational/boolean operators!
 //       Could actually be right
@@ -117,6 +117,8 @@ statement  :	matched_statement
 
 unmatched_statement :	if_then statement {write_label($1->getValue());}
 		|	else_match unmatched_statement {write_label($1->getValue());}
+		|	while_do statement {write_label($1->getValue());}
+		|	repeat_until unmatched_statement {write_label($1->getValue());}
 		;
 
 matched_statement  :	if_match
@@ -133,6 +135,10 @@ id_list    :	ident      {verify_sym_decl($1); read_id($1);}
 expr_list  :	expression   {write_expr($1->getValue());}
                 | expr_list COMMA expression {write_expr($3->getValue());}
 		;
+
+while_do   :	WHILE expression DO matched_statement {$$ = conditionalJump("false", $2);}
+
+repeat_until :	REPEAT matched_statement UNTIL {} 
 
 if_then    : IF expression THEN {$$ = conditionalJump("false", $2);/*not tested (lol)*/}
 		;
