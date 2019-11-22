@@ -59,7 +59,7 @@ ParsedValue * jump ();
 %type <rawval>expression expr term
 %type <rawval>math_expr rel_expr boolean_and boolean_not
 %type <rawval>literal
-%type <rawval>if_then else_match while_do repeat_until
+%type <rawval>if_then else_match while_do repeat_until do_match
 
 // TODO: Set precedence of relational/boolean operators!
 //       Could actually be right
@@ -136,9 +136,14 @@ expr_list  :	expression   {write_expr($1->getValue());}
                 | expr_list COMMA expression {write_expr($3->getValue());}
 		;
 
-while_do   :	WHILE expression DO matched_statement {$$ = conditionalJump("false", $2);}
+while_do   :	WHILE expression do_match {$$ = conditionalJump("false", $2); $3 = $2; }
+		;
+
+do_match :	DO {$$ = jump();}
+		;
 
 repeat_until :	REPEAT matched_statement UNTIL {} 
+		;
 
 if_then    : IF expression THEN {$$ = conditionalJump("false", $2);/*not tested (lol)*/}
 		;
