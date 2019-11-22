@@ -10,6 +10,7 @@ extern SymbolTable symTable;
 extern const char * createTempLabel();
 extern void yyerror(const char s[]);
 
+
 void write_expr(char id_name[]) {
    outFile << "write " << id_name << std::endl;
 }
@@ -36,4 +37,20 @@ ParsedValue * conditionalJump(const char * jump_if, ParsedValue * cond) {
       outFile << "jf " << cond->getValue() << ", " << jumpLabel << std::endl;
    }
    return new ParsedValue(strdup(jumpLabel), "label");
+}
+
+int expCheck(ParsedValue * cond, int whileCounter) {
+   if (strcmp(cond->getType(), "integer") != 0) {
+      yyerror("Conditional must evaluate to boolean.");
+   }
+
+   if (strcmp(cond->getValue(), "1") == 0 && whileCounter < 1) {
+      whileCounter++;
+      return 1;
+   } else if (strcmp(cond->getValue(), "1") == 0 && whileCounter > 0) {
+      return 2; // return number of times it has to go through the loop
+   } else {
+      whileCounter = 0;
+      return 0;
+   }
 }

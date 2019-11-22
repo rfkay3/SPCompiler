@@ -15,6 +15,7 @@ extern "C" int yyparse();
 extern FILE * yyin;
 
 int line_no = 1;
+int whileCounter = 0;
 std::ofstream outFile;
 SymbolTable symTable;
 
@@ -37,6 +38,7 @@ void yyerror(const char []);
 void printSymbolTable();
 ParsedValue * conditionalJump(const char * jump_if, ParsedValue * cond);
 ParsedValue * jump ();
+int expCheck(ParsedValue * cond, int whileCounter);
 %}
 
 
@@ -136,7 +138,8 @@ expr_list  :	expression   {write_expr($1->getValue());}
                 | expr_list COMMA expression {write_expr($3->getValue());}
 		;
 
-while_do   :	WHILE expression do_match {$$ = conditionalJump("false", $2); $3 = $2; }
+while_do   :	WHILE expression do_match {$$ = conditionalJump("false", $2); $3 = $2; 
+				if (expCheck($2, whileCounter) == 1) {$$ = jump();};}
 		;
 
 do_match :	DO {$$ = jump();}
