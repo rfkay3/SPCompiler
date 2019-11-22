@@ -90,6 +90,7 @@ SymbolTable symTable;
 bool isReal(char value[]);
 const char * createTempIntegerAddress();
 const char * createTempRealAddress();
+const char * createTempLabel();
 void assign (char [], ParsedValue *);
 void decl_id ( char [], const char [] );
 void finish();
@@ -105,9 +106,9 @@ void error(const char []);
 void yyerror(const char []);
 void printSymbolTable();
 ParsedValue * conditionalJump(const char * jump_if, ParsedValue * cond);
-ParsedValue * jump ();
+ParsedValue * jump (char * label);
 
-#line 111 "SPparser.tab.c"
+#line 112 "SPparser.tab.c"
 
 # ifndef YY_NULLPTR
 #  if defined __cplusplus
@@ -197,13 +198,13 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 43 "SPparser.y"
+#line 44 "SPparser.y"
 
 	int ival;
 	char * sval;
 	ParsedValue * rawval;
 
-#line 207 "SPparser.tab.c"
+#line 208 "SPparser.tab.c"
 
 };
 typedef union YYSTYPE YYSTYPE;
@@ -513,17 +514,17 @@ static const yytype_uint8 yytranslate[] =
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_uint8 yyrline[] =
 {
-       0,    70,    70,    70,    70,    72,    73,    73,    75,    76,
-      78,    79,    80,    81,    82,    84,    85,    85,    86,    87,
-      87,    89,    90,    90,    91,    92,    92,    94,    95,    95,
-      96,    97,    97,    99,   100,   100,   101,   102,   102,   104,
-     105,   105,   106,   107,   107,   110,   111,   114,   115,   118,
-     119,   122,   123,   123,   124,   125,   126,   127,   130,   131,
-     133,   134,   137,   140,   143,   146,   147,   150,   151,   154,
-     155,   158,   159,   162,   163,   165,   166,   167,   169,   170,
-     171,   174,   175,   176,   177,   178,   179,   182,   183,   185,
-     186,   189,   192,   195,   198,   199,   200,   201,   202,   203,
-     206,   207,   209,   210,   211,   213,   214,   216
+       0,    71,    71,    71,    71,    73,    74,    74,    76,    77,
+      79,    80,    81,    82,    83,    85,    86,    86,    87,    88,
+      88,    90,    91,    91,    92,    93,    93,    95,    96,    96,
+      97,    98,    98,   100,   101,   101,   102,   103,   103,   105,
+     106,   106,   107,   108,   108,   111,   112,   115,   116,   119,
+     120,   123,   124,   124,   125,   126,   127,   128,   131,   132,
+     134,   135,   138,   141,   144,   147,   148,   151,   152,   155,
+     156,   159,   160,   163,   164,   166,   167,   168,   170,   171,
+     172,   175,   176,   177,   178,   179,   180,   183,   184,   186,
+     187,   190,   193,   196,   199,   200,   201,   202,   203,   204,
+     207,   208,   210,   211,   212,   214,   215,   217
 };
 #endif
 
@@ -1427,577 +1428,577 @@ yyreduce:
   switch (yyn)
     {
   case 2:
-#line 70 "SPparser.y"
+#line 71 "SPparser.y"
     {line_no++; symTable.enterScope();}
-#line 1433 "SPparser.tab.c"
+#line 1434 "SPparser.tab.c"
     break;
 
   case 3:
-#line 70 "SPparser.y"
+#line 71 "SPparser.y"
     {line_no++;}
-#line 1439 "SPparser.tab.c"
+#line 1440 "SPparser.tab.c"
     break;
 
   case 4:
-#line 70 "SPparser.y"
+#line 71 "SPparser.y"
     {line_no++;}
-#line 1445 "SPparser.tab.c"
+#line 1446 "SPparser.tab.c"
     break;
 
   case 5:
-#line 72 "SPparser.y"
+#line 73 "SPparser.y"
     {line_no++;}
-#line 1451 "SPparser.tab.c"
+#line 1452 "SPparser.tab.c"
     break;
 
   case 6:
-#line 73 "SPparser.y"
+#line 74 "SPparser.y"
     {line_no++;}
-#line 1457 "SPparser.tab.c"
+#line 1458 "SPparser.tab.c"
     break;
 
   case 10:
-#line 78 "SPparser.y"
+#line 79 "SPparser.y"
     {line_no++;}
-#line 1463 "SPparser.tab.c"
+#line 1464 "SPparser.tab.c"
     break;
 
   case 11:
-#line 79 "SPparser.y"
+#line 80 "SPparser.y"
     {line_no++;}
-#line 1469 "SPparser.tab.c"
+#line 1470 "SPparser.tab.c"
     break;
 
   case 12:
-#line 80 "SPparser.y"
+#line 81 "SPparser.y"
     {line_no++;}
-#line 1475 "SPparser.tab.c"
+#line 1476 "SPparser.tab.c"
     break;
 
   case 13:
-#line 81 "SPparser.y"
+#line 82 "SPparser.y"
     {line_no++;}
-#line 1481 "SPparser.tab.c"
+#line 1482 "SPparser.tab.c"
     break;
 
   case 14:
-#line 82 "SPparser.y"
+#line 83 "SPparser.y"
     {line_no++;}
-#line 1487 "SPparser.tab.c"
+#line 1488 "SPparser.tab.c"
     break;
 
   case 15:
-#line 84 "SPparser.y"
+#line 85 "SPparser.y"
     { decl_id((yyvsp[0].sval), "integer"); symTable.insertSymbol((yyvsp[0].sval), "integer");}
-#line 1493 "SPparser.tab.c"
+#line 1494 "SPparser.tab.c"
     break;
 
   case 16:
-#line 85 "SPparser.y"
+#line 86 "SPparser.y"
     {decl_id((yyvsp[0].sval), "integer"); symTable.insertSymbol((yyvsp[0].sval), "integer");}
-#line 1499 "SPparser.tab.c"
+#line 1500 "SPparser.tab.c"
     break;
 
   case 17:
-#line 85 "SPparser.y"
+#line 86 "SPparser.y"
     {assign((yyvsp[-3].sval), new ParsedValue(yylval.sval, "integer"));}
-#line 1505 "SPparser.tab.c"
+#line 1506 "SPparser.tab.c"
     break;
 
   case 18:
-#line 86 "SPparser.y"
+#line 87 "SPparser.y"
     { decl_id((yyvsp[0].sval), "integer"); symTable.insertSymbol((yyvsp[0].sval), "integer");}
-#line 1511 "SPparser.tab.c"
+#line 1512 "SPparser.tab.c"
     break;
 
   case 19:
-#line 87 "SPparser.y"
+#line 88 "SPparser.y"
     { decl_id((yyvsp[0].sval), "integer"); symTable.insertSymbol((yyvsp[0].sval), "integer");}
-#line 1517 "SPparser.tab.c"
+#line 1518 "SPparser.tab.c"
     break;
 
   case 20:
-#line 87 "SPparser.y"
+#line 88 "SPparser.y"
     {assign((yyvsp[-3].sval), new ParsedValue(yylval.sval, "integer"));}
-#line 1523 "SPparser.tab.c"
+#line 1524 "SPparser.tab.c"
     break;
 
   case 21:
-#line 89 "SPparser.y"
+#line 90 "SPparser.y"
     { decl_id((yyvsp[0].sval), "integer"); symTable.insertSymbol((yyvsp[0].sval), "integer");}
-#line 1529 "SPparser.tab.c"
+#line 1530 "SPparser.tab.c"
     break;
 
   case 22:
-#line 90 "SPparser.y"
+#line 91 "SPparser.y"
     {decl_id((yyvsp[0].sval), "integer"); symTable.insertSymbol((yyvsp[0].sval), "integer");}
-#line 1535 "SPparser.tab.c"
+#line 1536 "SPparser.tab.c"
     break;
 
   case 23:
-#line 90 "SPparser.y"
+#line 91 "SPparser.y"
     {assign((yyvsp[-3].sval), new ParsedValue(yylval.sval, "integer"));}
-#line 1541 "SPparser.tab.c"
+#line 1542 "SPparser.tab.c"
     break;
 
   case 24:
-#line 91 "SPparser.y"
+#line 92 "SPparser.y"
     { decl_id((yyvsp[0].sval), "integer"); symTable.insertSymbol((yyvsp[0].sval), "integer");}
-#line 1547 "SPparser.tab.c"
+#line 1548 "SPparser.tab.c"
     break;
 
   case 25:
-#line 92 "SPparser.y"
+#line 93 "SPparser.y"
     { decl_id((yyvsp[0].sval), "integer"); symTable.insertSymbol((yyvsp[0].sval), "integer");}
-#line 1553 "SPparser.tab.c"
+#line 1554 "SPparser.tab.c"
     break;
 
   case 26:
-#line 92 "SPparser.y"
+#line 93 "SPparser.y"
     {assign((yyvsp[-3].sval), new ParsedValue(yylval.sval, "integer"));}
-#line 1559 "SPparser.tab.c"
+#line 1560 "SPparser.tab.c"
     break;
 
   case 27:
-#line 94 "SPparser.y"
+#line 95 "SPparser.y"
     {decl_id((yyvsp[0].sval), "real"); symTable.insertSymbol((yyvsp[0].sval), "real");}
-#line 1565 "SPparser.tab.c"
+#line 1566 "SPparser.tab.c"
     break;
 
   case 28:
-#line 95 "SPparser.y"
+#line 96 "SPparser.y"
     {decl_id((yyvsp[0].sval), "real"); symTable.insertSymbol((yyvsp[0].sval), "real");}
-#line 1571 "SPparser.tab.c"
+#line 1572 "SPparser.tab.c"
     break;
 
   case 29:
-#line 95 "SPparser.y"
+#line 96 "SPparser.y"
     {assign((yyvsp[-3].sval), new ParsedValue(yylval.sval, "real"));}
-#line 1577 "SPparser.tab.c"
+#line 1578 "SPparser.tab.c"
     break;
 
   case 30:
-#line 96 "SPparser.y"
+#line 97 "SPparser.y"
     {decl_id((yyvsp[0].sval), "real"); symTable.insertSymbol((yyvsp[0].sval), "real");}
-#line 1583 "SPparser.tab.c"
+#line 1584 "SPparser.tab.c"
     break;
 
   case 31:
-#line 97 "SPparser.y"
+#line 98 "SPparser.y"
     {decl_id((yyvsp[0].sval), "real"); symTable.insertSymbol((yyvsp[0].sval), "real");}
-#line 1589 "SPparser.tab.c"
+#line 1590 "SPparser.tab.c"
     break;
 
   case 32:
-#line 97 "SPparser.y"
+#line 98 "SPparser.y"
     {assign((yyvsp[-3].sval), new ParsedValue(yylval.sval, "real"));}
-#line 1595 "SPparser.tab.c"
+#line 1596 "SPparser.tab.c"
     break;
 
   case 33:
-#line 99 "SPparser.y"
+#line 100 "SPparser.y"
     {decl_id((yyvsp[0].sval), "character"); symTable.insertSymbol((yyvsp[0].sval), "character");}
-#line 1601 "SPparser.tab.c"
+#line 1602 "SPparser.tab.c"
     break;
 
   case 34:
-#line 100 "SPparser.y"
+#line 101 "SPparser.y"
     {decl_id((yyvsp[0].sval), "character"); symTable.insertSymbol((yyvsp[0].sval), "character");}
-#line 1607 "SPparser.tab.c"
+#line 1608 "SPparser.tab.c"
     break;
 
   case 35:
-#line 100 "SPparser.y"
+#line 101 "SPparser.y"
     {assign((yyvsp[-3].sval), new ParsedValue(yylval.sval, "character"));}
-#line 1613 "SPparser.tab.c"
+#line 1614 "SPparser.tab.c"
     break;
 
   case 36:
-#line 101 "SPparser.y"
+#line 102 "SPparser.y"
     {decl_id((yyvsp[0].sval), "character"); symTable.insertSymbol((yyvsp[0].sval), "character");}
-#line 1619 "SPparser.tab.c"
+#line 1620 "SPparser.tab.c"
     break;
 
   case 37:
-#line 102 "SPparser.y"
+#line 103 "SPparser.y"
     {decl_id((yyvsp[0].sval), "character"); symTable.insertSymbol((yyvsp[0].sval), "character");}
-#line 1625 "SPparser.tab.c"
+#line 1626 "SPparser.tab.c"
     break;
 
   case 38:
-#line 102 "SPparser.y"
+#line 103 "SPparser.y"
     {assign((yyvsp[-3].sval), new ParsedValue(yylval.sval, "character"));}
-#line 1631 "SPparser.tab.c"
+#line 1632 "SPparser.tab.c"
     break;
 
   case 39:
-#line 104 "SPparser.y"
+#line 105 "SPparser.y"
     {decl_id((yyvsp[0].sval), "string"); symTable.insertSymbol((yyvsp[0].sval), "string");}
-#line 1637 "SPparser.tab.c"
+#line 1638 "SPparser.tab.c"
     break;
 
   case 40:
-#line 105 "SPparser.y"
+#line 106 "SPparser.y"
     {decl_id((yyvsp[0].sval), "string"); symTable.insertSymbol((yyvsp[0].sval), "string");}
-#line 1643 "SPparser.tab.c"
+#line 1644 "SPparser.tab.c"
     break;
 
   case 41:
-#line 105 "SPparser.y"
+#line 106 "SPparser.y"
     {assign((yyvsp[-3].sval), new ParsedValue(yylval.sval, "string"));}
-#line 1649 "SPparser.tab.c"
+#line 1650 "SPparser.tab.c"
     break;
 
   case 42:
-#line 106 "SPparser.y"
+#line 107 "SPparser.y"
     {decl_id((yyvsp[0].sval), "string"); symTable.insertSymbol((yyvsp[0].sval), "string");}
-#line 1655 "SPparser.tab.c"
+#line 1656 "SPparser.tab.c"
     break;
 
   case 43:
-#line 107 "SPparser.y"
+#line 108 "SPparser.y"
     {decl_id((yyvsp[0].sval), "string"); symTable.insertSymbol((yyvsp[0].sval), "string");}
-#line 1661 "SPparser.tab.c"
+#line 1662 "SPparser.tab.c"
     break;
 
   case 44:
-#line 107 "SPparser.y"
+#line 108 "SPparser.y"
     {assign((yyvsp[-3].sval), new ParsedValue(yylval.sval, "string"));}
-#line 1667 "SPparser.tab.c"
+#line 1668 "SPparser.tab.c"
     break;
 
   case 49:
-#line 118 "SPparser.y"
+#line 119 "SPparser.y"
     {write_label((yyvsp[-1].rawval)->getValue());}
-#line 1673 "SPparser.tab.c"
+#line 1674 "SPparser.tab.c"
     break;
 
   case 50:
-#line 119 "SPparser.y"
+#line 120 "SPparser.y"
     {write_label((yyvsp[-1].rawval)->getValue());}
-#line 1679 "SPparser.tab.c"
+#line 1680 "SPparser.tab.c"
     break;
 
   case 52:
-#line 123 "SPparser.y"
+#line 124 "SPparser.y"
     {verify_sym_decl((yyvsp[-2].sval)); assign((yyvsp[-2].sval),(yyvsp[0].rawval));}
-#line 1685 "SPparser.tab.c"
+#line 1686 "SPparser.tab.c"
     break;
 
   case 53:
-#line 123 "SPparser.y"
+#line 124 "SPparser.y"
     {line_no++;}
-#line 1691 "SPparser.tab.c"
+#line 1692 "SPparser.tab.c"
     break;
 
   case 54:
-#line 124 "SPparser.y"
+#line 125 "SPparser.y"
     {line_no++;}
-#line 1697 "SPparser.tab.c"
+#line 1698 "SPparser.tab.c"
     break;
 
   case 55:
-#line 125 "SPparser.y"
+#line 126 "SPparser.y"
     {line_no++;}
-#line 1703 "SPparser.tab.c"
+#line 1704 "SPparser.tab.c"
     break;
 
   case 57:
-#line 127 "SPparser.y"
+#line 128 "SPparser.y"
     {line_no++;}
-#line 1709 "SPparser.tab.c"
+#line 1710 "SPparser.tab.c"
     break;
 
   case 58:
-#line 130 "SPparser.y"
+#line 131 "SPparser.y"
     {verify_sym_decl((yyvsp[0].sval)); read_id((yyvsp[0].sval));}
-#line 1715 "SPparser.tab.c"
+#line 1716 "SPparser.tab.c"
     break;
 
   case 59:
-#line 131 "SPparser.y"
+#line 132 "SPparser.y"
     {verify_sym_decl((yyvsp[0].sval)); read_id((yyvsp[0].sval));}
-#line 1721 "SPparser.tab.c"
+#line 1722 "SPparser.tab.c"
     break;
 
   case 60:
-#line 133 "SPparser.y"
+#line 134 "SPparser.y"
     {write_expr((yyvsp[0].rawval)->getValue());}
-#line 1727 "SPparser.tab.c"
+#line 1728 "SPparser.tab.c"
     break;
 
   case 61:
-#line 134 "SPparser.y"
+#line 135 "SPparser.y"
     {write_expr((yyvsp[0].rawval)->getValue());}
-#line 1733 "SPparser.tab.c"
+#line 1734 "SPparser.tab.c"
     break;
 
   case 62:
-#line 137 "SPparser.y"
+#line 138 "SPparser.y"
     {(yyval.rawval) = conditionalJump("false", (yyvsp[-1].rawval));/*not tested (lol)*/}
-#line 1739 "SPparser.tab.c"
+#line 1740 "SPparser.tab.c"
     break;
 
   case 63:
-#line 140 "SPparser.y"
+#line 141 "SPparser.y"
     {write_label((yyvsp[-1].rawval)->getValue());}
-#line 1745 "SPparser.tab.c"
+#line 1746 "SPparser.tab.c"
     break;
 
   case 64:
-#line 143 "SPparser.y"
-    {(yyval.rawval) = jump(); write_label((yyvsp[-2].rawval)->getValue());/*needs testing*/}
-#line 1751 "SPparser.tab.c"
+#line 144 "SPparser.y"
+    {(yyval.rawval) = jump(strdup(createTempLabel())); write_label((yyvsp[-2].rawval)->getValue());/*needs testing*/}
+#line 1752 "SPparser.tab.c"
     break;
 
   case 65:
-#line 146 "SPparser.y"
+#line 147 "SPparser.y"
     {(yyval.rawval) = (yyvsp[0].rawval);}
-#line 1757 "SPparser.tab.c"
+#line 1758 "SPparser.tab.c"
     break;
 
   case 66:
-#line 147 "SPparser.y"
+#line 148 "SPparser.y"
     {(yyval.rawval) = boolean_infix((yyvsp[-2].rawval), (yyvsp[-1].sval), (yyvsp[0].rawval));}
-#line 1763 "SPparser.tab.c"
+#line 1764 "SPparser.tab.c"
     break;
 
   case 67:
-#line 150 "SPparser.y"
+#line 151 "SPparser.y"
     {(yyval.rawval) = (yyvsp[0].rawval);}
-#line 1769 "SPparser.tab.c"
+#line 1770 "SPparser.tab.c"
     break;
 
   case 68:
-#line 151 "SPparser.y"
+#line 152 "SPparser.y"
     {(yyval.rawval) = boolean_infix((yyvsp[-2].rawval), (yyvsp[-1].sval), (yyvsp[0].rawval));}
-#line 1775 "SPparser.tab.c"
+#line 1776 "SPparser.tab.c"
     break;
 
   case 69:
-#line 154 "SPparser.y"
+#line 155 "SPparser.y"
     {(yyval.rawval) = (yyvsp[0].rawval);}
-#line 1781 "SPparser.tab.c"
+#line 1782 "SPparser.tab.c"
     break;
 
   case 70:
-#line 155 "SPparser.y"
+#line 156 "SPparser.y"
     {(yyval.rawval) = boolean_not((yyvsp[-1].sval), (yyvsp[0].rawval));}
-#line 1787 "SPparser.tab.c"
+#line 1788 "SPparser.tab.c"
     break;
 
   case 71:
-#line 158 "SPparser.y"
+#line 159 "SPparser.y"
     {(yyval.rawval) = (yyvsp[0].rawval);}
-#line 1793 "SPparser.tab.c"
+#line 1794 "SPparser.tab.c"
     break;
 
   case 72:
-#line 159 "SPparser.y"
+#line 160 "SPparser.y"
     {(yyval.rawval) = relation_infix((yyvsp[-2].rawval), (yyvsp[-1].sval), (yyvsp[0].rawval));}
-#line 1799 "SPparser.tab.c"
+#line 1800 "SPparser.tab.c"
     break;
 
   case 73:
-#line 162 "SPparser.y"
+#line 163 "SPparser.y"
     {(yyval.rawval) = (yyvsp[0].rawval);}
-#line 1805 "SPparser.tab.c"
+#line 1806 "SPparser.tab.c"
     break;
 
   case 74:
-#line 163 "SPparser.y"
+#line 164 "SPparser.y"
     {(yyval.rawval) = gen_infix((yyvsp[-2].rawval),(yyvsp[-1].sval),(yyvsp[0].rawval));}
-#line 1811 "SPparser.tab.c"
+#line 1812 "SPparser.tab.c"
     break;
 
   case 75:
-#line 165 "SPparser.y"
+#line 166 "SPparser.y"
     {(yyval.rawval) = (yyvsp[0].rawval);}
-#line 1817 "SPparser.tab.c"
+#line 1818 "SPparser.tab.c"
     break;
 
   case 76:
-#line 166 "SPparser.y"
+#line 167 "SPparser.y"
     {(yyval.rawval) = gen_infix((yyvsp[-2].rawval),(yyvsp[-1].sval),(yyvsp[0].rawval));}
-#line 1823 "SPparser.tab.c"
+#line 1824 "SPparser.tab.c"
     break;
 
   case 77:
-#line 167 "SPparser.y"
+#line 168 "SPparser.y"
     {error("EXPRESSION EXPECTED, BUT FOUND");}
-#line 1829 "SPparser.tab.c"
+#line 1830 "SPparser.tab.c"
     break;
 
   case 78:
-#line 169 "SPparser.y"
+#line 170 "SPparser.y"
     {(yyval.rawval) = (yyvsp[-1].rawval);}
-#line 1835 "SPparser.tab.c"
+#line 1836 "SPparser.tab.c"
     break;
 
   case 79:
-#line 170 "SPparser.y"
+#line 171 "SPparser.y"
     {verify_sym_decl((yyvsp[0].sval)); (yyval.rawval) = new ParsedValue((yyvsp[0].sval), symTable.typeOf((yyvsp[0].sval)).c_str());}
-#line 1841 "SPparser.tab.c"
+#line 1842 "SPparser.tab.c"
     break;
 
   case 80:
-#line 171 "SPparser.y"
+#line 172 "SPparser.y"
     {(yyval.rawval) = (yyvsp[0].rawval);}
-#line 1847 "SPparser.tab.c"
+#line 1848 "SPparser.tab.c"
     break;
 
   case 81:
-#line 174 "SPparser.y"
+#line 175 "SPparser.y"
     {(yyval.rawval) = new ParsedValue(yylval.sval, "integer");}
-#line 1853 "SPparser.tab.c"
+#line 1854 "SPparser.tab.c"
     break;
 
   case 82:
-#line 175 "SPparser.y"
+#line 176 "SPparser.y"
     {(yyval.rawval) = new ParsedValue(yylval.sval, "real");}
-#line 1859 "SPparser.tab.c"
+#line 1860 "SPparser.tab.c"
     break;
 
   case 83:
-#line 176 "SPparser.y"
+#line 177 "SPparser.y"
     {(yyval.rawval) = new ParsedValue(yylval.sval, "string");}
-#line 1865 "SPparser.tab.c"
+#line 1866 "SPparser.tab.c"
     break;
 
   case 84:
-#line 177 "SPparser.y"
+#line 178 "SPparser.y"
     {(yyval.rawval) = new ParsedValue(yylval.sval, "char");}
-#line 1871 "SPparser.tab.c"
+#line 1872 "SPparser.tab.c"
     break;
 
   case 85:
-#line 178 "SPparser.y"
+#line 179 "SPparser.y"
     {(yyval.rawval) = new ParsedValue(yylval.sval, "integer");}
-#line 1877 "SPparser.tab.c"
+#line 1878 "SPparser.tab.c"
     break;
 
   case 86:
-#line 179 "SPparser.y"
+#line 180 "SPparser.y"
     {error("NUMERIC VALUE EXPECTED, BUT FOUND");}
-#line 1883 "SPparser.tab.c"
+#line 1884 "SPparser.tab.c"
     break;
 
   case 88:
-#line 183 "SPparser.y"
+#line 184 "SPparser.y"
     {error("( EXPECTED , BUT FOUND");}
-#line 1889 "SPparser.tab.c"
+#line 1890 "SPparser.tab.c"
     break;
 
   case 90:
-#line 186 "SPparser.y"
+#line 187 "SPparser.y"
     {error(") EXPECTED , BUT FOUND");}
-#line 1895 "SPparser.tab.c"
+#line 1896 "SPparser.tab.c"
     break;
 
   case 91:
-#line 189 "SPparser.y"
+#line 190 "SPparser.y"
     {(yyval.sval) = strdup("or");}
-#line 1901 "SPparser.tab.c"
+#line 1902 "SPparser.tab.c"
     break;
 
   case 92:
-#line 192 "SPparser.y"
+#line 193 "SPparser.y"
     {(yyval.sval) = strdup("and");}
-#line 1907 "SPparser.tab.c"
+#line 1908 "SPparser.tab.c"
     break;
 
   case 93:
-#line 195 "SPparser.y"
+#line 196 "SPparser.y"
     {(yyval.sval) = strdup("not");}
-#line 1913 "SPparser.tab.c"
+#line 1914 "SPparser.tab.c"
     break;
 
   case 94:
-#line 198 "SPparser.y"
+#line 199 "SPparser.y"
     {(yyval.sval) = strdup("gt");}
-#line 1919 "SPparser.tab.c"
+#line 1920 "SPparser.tab.c"
     break;
 
   case 95:
-#line 199 "SPparser.y"
+#line 200 "SPparser.y"
     {(yyval.sval) = strdup("lt");}
-#line 1925 "SPparser.tab.c"
+#line 1926 "SPparser.tab.c"
     break;
 
   case 96:
-#line 200 "SPparser.y"
+#line 201 "SPparser.y"
     {(yyval.sval) = strdup("gtequal");}
-#line 1931 "SPparser.tab.c"
+#line 1932 "SPparser.tab.c"
     break;
 
   case 97:
-#line 201 "SPparser.y"
+#line 202 "SPparser.y"
     {(yyval.sval) = strdup("ltequal");}
-#line 1937 "SPparser.tab.c"
+#line 1938 "SPparser.tab.c"
     break;
 
   case 98:
-#line 202 "SPparser.y"
+#line 203 "SPparser.y"
     {(yyval.sval) = strdup("equal");}
-#line 1943 "SPparser.tab.c"
+#line 1944 "SPparser.tab.c"
     break;
 
   case 99:
-#line 203 "SPparser.y"
+#line 204 "SPparser.y"
     {(yyval.sval) = strdup("notequal");}
-#line 1949 "SPparser.tab.c"
+#line 1950 "SPparser.tab.c"
     break;
 
   case 100:
-#line 206 "SPparser.y"
+#line 207 "SPparser.y"
     {(yyval.sval) = strdup("add");}
-#line 1955 "SPparser.tab.c"
+#line 1956 "SPparser.tab.c"
     break;
 
   case 101:
-#line 207 "SPparser.y"
+#line 208 "SPparser.y"
     {(yyval.sval) = strdup("sub");}
-#line 1961 "SPparser.tab.c"
+#line 1962 "SPparser.tab.c"
     break;
 
   case 102:
-#line 209 "SPparser.y"
+#line 210 "SPparser.y"
     {(yyval.sval) = strdup("mult");}
-#line 1967 "SPparser.tab.c"
+#line 1968 "SPparser.tab.c"
     break;
 
   case 103:
-#line 210 "SPparser.y"
+#line 211 "SPparser.y"
     {(yyval.sval) = strdup("div");}
-#line 1973 "SPparser.tab.c"
+#line 1974 "SPparser.tab.c"
     break;
 
   case 104:
-#line 211 "SPparser.y"
+#line 212 "SPparser.y"
     {(yyval.sval) = strdup("mod");}
-#line 1979 "SPparser.tab.c"
+#line 1980 "SPparser.tab.c"
     break;
 
   case 105:
-#line 213 "SPparser.y"
+#line 214 "SPparser.y"
     {(yyval.sval) = strdup(yylval.sval);}
-#line 1985 "SPparser.tab.c"
+#line 1986 "SPparser.tab.c"
     break;
 
   case 106:
-#line 214 "SPparser.y"
+#line 215 "SPparser.y"
     {error("IDENTIFIER EXPECTED, BUT FOUND");}
-#line 1991 "SPparser.tab.c"
+#line 1992 "SPparser.tab.c"
     break;
 
   case 107:
-#line 216 "SPparser.y"
+#line 217 "SPparser.y"
     { finish(); }
-#line 1997 "SPparser.tab.c"
+#line 1998 "SPparser.tab.c"
     break;
 
 
-#line 2001 "SPparser.tab.c"
+#line 2002 "SPparser.tab.c"
 
       default: break;
     }
@@ -2229,7 +2230,7 @@ yyreturn:
 #endif
   return yyresult;
 }
-#line 218 "SPparser.y"
+#line 219 "SPparser.y"
 
 int main( int argc, char **argv )
 {

@@ -18,8 +18,7 @@ void write_label(const char * label) {
    outFile << label << std::endl;
 }
 
-ParsedValue * jump () {
-   char * label = strdup(createTempLabel());
+ParsedValue * jump (char * label) {
    outFile << "jmp " << label << std::endl;
    return new ParsedValue(label, "label");
 }

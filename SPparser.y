@@ -21,6 +21,7 @@ SymbolTable symTable;
 bool isReal(char value[]);
 const char * createTempIntegerAddress();
 const char * createTempRealAddress();
+const char * createTempLabel();
 void assign (char [], ParsedValue *);
 void decl_id ( char [], const char [] );
 void finish();
@@ -36,7 +37,7 @@ void error(const char []);
 void yyerror(const char []);
 void printSymbolTable();
 ParsedValue * conditionalJump(const char * jump_if, ParsedValue * cond);
-ParsedValue * jump ();
+ParsedValue * jump (char * label);
 %}
 
 
@@ -140,7 +141,7 @@ if_then    : IF expression THEN {$$ = conditionalJump("false", $2);/*not tested 
 if_match   : else_match matched_statement {write_label($1->getValue());}
 		;
 
-else_match : if_then matched_statement ELSE {$$ = jump(); write_label($1->getValue());/*needs testing*/}
+else_match : if_then matched_statement ELSE {$$ = jump(strdup(createTempLabel())); write_label($1->getValue());/*needs testing*/}
 		;
 
 expression :	boolean_and {$$ = $1;}
