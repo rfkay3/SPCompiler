@@ -20,7 +20,7 @@ store 2, j
 declare m, integer
 store 92, m
 declare &tempi1, integer
-low a, b, &tempi1
+high a, b, &tempi1
 jmp :&temp1
 jf &tempi1, :&temp2
 declare &tempr1, real

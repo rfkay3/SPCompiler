@@ -139,13 +139,13 @@ expr_list  :	expression   {write_expr($1->getValue());}
 		;
 
 while_do   :	WHILE expression do_match {$$ = conditionalJump("false", $2); $3 = $2; 
-				if (expCheck($2, whileCounter) == 1) {$$ = jump();};}
+		 if (expCheck($2, whileCounter) == 1) {$$ = jump();};}
 		;
 
 do_match :	DO {$$ = jump();}
 		;
 
-repeat_until :	REPEAT matched_statement UNTIL {} 
+repeat_until :	REPEAT matched_statement UNTIL expression {$$ = conditionalJump("false", $4);} 
 		;
 
 if_then    : IF expression THEN {$$ = conditionalJump("false", $2);/*not tested (lol)*/}
