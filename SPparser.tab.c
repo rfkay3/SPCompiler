@@ -1790,7 +1790,7 @@ yyreduce:
 
   case 69:
 #line 153 "SPparser.y"
-    {conditionalJump("true", (yyvsp[-3].rawval));}
+    {jump((yyvsp[-3].rawval)->getValue());conditionalJump("true", (yyvsp[0].rawval));}
 #line 1795 "SPparser.tab.c"
     break;
 

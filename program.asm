@@ -5,9 +5,9 @@ store false, more
 declare a, real
 store 1.5, a
 declare b, real
-store 2.0, b
+store 4.0, b
 declare c, real
-store 2.5, c
+store 2.0, c
 declare d, real
 store 5.0, d
 declare x, real
@@ -21,12 +21,11 @@ declare m, integer
 store 92, m
 :&temp1
 declare &tempr1, real
-rmult c, a, &tempr1
-declare &tempr2, real
-store &tempr1, &tempr2
-declare &tempi1, integer
-rtoi &tempr2, &tempi1
-store &tempi1, g
+radd b, a, &tempr1
+store &tempr1, a
 write d
-declare &tempi2, integer
-high a, b, &tempi2
+declare &tempi1, integer
+high a, b, &tempi1
+jmp :&temp1
+jt &tempi1, :&temp2
+halt
