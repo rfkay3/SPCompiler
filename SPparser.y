@@ -153,6 +153,7 @@ repeat_until :	repeat matched_statement UNTIL expression {conditionalJump("true"
 		;
 
 repeat	:	REPEAT {const char * temp = strdup(createTempLabel()); write_label(temp); $$ = new ParsedValue(temp, "character");}
+		;
 
 if_then    : IF expression THEN {$$ = conditionalJump("false", $2);/*not tested (lol)*/}
 		;
