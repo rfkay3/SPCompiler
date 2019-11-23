@@ -37,8 +37,9 @@ void error(const char []);
 void yyerror(const char []);
 void printSymbolTable();
 ParsedValue * conditionalJump(const char * jump_if, ParsedValue * cond);
-ParsedValue * jump ();
+ParsedValue * jump (char * label);
 int expCheck(ParsedValue * cond, int whileCounter);
+const char * createTempLabel();
 %}
 
 
@@ -51,7 +52,7 @@ int expCheck(ParsedValue * cond, int whileCounter);
 %token PROGRAM VAR START END READ WRITE ASSIGNOP INTEGER REAL CHARACTER STRING BOOLEAN BOOL INTLITERAL 
 %token REALLITERAL CHARLITERAL STRINGLITERAL LPAREN RPAREN LBRACKET RBRACKET COMMA PERIOD SEMICOLON COLON 
 %token PLUSOP MINUSOP MULTOP DIVOP MODOP COMMENT ID GT_OP LT_OP GTEQUAL_OP LTEQUAL_OP EQUALOP NOTEQUALOP
-%token ANDOP OR_OP NOTOP IF THEN ELSE WHILE DO REPEAT UNTIL
+%token ANDOP OR_OP NOTOP IF THEN ELSE WHILE DO REPEAT UNTIL 
 
 %left MULTOP DIVOP MODOP PLUSOP MINUSOP
 
@@ -61,7 +62,7 @@ int expCheck(ParsedValue * cond, int whileCounter);
 %type <rawval>expression expr term
 %type <rawval>math_expr rel_expr boolean_and boolean_not
 %type <rawval>literal
-%type <rawval>if_then else_match while_do repeat_until do_match
+%type <rawval>if_then else_match repeat_until do_match while while_do 
 
 // TODO: Set precedence of relational/boolean operators!
 //       Could actually be right
@@ -124,6 +125,7 @@ unmatched_statement :	if_then statement {write_label($1->getValue());}
 		;
 
 matched_statement  :	if_match
+		|	while_do
 		|	ident ASSIGNOP expression {verify_sym_decl($1); assign($1,$3);} SEMICOLON {line_no++;}
 		|	READ lparen id_list rparen SEMICOLON {line_no++;}
 		|	WRITE lparen expr_list rparen SEMICOLON {line_no++;}
@@ -138,11 +140,13 @@ expr_list  :	expression   {write_expr($1->getValue());}
                 | expr_list COMMA expression {write_expr($3->getValue());}
 		;
 
-while_do   :	WHILE expression do_match {$$ = conditionalJump("false", $2); $3 = $2; 
-				if (expCheck($2, whileCounter) == 1) {$$ = jump();};}
+while_do   :	while do_match statement_list {jump($1->getValue()); write_label($2->getValue());}
 		;
 
-do_match :	DO {$$ = jump();}
+while	:	WHILE {const char * temp = strdup(createTempLabel()); write_label(temp); $$ = new ParsedValue(temp, "character");}
+		;
+
+do_match :	expression DO {$$ = conditionalJump("false", $1);}
 		;
 
 repeat_until :	REPEAT matched_statement UNTIL {} 
@@ -154,7 +158,7 @@ if_then    : IF expression THEN {$$ = conditionalJump("false", $2);/*not tested 
 if_match   : else_match matched_statement {write_label($1->getValue());}
 		;
 
-else_match : if_then matched_statement ELSE {$$ = jump(); write_label($1->getValue());/*needs testing*/}
+else_match : if_then matched_statement ELSE {$$ = jump(strdup(createTempLabel())); write_label($1->getValue());/*needs testing*/}
 		;
 
 expression :	boolean_and {$$ = $1;}
