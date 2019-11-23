@@ -20,17 +20,13 @@ store 2, j
 declare m, integer
 store 92, m
 :&temp1
-declare &tempi1, integer
-high a, b, &tempi1
-jf &tempi1, :&temp2
 declare &tempr1, real
 rmult c, a, &tempr1
 declare &tempr2, real
 store &tempr1, &tempr2
-declare &tempi2, integer
-rtoi &tempr2, &tempi2
-store &tempi2, g
+declare &tempi1, integer
+rtoi &tempr2, &tempi1
+store &tempi1, g
 write d
-jmp :&temp1
-:&temp2
-halt
+declare &tempi2, integer
+high a, b, &tempi2

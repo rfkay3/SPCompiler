@@ -150,7 +150,7 @@ while	:	WHILE {const char * temp = strdup(createTempLabel()); write_label(temp);
 do_match :	expression DO {$$ = conditionalJump("false", $1);}
 		;
 
-repeat_until :	repeat matched_statement UNTIL expression {conditionalJump("true", $1);} 
+repeat_until :	repeat statement_list UNTIL expression {conditionalJump("true", $1);} 
 		;
 
 repeat	:	REPEAT {const char * temp = strdup(createTempLabel()); write_label(temp); $$ = new ParsedValue(temp, "character");}
