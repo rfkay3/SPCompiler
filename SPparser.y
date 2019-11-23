@@ -62,7 +62,7 @@ const char * createTempLabel();
 %type <rawval>expression expr term
 %type <rawval>math_expr rel_expr boolean_and boolean_not
 %type <rawval>literal
-%type <rawval>if_then else_match repeat_until do_match while while_do 
+%type <rawval>if_then else_match repeat repeat_until do_match while while_do
 
 // TODO: Set precedence of relational/boolean operators!
 //       Could actually be right
@@ -149,8 +149,10 @@ while	:	WHILE {const char * temp = strdup(createTempLabel()); write_label(temp);
 do_match :	expression DO {$$ = conditionalJump("false", $1);}
 		;
 
-repeat_until :	REPEAT matched_statement UNTIL expression {$$ = conditionalJump("false", $4);} 
+repeat_until :	repeat matched_statement UNTIL expression {conditionalJump("true", $1);} 
 		;
+
+repeat	:	REPEAT {const char * temp = strdup(createTempLabel()); write_label(temp); $$ = new ParsedValue(temp, "character");}
 
 if_then    : IF expression THEN {$$ = conditionalJump("false", $2);/*not tested (lol)*/}
 		;
