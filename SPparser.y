@@ -126,6 +126,7 @@ unmatched_statement :	if_then statement {write_label($1->getValue());}
 
 matched_statement  :	if_match
 		|	while_do
+		|	repeat_until
 		|	ident ASSIGNOP expression {verify_sym_decl($1); assign($1,$3);} SEMICOLON {line_no++;}
 		|	READ lparen id_list rparen SEMICOLON {line_no++;}
 		|	WRITE lparen expr_list rparen SEMICOLON {line_no++;}
