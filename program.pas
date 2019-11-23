@@ -9,7 +9,7 @@ begin
 // b := 2;
 
 
-while (a < b) do
+while (a > b) do
 BEGIN
 g := c * a;
 WRITE(d);
