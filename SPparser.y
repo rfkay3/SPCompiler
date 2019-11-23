@@ -140,12 +140,7 @@ expr_list  :	expression   {write_expr($1->getValue());}
                 | expr_list COMMA expression {write_expr($3->getValue());}
 		;
 
-<<<<<<< HEAD
 while_do   :	while do_match statement_list {jump($1->getValue()); write_label($2->getValue());}
-=======
-while_do   :	WHILE expression do_match {$$ = conditionalJump("false", $2); $3 = $2; 
-		 if (expCheck($2, whileCounter) == 1) {$$ = jump();};}
->>>>>>> 629d2e3c7fb81e95b1aa9b6182f095e45d43f2ea
 		;
 
 while	:	WHILE {const char * temp = strdup(createTempLabel()); write_label(temp); $$ = new ParsedValue(temp, "character");}

@@ -21,12 +21,7 @@ declare m, integer
 store 92, m
 :&temp1
 declare &tempi1, integer
-<<<<<<< HEAD
-low a, b, &tempi1
-=======
 high a, b, &tempi1
-jmp :&temp1
->>>>>>> 629d2e3c7fb81e95b1aa9b6182f095e45d43f2ea
 jf &tempi1, :&temp2
 declare &tempr1, real
 rmult c, a, &tempr1
