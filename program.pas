@@ -1,27 +1,14 @@
 program
 var
-BOOLEAN less := true, more;
-real a := 1.5, b := 2.0, c := 2.5, d := 5.0, x := 22.4;
-character f := 'a';
-integer g, j := 2, m := 92;
+integer a := 4, b := 2, c := 6, d := 8;
 begin
 
-// b := 2;
 
-more := j-m >= x;
+repeat 
+BEgiN
+    d := c * a;
+ENd
+until a < b and c = d or b <> c and NOT a * b < c
 
-IF ((a <= b) AND (c = d)) OR (b <> c) THEN
-BEGIN
-g := c * a;
-WRITE(d);
-END
-ELSE
-BEGIN
-b := d * a;
-WRITE(b);
-END
-
-{ if 8 < 9 ThEn
-    b := 10; }
 
 end.

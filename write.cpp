@@ -23,16 +23,15 @@ ParsedValue * jump (char * label) {
    return new ParsedValue(label, "label");
 }
 
-ParsedValue * conditionalJump(const char * jump_if, ParsedValue * cond) {
+ParsedValue * conditionalJump(const char * jump_if, ParsedValue * cond, char * label) {
    if ( strcmp(cond->getType(), "integer") != 0){
     yyerror("Conditional must evaluate to boolean.");
    }
 
-   char * jumpLabel = strdup(createTempLabel());
    if(strcmp(jump_if, "true") == 0) {
-      outFile << "jt " << cond->getValue() << ", " << jumpLabel << std::endl;
+      outFile << "jt " << cond->getValue() << ", " << label << std::endl;
    } else if (strcmp(jump_if, "false") == 0) {
-      outFile << "jf " << cond->getValue() << ", " << jumpLabel << std::endl;
+      outFile << "jf " << cond->getValue() << ", " << label << std::endl;
    }
-   return new ParsedValue(strdup(jumpLabel), "label");
+   return new ParsedValue(strdup(label), "label");
 }

@@ -61,6 +61,10 @@ id              ({letter}|{underscore})({letter}|{digit}|{underscore})*
 [Ii][Ff]                                        {return IF;}
 [Tt][Hh][Ee][Nn]                                {return THEN;}
 [Ee][Ll][Ss][Ee]                                {return ELSE;}
+[Ww][Hh][Ii][Ll][Ee]                            {return WHILE;}
+[Dd][Oo]                                        {return DO;}
+[Rr][Ee][Pp][Ee][Aa][Tt]                        {return REPEAT;}
+[Uu][Nn][Tt][Ii][Ll]                            {return UNTIL;}
 {comma}                                         {return COMMA;}
 {period}					{return PERIOD;}
 {semicolon}                                     {return SEMICOLON;}

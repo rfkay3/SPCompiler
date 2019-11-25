@@ -92,7 +92,11 @@ extern int yydebug;
     NOTOP = 298,
     IF = 299,
     THEN = 300,
-    ELSE = 301
+    ELSE = 301,
+    WHILE = 302,
+    DO = 303,
+    REPEAT = 304,
+    UNTIL = 305
   };
 #endif
 
@@ -106,7 +110,7 @@ union YYSTYPE
 	char * sval;
 	ParsedValue * rawval;
 
-#line 110 "pascal.tab.h"
+#line 114 "pascal.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;
