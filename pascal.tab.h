@@ -96,7 +96,10 @@ extern int yydebug;
     WHILE = 302,
     DO = 303,
     REPEAT = 304,
-    UNTIL = 305
+    UNTIL = 305,
+    FUNCTION = 306,
+    PROCEDURE = 307,
+    PROCEDURELITERAL = 308
   };
 #endif
 
@@ -104,13 +107,13 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 44 "SPparser.y"
+#line 45 "SPparser.y"
 
 	int ival;
 	char * sval;
 	ParsedValue * rawval;
 
-#line 114 "pascal.tab.h"
+#line 117 "pascal.tab.h"
 
 };
 typedef union YYSTYPE YYSTYPE;

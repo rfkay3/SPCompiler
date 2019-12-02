@@ -1,14 +1,14 @@
 program
 var
-integer a := 4, b := 2, c := 6, d := 8;
+integer a := 4, b := 2, c := 6, d := 8, e:=4;
+string s:= "tricky foobar";
 begin
-
-
-repeat 
+procedure foobar;
+var 
+integer a := 2;
+string s:="reassigned s";
 BEgiN
     d := c * a;
+    write(d);
 ENd
-until a < b and c = d or b <> c and NOT a * b < c
-
-
 end.

@@ -14,5 +14,7 @@ echo "__________________________________________"
 ./pascal program.pas
 
 echo "Here is the contents of the .asm file..."
+echo "__________________________________________"
 cat program.asm
+echo "__________________________________________"
 cat program.pas

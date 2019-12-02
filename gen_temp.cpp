@@ -1,5 +1,6 @@
 #include <string.h>
 #include <string>
+#include "parsedValue.h"
 
 extern void decl_id(char id[], const char type[]);
 
@@ -46,3 +47,12 @@ const char * createTempLabel(){
 	tempLabelCount++;
 	return tempLabelName;
 }
+
+const char * createProcedureLabel(ParsedValue * mktemp){
+	static int tempProcedureCount = 1;
+	static char tempProcedureName [30];
+        sprintf(tempProcedureName, ":#%s", mktemp->getValue());
+	tempProcedureCount++;
+        return tempProcedureName;
+}
+

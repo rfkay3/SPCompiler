@@ -41,6 +41,7 @@ intliteral      (0|([1-9]{digit}*))
 realliteral	({intliteral}{period}(0|{digit}*[1-9]))
 charliteral	('.')
 stringliteral	(\"(\\.|[^"\\])*\")
+procedureliteral ([a-zA-Z]+[;])
 id              ({letter}|{underscore})({letter}|{digit}|{underscore})*
 %x		MULTILINE
 %%
@@ -65,6 +66,8 @@ id              ({letter}|{underscore})({letter}|{digit}|{underscore})*
 [Dd][Oo]                                        {return DO;}
 [Rr][Ee][Pp][Ee][Aa][Tt]                        {return REPEAT;}
 [Uu][Nn][Tt][Ii][Ll]                            {return UNTIL;}
+[Pp][Rr][Oo][Cc][Ee][Dd][Uu][Rr][Ee]		{return PROCEDURE;}
+[Ff][Uu][Nn][Cc][Tt][Ii][Oo][Nn]		{return FUNCTION;}
 {comma}                                         {return COMMA;}
 {period}					{return PERIOD;}
 {semicolon}                                     {return SEMICOLON;}
@@ -94,6 +97,7 @@ id              ({letter}|{underscore})({letter}|{digit}|{underscore})*
 {realliteral}					{yylval.sval = strdup(yytext); return REALLITERAL;}
 {charliteral}					{yylval.sval = strdup(yytext); return CHARLITERAL;}
 {stringliteral}					{yylval.sval = strdup(yytext); return STRINGLITERAL;}
+{procedureliteral}				{yylval.sval = strdup(yytext); return PROCEDURELITERAL;}
 {id}                                            {yylval.sval = strdup(yytext); return ID;}
 
 {lbrace}					{BEGIN(MULTILINE);}
