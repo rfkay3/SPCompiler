@@ -56,13 +56,13 @@ ParsedValue * jump (char * label);
 
 %left MULTOP DIVOP MODOP PLUSOP MINUSOP
 
-%type <sval>ident while repeat
-%type <sval>and or not add_op mult_op relation
+%type <sval>ident while repeat procedure
+%type <sval>and or not add_op mult_op relation 
 
 %type <rawval>expression expr term
 %type <rawval>math_expr rel_expr boolean_and boolean_not
 %type <rawval>literal do_expr
-%type <rawval>if_then else_match procedure_match procedure_literal procedure
+%type <rawval>if_then else_match procedure_match
 
 // TODO: Set precedence of relational/boolean operators!
 //       Could actually be right
@@ -120,32 +120,25 @@ statement  :	matched_statement
 
 unmatched_statement :   if_then statement {write_label($1->getValue());}
                 |       else_match unmatched_statement {write_label($1->getValue());}
-                |       procedure_match matched_statement {write_label($1->getValue());}
                 ;
 
-matched_statement  :    if_match
+matched_statement  :    procedure_match
+		|	if_match
                 |       ident ASSIGNOP expression {verify_sym_decl($1); assign($1,$3);} SEMICOLON {line_no++;}
                 |       READ lparen id_list rparen SEMICOLON {line_no++;}
                 |       WRITE lparen expr_list rparen SEMICOLON {line_no++;}
                 |       START statement_list END
                 |       while_loop
                 |       repeat_until
+		|	variables statement_list
                 |       SEMICOLON {line_no++;}
-                ;
+		;
 
-procedure_match : procedure procedure_body {write_label($1->getValue());}
+procedure_match : procedure matched_statement {write_label($1);}
                 | {error("PROCEDURE EXPECTED, BUT NOT FOUND!:(");}
                 ;
 
-procedure       : PROCEDURE procedure_literal {const char * temp = createProcedureLabel($2); $$ = temp; line_no++;}
-                ;
-
-procedure_literal : PROCEDURELITERAL {$$ = new ParsedValue(yylval.sval, "string");}
-                | {error("PROCEDURE NAME EXPECTED, BUT NOT FOUND!");}
-                ;
-
-procedure_body : variables statement_list
-                | {error("PROCEDURE BODY EXPECTED, BUT NOT FOUND!:(");}
+procedure       : PROCEDURE literal {char * temp = strdup(createProcedureLabel($2)); $$ = temp; line_no++;}
                 ;
 
 while_loop :	while do_expr statement_list {jump($1); write_label($2->getValue());}
@@ -211,6 +204,7 @@ literal   : INTLITERAL {$$ = new ParsedValue(yylval.sval, "integer");}
 		| STRINGLITERAL {$$ = new ParsedValue(yylval.sval, "string");}
 		| CHARLITERAL {$$ = new ParsedValue(yylval.sval, "char");}
 		| BOOL {$$ = new ParsedValue(yylval.sval, "integer");}
+		| PROCEDURELITERAL {$$ = new ParsedValue(yylval.sval, "procedure");}
 		| {error("LITERAL VALUE EXPECTED, BUT FOUND");}
 		;
 

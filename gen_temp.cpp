@@ -49,10 +49,9 @@ const char * createTempLabel(){
 }
 
 const char * createProcedureLabel(ParsedValue * mktemp){
-	static int tempProcedureCount = 1;
-	static char tempProcedureName [30];
+        static int tempProcedureCount = 1;
+        static char tempProcedureName [30];
         sprintf(tempProcedureName, ":#%s", mktemp->getValue());
-	tempProcedureCount++;
+        tempProcedureCount++;
         return tempProcedureName;
 }
-
