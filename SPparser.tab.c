@@ -1762,7 +1762,7 @@ yyreduce:
 
   case 64:
 #line 141 "SPparser.y"
-    {char * temp = strdup(createProcedureLabel((yyvsp[0].rawval))); (yyval.sval) = temp; line_no++;}
+    {char * temp = strdup(createProcedureLabel((yyvsp[0].rawval))); write_label(temp); (yyval.sval) = temp; line_no++;}
 #line 1767 "SPparser.tab.c"
     break;
 

@@ -10,6 +10,7 @@ declare e, integer
 store 4, e
 declare s, string
 store "tricky foobar", s
+:#foobar;
 declare a, integer
 store 2, a
 declare s, string

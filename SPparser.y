@@ -56,7 +56,7 @@ ParsedValue * jump (char * label);
 
 %left MULTOP DIVOP MODOP PLUSOP MINUSOP
 
-%type <sval>ident while repeat procedure
+%type <sval>ident while repeat procedure function
 %type <sval>and or not add_op mult_op relation 
 
 %type <rawval>expression expr term
@@ -138,7 +138,7 @@ procedure_match : procedure matched_statement {write_label($1);}
                 | {error("PROCEDURE EXPECTED, BUT NOT FOUND!:(");}
                 ;
 
-procedure       : PROCEDURE literal {char * temp = strdup(createProcedureLabel($2)); $$ = temp; line_no++;}
+procedure       : PROCEDURE literal {char * temp = strdup(createProcedureLabel($2)); write_label(temp); $$ = temp; line_no++;}
                 ;
 
 while_loop :	while do_expr statement_list {jump($1); write_label($2->getValue());}
