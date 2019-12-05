@@ -22,7 +22,8 @@ bool isReal(char value[]);
 const char * createTempIntegerAddress();
 const char * createTempRealAddress();
 const char * createTempLabel();
-const char * createProcedureLabel(ParsedValue *);
+const char * createTempProcedureLabel(ParsedValue *);
+const char * createTempFunctionLabel(ParsedValue *);
 void assign (char [], ParsedValue *);
 void decl_id ( char [], const char [] );
 void finish();
@@ -52,7 +53,7 @@ ParsedValue * jump (char * label);
 %token REALLITERAL CHARLITERAL STRINGLITERAL LPAREN RPAREN LBRACKET RBRACKET COMMA PERIOD SEMICOLON COLON 
 %token PLUSOP MINUSOP MULTOP DIVOP MODOP COMMENT ID GT_OP LT_OP GTEQUAL_OP LTEQUAL_OP EQUALOP NOTEQUALOP
 %token ANDOP OR_OP NOTOP IF THEN ELSE WHILE DO REPEAT UNTIL
-%token FUNCTION PROCEDURE PROCEDURELITERAL
+%token FUNCTION PROCEDURE PROCEDURELITERAL FUNCTIONLITERAL
 
 %left MULTOP DIVOP MODOP PLUSOP MINUSOP
 
@@ -61,8 +62,8 @@ ParsedValue * jump (char * label);
 
 %type <rawval>expression expr term
 %type <rawval>math_expr rel_expr boolean_and boolean_not
-%type <rawval>literal do_expr
-%type <rawval>if_then else_match procedure_match
+%type <rawval>literal do_expr keyword_literal
+%type <rawval>if_then else_match procedure_match function_match
 
 // TODO: Set precedence of relational/boolean operators!
 //       Could actually be right
@@ -123,6 +124,7 @@ unmatched_statement :   if_then statement {write_label($1->getValue());}
                 ;
 
 matched_statement  :    procedure_match
+		|	function_match
 		|	if_match
                 |       ident ASSIGNOP expression {verify_sym_decl($1); assign($1,$3);} SEMICOLON {line_no++;}
                 |       READ lparen id_list rparen SEMICOLON {line_no++;}
@@ -138,9 +140,28 @@ procedure_match : procedure variables START statement_list END SEMICOLON {write_
                 | {error("PROCEDURE EXPECTED, BUT NOT FOUND!:(");}
                 ;
 
-procedure       : PROCEDURE literal {char * temp = strdup(createProcedureLabel($2)); write_label(temp); $$ = temp; line_no++;}
+procedure       : PROCEDURE keyword_literal {char * temp = strdup(createTempProcedureLabel($2)); write_label(temp); $$ = temp; line_no++;}
                 ;
 
+function_match  : function START statement_list END SEMICOLON {write_label($1);} 
+		;
+
+function	: FUNCTION keyword_literal function_returns SEMICOLON {char * temp = strdup(createTempFunctionLabel($2)); write_label(temp); $$ = temp; line_no++;}
+		;
+
+function_returns: INTEGER
+		| BOOLEAN
+		| CHARACTER
+		| REAL
+		| STRING
+		| {error("RETURN TYPE EXPECTED BUT NOT FOUND");}
+		;
+
+keyword_literal: PROCEDURELITERAL {$$ = new ParsedValue(yylval.sval, "procedure");}
+                | FUNCTIONLITERAL {$$ = new ParsedValue(yylval.sval, "function");}
+		| {error("KEYWORDLITERAL EXPECTED BUT NOT FOUND");}
+		;
+	
 while_loop :	while do_expr statement_list {jump($1); write_label($2->getValue());}
 		;
 
@@ -204,7 +225,6 @@ literal   : INTLITERAL {$$ = new ParsedValue(yylval.sval, "integer");}
 		| STRINGLITERAL {$$ = new ParsedValue(yylval.sval, "string");}
 		| CHARLITERAL {$$ = new ParsedValue(yylval.sval, "char");}
 		| BOOL {$$ = new ParsedValue(yylval.sval, "integer");}
-		| PROCEDURELITERAL {$$ = new ParsedValue(yylval.sval, "procedure");}
 		| {error("LITERAL VALUE EXPECTED, BUT FOUND");}
 		;
 

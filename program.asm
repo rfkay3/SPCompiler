@@ -16,6 +16,3 @@ store 2, a
 declare s, string
 store "reassigned s", s
 write d
-declare &tempi1, integer
-imult c, a;, &tempi1
-store &tempi1, d

@@ -1,4 +1,3 @@
-
 program
 var
 integer a := 4, b := 2, c := 6, d := 8, e:=4;
@@ -13,6 +12,4 @@ BEgiN
     d := c * a;
 ENd;
 end.
-
-
 

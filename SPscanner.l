@@ -41,8 +41,9 @@ intliteral      (0|([1-9]{digit}*))
 realliteral	({intliteral}{period}(0|{digit}*[1-9]))
 charliteral	('.')
 stringliteral	(\"(\\.|[^"\\])*\")
-procedureliteral ([a-zA-Z]+[;])
 id              ({letter}|{underscore})({letter}|{digit}|{underscore})*
+functionliteral ([a-zA-Z]+2[:])
+procedureliteral ([a-zA-Z]+[;])
 %x		MULTILINE
 %%
 
@@ -98,6 +99,7 @@ id              ({letter}|{underscore})({letter}|{digit}|{underscore})*
 {charliteral}					{yylval.sval = strdup(yytext); return CHARLITERAL;}
 {stringliteral}					{yylval.sval = strdup(yytext); return STRINGLITERAL;}
 {procedureliteral}				{yylval.sval = strdup(yytext); return PROCEDURELITERAL;}
+{functionliteral}				{yylval.sval = strdup(yytext); return FUNCTIONLITERAL;}
 {id}                                            {yylval.sval = strdup(yytext); return ID;}
 
 {lbrace}					{BEGIN(MULTILINE);}

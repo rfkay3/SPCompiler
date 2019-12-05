@@ -48,10 +48,18 @@ const char * createTempLabel(){
 	return tempLabelName;
 }
 
-const char * createProcedureLabel(ParsedValue * mktemp){
+const char * createTempProcedureLabel(ParsedValue * mktemp){
         static int tempProcedureCount = 1;
         static char tempProcedureName [30];
         sprintf(tempProcedureName, ":#%s", mktemp->getValue());
         tempProcedureCount++;
         return tempProcedureName;
+}
+
+const char * createTempFunctionLabel(ParsedValue * mktemp){
+        static int tempFunctionCount = 1;
+        static char tempFunctionName [30];
+        sprintf(tempFunctionName, ":#%s", mktemp->getValue());
+        tempFunctionCount++;
+        return tempFunctionName;
 }
