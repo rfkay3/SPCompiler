@@ -11,10 +11,8 @@ string s:="reassigned s";
 BEgiN
     write(d);
     d := c * a;
-ENd
+ENd;
 end.
-
-
 
 
 

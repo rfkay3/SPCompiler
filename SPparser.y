@@ -130,11 +130,11 @@ matched_statement  :    procedure_match
                 |       START statement_list END
                 |       while_loop
                 |       repeat_until
-		|	variables statement_list
                 |       SEMICOLON {line_no++;}
 		;
 
-procedure_match : procedure matched_statement {write_label($1);}
+procedure_match : procedure variables START statement_list END SEMICOLON {write_label($1);}
+		| procedure START statement_list END SEMICOLON {write_label($1);}
                 | {error("PROCEDURE EXPECTED, BUT NOT FOUND!:(");}
                 ;
 
