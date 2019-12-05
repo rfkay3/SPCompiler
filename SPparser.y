@@ -68,7 +68,7 @@ ParsedValue * jump (char * label);
 %%
 
 
-program	    :	 PROGRAM {line_no++; symTable.enterScope();} variables START {line_no++;} statement_list END PERIOD {line_no++;} 
+program	    :	 PROGRAM {line_no++; symTable.enterScope("program");} variables START {line_no++;} statement_list END PERIOD {line_no++;} 
 		;
 variables   :	SEMICOLON {line_no++;}
 		 | VAR {line_no++;} d_list
@@ -112,7 +112,6 @@ matched_statement  :	if_match
 		|	START statement_list END
 		|	while_loop
 		|	repeat_until
-		/*|	function START*/
 		|	SEMICOLON {line_no++;}
 		;
 

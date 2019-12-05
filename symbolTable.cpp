@@ -1,6 +1,7 @@
 #include "symbolTable.h"
 
-ScopeNode::ScopeNode(){
+ScopeNode::ScopeNode(std::string name){
+	scopeRoutineName = name;
 	next = NULL;
 }
 
@@ -18,6 +19,21 @@ void ScopeNode::insert(const char symbol[], const char type[]){
 	std::string sym_str(symbol);
 	std::string type_str(type);
 	scopeTable.insert({symbol, type});
+}
+
+std::string ScopeNode::getRoutineType(const char routine[]){
+	std::string name_str(routine);
+	return routines.at(name_str);
+}
+
+void ScopeNode::insertRoutine(const char routine[], const char type[]){
+	std::string routine_str(routine);
+	std::string type_str(type);
+	routines.insert({routine, type});
+}
+
+std::string ScopeNode::getScopeName(){
+	return scopeRoutineName;
 }
 
 
@@ -56,8 +72,8 @@ void SymbolTable::insertSymbol(const char symbol[], const char type[]){
 	head->insert(symbol, type);
 }
 
-void SymbolTable::enterScope(){
-	ScopeNode* newScope = new ScopeNode();
+void SymbolTable::enterScope(std::string newName){
+	ScopeNode* newScope = new ScopeNode(newName);
 	newScope->next = head;
 	head = newScope;
 }
