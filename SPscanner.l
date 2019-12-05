@@ -65,6 +65,8 @@ id              ({letter}|{underscore})({letter}|{digit}|{underscore})*
 [Dd][Oo]                                        {return DO;}
 [Rr][Ee][Pp][Ee][Aa][Tt]                        {return REPEAT;}
 [Uu][Nn][Tt][Ii][Ll]                            {return UNTIL;}
+[Pp][Rr][Oo][Cc][Ee][Dd][Uu][Rr][Ee]		{return PROCEDURE;}
+[Ff][Uu][Nn][Cc][Tt][Ii][Oo][Nn]		{return FUNCTION;}
 {comma}                                         {return COMMA;}
 {period}					{return PERIOD;}
 {semicolon}                                     {return SEMICOLON;}

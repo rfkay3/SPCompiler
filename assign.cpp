@@ -87,6 +87,8 @@ void assign (char target[], ParsedValue * source)
 			outFile << "store " << convertAddr << ", " << target << std::endl;
 
 		// Types of source and target are not the same, and are invalid for type coercion.
+		} else if (strcmp(target_type, "boolean") == 0 && strcmp(source_type, "integer") == 0) {
+		       outFile << "store " << source->getValue() /*Addr*/ << ", " << target << std::endl;
 		} else {
 			char buff[128];
 			sprintf(buff, "Cannot store %s in %s.", source->getType(), symTable.typeOf(target).c_str());

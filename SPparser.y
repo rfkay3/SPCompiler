@@ -17,6 +17,7 @@ extern FILE * yyin;
 int line_no = 1;
 std::ofstream outFile;
 SymbolTable symTable;
+char * var_type;
 
 bool isReal(char value[]);
 const char * createTempIntegerAddress();
@@ -50,20 +51,19 @@ ParsedValue * jump (char * label);
 %token PROGRAM VAR START END READ WRITE ASSIGNOP INTEGER REAL CHARACTER STRING BOOLEAN BOOL INTLITERAL 
 %token REALLITERAL CHARLITERAL STRINGLITERAL LPAREN RPAREN LBRACKET RBRACKET COMMA PERIOD SEMICOLON COLON 
 %token PLUSOP MINUSOP MULTOP DIVOP MODOP COMMENT ID GT_OP LT_OP GTEQUAL_OP LTEQUAL_OP EQUALOP NOTEQUALOP
-%token ANDOP OR_OP NOTOP IF THEN ELSE WHILE DO REPEAT UNTIL
+%token ANDOP OR_OP NOTOP IF THEN ELSE WHILE DO REPEAT UNTIL PROCEDURE FUNCTION
 
 %left MULTOP DIVOP MODOP PLUSOP MINUSOP
 
-%type <sval>ident while repeat
+%type <sval>ident while repeat type
 %type <sval>and or not add_op mult_op relation
 
+%type <rawval>literal
 %type <rawval>expression expr term
 %type <rawval>math_expr rel_expr boolean_and boolean_not
-%type <rawval>literal do_expr
+%type <rawval>do_expr
 %type <rawval>if_then else_match
 
-// TODO: Set precedence of relational/boolean operators!
-//       Could actually be right
 %start system_goal
 %%
 
@@ -76,36 +76,21 @@ variables   :	SEMICOLON {line_no++;}
 d_list      :   d_list declaration 
 		| declaration
 		;
-declaration :	INTEGER int_var_list SEMICOLON {line_no++;} 
-		| REAL real_var_list SEMICOLON {line_no++;}
-		| CHARACTER char_var_list SEMICOLON {line_no++;}
-		| STRING string_var_list SEMICOLON {line_no++;}
-		| BOOLEAN bool_var_list SEMICOLON {line_no++;}
-		;
-bool_var_list:   ident  { decl_id($1, "integer"); symTable.insertSymbol($1, "integer");}
-		| ident {decl_id($1, "integer"); symTable.insertSymbol($1, "integer");} ASSIGNOP BOOL {assign($1, new ParsedValue(yylval.sval, "integer"));}             
-		| bool_var_list COMMA ident { decl_id($3, "integer"); symTable.insertSymbol($3, "integer");}
-		| bool_var_list COMMA ident { decl_id($3, "integer"); symTable.insertSymbol($3, "integer");} ASSIGNOP BOOL {assign($3, new ParsedValue(yylval.sval, "integer"));}
-		;
-int_var_list:   ident  { decl_id($1, "integer"); symTable.insertSymbol($1, "integer");}
-		| ident {decl_id($1, "integer"); symTable.insertSymbol($1, "integer");} ASSIGNOP INTLITERAL {assign($1, new ParsedValue(yylval.sval, "integer"));}             
-		| int_var_list COMMA ident { decl_id($3, "integer"); symTable.insertSymbol($3, "integer");}
-		| int_var_list COMMA ident { decl_id($3, "integer"); symTable.insertSymbol($3, "integer");} ASSIGNOP INTLITERAL {assign($3, new ParsedValue(yylval.sval, "integer"));}
-		;
-real_var_list:	ident {decl_id($1, "real"); symTable.insertSymbol($1, "real");}
-		| ident {decl_id($1, "real"); symTable.insertSymbol($1, "real");} ASSIGNOP REALLITERAL {assign($1, new ParsedValue(yylval.sval, "real"));}
-		| real_var_list COMMA ident {decl_id($3, "real"); symTable.insertSymbol($3, "real");}
-		| real_var_list COMMA ident {decl_id($3, "real"); symTable.insertSymbol($3, "real");} ASSIGNOP REALLITERAL {assign($3, new ParsedValue(yylval.sval, "real"));}
-		;
-char_var_list:	ident {decl_id($1, "character"); symTable.insertSymbol($1, "character");}
-		| ident {decl_id($1, "character"); symTable.insertSymbol($1, "character");} ASSIGNOP CHARLITERAL {assign($1, new ParsedValue(yylval.sval, "character"));}
-		| char_var_list COMMA ident {decl_id($3, "character"); symTable.insertSymbol($3, "character");}
-		| char_var_list COMMA ident {decl_id($3, "character"); symTable.insertSymbol($3, "character");} ASSIGNOP CHARLITERAL {assign($3, new ParsedValue(yylval.sval, "character"));}
-		;
-string_var_list: ident {decl_id($1, "string"); symTable.insertSymbol($1, "string");}
-		| ident {decl_id($1, "string"); symTable.insertSymbol($1, "string");} ASSIGNOP STRINGLITERAL {assign($1, new ParsedValue(yylval.sval, "string"));}
-		| string_var_list COMMA ident {decl_id($3, "string"); symTable.insertSymbol($3, "string");}
-		| string_var_list COMMA ident {decl_id($3, "string"); symTable.insertSymbol($3, "string");} ASSIGNOP STRINGLITERAL {assign($3, new ParsedValue(yylval.sval, "string"));}
+
+declaration :	/* commented section */ type var_list SEMICOLON {line_no++;}
+	    	;
+
+type    :       INTEGER {var_type = strdup( "integer");}
+                | REAL {var_type = strdup( "real");}
+                | CHARACTER {var_type = strdup( "character");}
+                | STRING {var_type = strdup( "string");}
+                | BOOLEAN {var_type = strdup( "boolean");}
+                ;
+
+var_list    :	ident {decl_id($1, strdup(var_type)); symTable.insertSymbol($1, strdup(var_type));}
+	    	| ident ASSIGNOP literal {decl_id($1, strdup(var_type)); symTable.insertSymbol($1, strdup(var_type)); assign($1, $3);}
+		| var_list COMMA ident {decl_id($3, strdup(var_type)); symTable.insertSymbol($3, strdup(var_type));}
+		| var_list COMMA ident ASSIGNOP literal {decl_id($3, strdup(var_type)); symTable.insertSymbol($3, strdup(var_type)); assign($3, $5);}
 		;
 
 statement_list  :   statement
@@ -127,10 +112,11 @@ matched_statement  :	if_match
 		|	START statement_list END
 		|	while_loop
 		|	repeat_until
+		/*|	function START*/
 		|	SEMICOLON {line_no++;}
 		;
 
-while_loop :	while do_expr statement_list {jump($1); write_label($2->getValue());}
+while_loop :	while do_expr matched_statement {jump($1); write_label($2->getValue());}
 		;
 
 while	   :	WHILE {char * temp = strdup(createTempLabel()); write_label(temp); $$ = temp;}
@@ -139,7 +125,7 @@ while	   :	WHILE {char * temp = strdup(createTempLabel()); write_label(temp); $$
 do_expr	   :	expression DO {$$ = conditionalJump("false", $1, strdup(createTempLabel()));}
 		;
 
-repeat_until :	repeat statement_list UNTIL expression {conditionalJump("true", $4, $1);}
+repeat_until :	repeat matched_statement UNTIL expression {conditionalJump("true", $4, $1);}
 		;
 
 repeat	   :	REPEAT {char * temp = strdup(createTempLabel()); write_label(temp); $$ = temp;}
@@ -151,13 +137,13 @@ expr_list  :	expression   {write_expr($1->getValue());}
                 | expr_list COMMA expression {write_expr($3->getValue());}
 		;
 
-if_then    : IF expression THEN {$$ = conditionalJump("false", $2, strdup(createTempLabel()));}
+if_then    : 	IF expression THEN {$$ = conditionalJump("false", $2, strdup(createTempLabel()));}
 		;
 
-if_match   : else_match matched_statement {write_label($1->getValue());}
+if_match   : 	else_match matched_statement {write_label($1->getValue());}
 		;
 
-else_match : if_then matched_statement ELSE {$$ = jump(strdup(createTempLabel())); write_label($1->getValue());}
+else_match : 	if_then matched_statement ELSE {$$ = jump(strdup(createTempLabel())); write_label($1->getValue());}
 		;
 
 expression :	boolean_and {$$ = $1;}
@@ -172,7 +158,7 @@ boolean_not :	rel_expr {$$ = $1;}
 		| not rel_expr {$$ = boolean_not($1, $2);}
 		;
 
-rel_expr :		math_expr {$$ = $1;}
+rel_expr :	math_expr {$$ = $1;}
 		| math_expr relation math_expr {$$ = relation_infix($1, $2, $3);}
 		;
 
@@ -188,31 +174,32 @@ term      :	lparen expression rparen   {$$ = $2;}
 		| literal	{$$ = $1;}
 		;
 
-literal   : INTLITERAL {$$ = new ParsedValue(yylval.sval, "integer");}  
+literal   : 	INTLITERAL {$$ = new ParsedValue(yylval.sval, "integer");}  
 		| REALLITERAL {$$ = new ParsedValue(yylval.sval, "real");} 
 		| STRINGLITERAL {$$ = new ParsedValue(yylval.sval, "string");}
-		| CHARLITERAL {$$ = new ParsedValue(yylval.sval, "char");}
+		| CHARLITERAL {$$ = new ParsedValue(yylval.sval, "character");}
 		| BOOL {$$ = new ParsedValue(yylval.sval, "integer");}
-		| {error("NUMERIC VALUE EXPECTED, BUT FOUND");}
+		| {error("LITERAL EXPECTED, BUT FOUND");}
 		;
 
-lparen    :	LPAREN
+
+lparen	:	LPAREN
 		| {error("( EXPECTED , BUT FOUND");}
 		;
-rparen    :	RPAREN
+rparen	:	RPAREN
 		| {error(") EXPECTED , BUT FOUND");}
 		;
 
-or		  : OR_OP {$$ = strdup("or");}
+or	: 	OR_OP {$$ = strdup("or");}
 		;
 
-and		  : ANDOP {$$ = strdup("and");}
+and	:	ANDOP {$$ = strdup("and");}
 		;
 
-not		  : NOTOP {$$ = strdup("not");}
+not	:	NOTOP {$$ = strdup("not");}
 		;
 
-relation  :	GT_OP {$$ = strdup("gt");}
+relation:	GT_OP {$$ = strdup("gt");}
 		| LT_OP	{$$ = strdup("lt");}
 		| GTEQUAL_OP {$$ = strdup("gtequal");}
 		| LTEQUAL_OP {$$ = strdup("ltequal");}
@@ -220,14 +207,14 @@ relation  :	GT_OP {$$ = strdup("gt");}
 		| NOTEQUALOP	{$$ = strdup("notequal");}
 		;
 
-add_op	  : PLUSOP    {$$ = strdup("add");}
+add_op	: 	PLUSOP    {$$ = strdup("add");}
 		| MINUSOP {$$ = strdup("sub");}
 		;
-mult_op   : MULTOP  {$$ = strdup("mult");}
+mult_op	: 	MULTOP  {$$ = strdup("mult");}
 		| DIVOP   {$$ = strdup("div");}
 		| MODOP   {$$ = strdup("mod");}
 		;
-ident     :	ID {$$ = strdup(yylval.sval);}
+ident	:	ID {$$ = strdup(yylval.sval);}
 		| {error("IDENTIFIER EXPECTED, BUT FOUND");}
 		;
 system_goal :	program  { finish(); }
