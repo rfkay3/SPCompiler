@@ -67,6 +67,13 @@ char * integerToReal(char source[]){
 
 void assign (char target[], ParsedValue * source)
 {
+	//NEEDS FINISHING
+	if(strcmp(symTable.scopeName(), "program") != 0){
+		std::string newTarget(symTable.scopeName());
+		newTarget += ".";
+		newTarget += target;
+
+	}
 	// Derive types of source and target.
 	const char * target_type = symTable.typeOf(target).c_str();
 	const char * source_type = source->getType();

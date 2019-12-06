@@ -1,4 +1,7 @@
+#include <string.h>
 #include "symbolTable.h"
+
+extern void yyerror(const char []);
 
 ScopeNode::ScopeNode(std::string name){
 	scopeRoutineName = name;
@@ -32,6 +35,11 @@ void ScopeNode::insertRoutine(const char routine[], const char type[]){
 	routines.insert({routine, type});
 }
 
+bool ScopeNode::lookupRoutine(const char name[]){
+	std::string routine_name(name);
+	return routines.find(name) != routines.end();
+}
+
 std::string ScopeNode::getScopeName(){
 	return scopeRoutineName;
 }
@@ -54,6 +62,23 @@ bool SymbolTable::lookupSymbol(const char symbol[]){
 	return found;
 }
 
+bool SymbolTable::lookupFunction(const char name[]){
+	bool found = false;
+	found = head->lookupRoutine(name);
+	if(found) {
+		if(strcmp(head->getRoutineType(name).c_str(), "procedure") == 0){
+			yyerror("Illegal call to procedure for return type");
+		}
+	}
+	return found;
+}
+
+bool SymbolTable::lookupSubroutine(const char name[]){
+	bool found = false;
+        found = head->lookupRoutine(name);
+        return found;
+}
+
 
 std::string SymbolTable::typeOf(const char symbol[]){
 	ScopeNode* curr = head;
@@ -70,6 +95,18 @@ std::string SymbolTable::typeOf(const char symbol[]){
 
 void SymbolTable::insertSymbol(const char symbol[], const char type[]){
 	head->insert(symbol, type);
+}
+
+void SymbolTable::insertProcedure(const char name[]){
+	head->insertRoutine(name, "procedure");
+}
+
+void SymbolTable::insertFunction(const char name[], const char type[]){
+	head->insertRoutine(name, type);
+}
+
+char * SymbolTable::scopeName() {
+	return strdup(head->getScopeName().c_str());
 }
 
 void SymbolTable::enterScope(std::string newName){

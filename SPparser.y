@@ -7,6 +7,7 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
+#include <stack>
 #include "symbolTable.h"
 #include "parsedValue.h"
 
@@ -18,6 +19,7 @@ int line_no = 1;
 std::ofstream outFile;
 SymbolTable symTable;
 char * var_type;
+std::stack<std::streambuf*> files;
 
 bool isReal(char value[]);
 const char * createTempIntegerAddress();
@@ -37,6 +39,7 @@ void verify_sym_decl(char []);
 void error(const char []);
 void yyerror(const char []);
 void printSymbolTable();
+void verify_subroutine(const char name[]);
 ParsedValue * conditionalJump(const char * jump_if, ParsedValue * cond, char * label);
 ParsedValue * jump (char * label);
 %}
@@ -55,7 +58,7 @@ ParsedValue * jump (char * label);
 
 %left MULTOP DIVOP MODOP PLUSOP MINUSOP
 
-%type <sval>ident while repeat type
+%type <sval>ident while repeat type procedure_decl
 %type <sval>and or not add_op mult_op relation
 
 %type <rawval>literal
@@ -78,7 +81,20 @@ d_list      :   d_list declaration
 		;
 
 declaration :	/* commented section */ type var_list SEMICOLON {line_no++;}
+	    	| procedure_decl variables START statement_list procedure_end
+		| function_decl variables START statement_list function_end
 	    	;
+procedure_decl:	PROCEDURE ident SEMICOLON {symTable.insertProcedure($2); symTable.enterScope($2); outFile << ":#" << $2 << std::endl; line_no++;}
+	      ;
+
+procedure_end:	END SEMICOLON {symTable.exitScope();}
+	     ;
+
+function_decl:	FUNCTION ident COLON type SEMICOLON {symTable.insertFunction($2, $4); symTable.enterScope($2); outFile << ":#" << $2 << std::endl; line_no++;}
+	     ;
+
+function_end :	END SEMICOLON {symTable.exitScope();}
+	     ;
 
 type    :       INTEGER {var_type = strdup( "integer");}
                 | REAL {var_type = strdup( "real");}
@@ -112,6 +128,7 @@ matched_statement  :	if_match
 		|	START statement_list END
 		|	while_loop
 		|	repeat_until
+		|	ident LPAREN RPAREN {verify_subroutine($1);}
 		|	SEMICOLON {line_no++;}
 		;
 
@@ -121,7 +138,7 @@ while_loop :	while do_expr matched_statement {jump($1); write_label($2->getValue
 while	   :	WHILE {char * temp = strdup(createTempLabel()); write_label(temp); $$ = temp;}
 		;
 
-do_expr	   :	expression DO {$$ = conditionalJump("false", $1, strdup(createTempLabel()));}
+do_expr	   :	expression DO {$$ = conditionalJump("false", $1, strdup(createTempLabel())); line_no++;}
 		;
 
 repeat_until :	repeat matched_statement UNTIL expression {conditionalJump("true", $4, $1);}
@@ -170,6 +187,7 @@ expr       :    term {$$ = $1;}
 		;
 term      :	lparen expression rparen   {$$ = $2;}
 		| ident     {verify_sym_decl($1); $$ = new ParsedValue($1, symTable.typeOf($1).c_str());}
+		| ident LPAREN RPAREN {}
 		| literal	{$$ = $1;}
 		;
 
@@ -264,6 +282,12 @@ void verify_sym_decl(char symbol[]){
 		error(msg.c_str());
 	}
 	//Don't need to do anything if the symbol is found
+}
+
+void verify_subroutine(const char name[]){
+	if(!symTable.lookupSubroutine(name)){
+		yyerror("Subroutine not declared in this scope");
+	}
 }
 
 void error( const char msg[] )

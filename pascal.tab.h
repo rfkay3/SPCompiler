@@ -106,7 +106,7 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 45 "SPparser.y"
+#line 48 "SPparser.y"
 
 	int ival;
 	char * sval;
