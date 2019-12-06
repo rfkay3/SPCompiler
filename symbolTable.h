@@ -29,6 +29,7 @@ public:
 	void insertFunction(const char name[], const char type[]);
 	bool lookupFunction(const char name[]);
 	bool lookupSubroutine(const char name[]);
+	std::string typeOfRoutine(const char name[]);
 	char * scopeName();
 	void enterScope(std::string newName);
 	void exitScope();

@@ -7,4 +7,10 @@ store 9, foo23
 declare a, integer
 store 5, a
 store p1, a
-store 0, p1
+:#intadd
+declare p, integer
+store 4, p
+declare intadd, integer
+store p, intadd
+store intadd, p1
+halt

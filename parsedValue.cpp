@@ -1,4 +1,5 @@
 #include <string.h>
+#include <iostream>
 #include "parsedValue.h"
 
 ParsedValue::ParsedValue(const char * unboundValue, const char * unboundType){

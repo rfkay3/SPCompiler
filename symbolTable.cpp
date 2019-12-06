@@ -32,7 +32,7 @@ std::string ScopeNode::getRoutineType(const char routine[]){
 void ScopeNode::insertRoutine(const char routine[], const char type[]){
 	std::string routine_str(routine);
 	std::string type_str(type);
-	routines.insert({routine, type});
+	routines.insert({routine_str, type_str});
 }
 
 bool ScopeNode::lookupRoutine(const char name[]){
@@ -91,6 +91,10 @@ std::string SymbolTable::typeOf(const char symbol[]){
 		curr = curr->next;
 	}
 	return NULL;
+}
+
+std::string SymbolTable::typeOfRoutine(const char name[]){
+	return head->getRoutineType(name);
 }
 
 void SymbolTable::insertSymbol(const char symbol[], const char type[]){

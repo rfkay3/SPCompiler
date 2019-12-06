@@ -19,7 +19,12 @@ end;
 	begin
 	;
 end;
+function intadd: integer;
+var
+	integer p := 4, intadd;
+	begin
+		intadd := p;
+	end;
 begIn
-p1 := 0;
-inbar();
+p1 := intadd();
 eND.

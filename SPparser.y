@@ -19,7 +19,9 @@ int line_no = 1;
 std::ofstream outFile;
 SymbolTable symTable;
 char * var_type;
-std::stack<std::streambuf*> files;
+std::stack<std::stringstream*> writeBuffer;
+std::deque<std::stringstream*> outFileBuffer;
+std::stringstream * curr_buffer;
 
 bool isReal(char value[]);
 const char * createTempIntegerAddress();
@@ -39,7 +41,9 @@ void verify_sym_decl(char []);
 void error(const char []);
 void yyerror(const char []);
 void printSymbolTable();
+void decl_function(const char name[]);
 void verify_subroutine(const char name[]);
+void verify_function(const char name[]);
 ParsedValue * conditionalJump(const char * jump_if, ParsedValue * cond, char * label);
 ParsedValue * jump (char * label);
 %}
@@ -90,7 +94,7 @@ procedure_decl:	PROCEDURE ident SEMICOLON {symTable.insertProcedure($2); symTabl
 procedure_end:	END SEMICOLON {symTable.exitScope();}
 	     ;
 
-function_decl:	FUNCTION ident COLON type SEMICOLON {symTable.insertFunction($2, $4); symTable.enterScope($2); outFile << ":#" << $2 << std::endl; line_no++;}
+function_decl:	FUNCTION ident COLON type SEMICOLON {decl_function($2); outFile << ":#" << $2 << std::endl; line_no++;}
 	     ;
 
 function_end :	END SEMICOLON {symTable.exitScope();}
@@ -186,8 +190,8 @@ expr       :    term {$$ = $1;}
 		| {error("EXPRESSION EXPECTED, BUT FOUND");}
 		;
 term      :	lparen expression rparen   {$$ = $2;}
-		| ident     {verify_sym_decl($1); $$ = new ParsedValue($1, symTable.typeOf($1).c_str());}
-		| ident LPAREN RPAREN {}
+		| ident     {$$ = new ParsedValue($1, symTable.typeOf($1).c_str());}
+		| ident LPAREN RPAREN {verify_function($1); $$ = new ParsedValue($1, symTable.typeOfRoutine($1).c_str());}
 		| literal	{$$ = $1;}
 		;
 
@@ -284,12 +288,35 @@ void verify_sym_decl(char symbol[]){
 	//Don't need to do anything if the symbol is found
 }
 
+void decl_function(const char name[]){
+	symTable.insertFunction(name, strdup(var_type)); 
+	symTable.enterScope(name); 
+// 	symTable.insertSymbol(funcVar, $4)
+}
+
 void verify_subroutine(const char name[]){
 	if(!symTable.lookupSubroutine(name)){
 		yyerror("Subroutine not declared in this scope");
 	}
 }
 
+void verify_function(const char name[]){
+	if(!symTable.lookupFunction(name)){
+		yyerror("Subroutine not declared in this scope");
+	}
+}
+
+void enterRoutine(){
+	writeBuffer.push(curr_buffer);
+	curr_buffer = new std::stringstream();
+}
+
+void exitRoutine(){
+	outFileBuffer.push_front(curr_buffer);
+	curr_buffer = writeBuffer.top();
+	writeBuffer.pop();
+
+}
 void error( const char msg[] )
 {
 	std::cout << "ERROR : LINE " << line_no << " : " << msg << std::endl;
