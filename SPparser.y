@@ -21,11 +21,13 @@ SymbolTable symTable;
 char * var_type;
 std::stack<std::stringstream*> writeBuffer;
 std::deque<std::stringstream*> outFileBuffer;
-std::stringstream * curr_buffer;
+std::stringstream * curr_buffer = new std::stringstream();
 
 bool isReal(char value[]);
 const char * createTempIntegerAddress();
 const char * createTempRealAddress();
+const char * createTempCharacterAddress();
+const char * createTempStringAddress();
 const char * createTempLabel();
 void assign (char [], ParsedValue *);
 void decl_id ( char [], const char [] );
@@ -44,6 +46,9 @@ void printSymbolTable();
 void decl_function(const char name[]);
 void verify_subroutine(const char name[]);
 void verify_function(const char name[]);
+char * call_func(const char name[]);
+void enterRoutine();
+void exitRoutine();
 ParsedValue * conditionalJump(const char * jump_if, ParsedValue * cond, char * label);
 ParsedValue * jump (char * label);
 %}
@@ -84,20 +89,20 @@ d_list      :   d_list declaration
 		| declaration
 		;
 
-declaration :	/* commented section */ type var_list SEMICOLON {line_no++;}
+declaration :	type var_list SEMICOLON {line_no++;}
 	    	| procedure_decl variables START statement_list procedure_end
 		| function_decl variables START statement_list function_end
 	    	;
-procedure_decl:	PROCEDURE ident SEMICOLON {symTable.insertProcedure($2); symTable.enterScope($2); outFile << ":#" << $2 << std::endl; line_no++;}
+procedure_decl:	PROCEDURE ident SEMICOLON {symTable.insertProcedure($2); symTable.enterScope($2); enterRoutine(); *curr_buffer << ":#" << $2 << std::endl; line_no++;}
 	      ;
 
-procedure_end:	END SEMICOLON {symTable.exitScope();}
+procedure_end:	END SEMICOLON {symTable.exitScope(); exitRoutine();}
 	     ;
 
-function_decl:	FUNCTION ident COLON type SEMICOLON {decl_function($2); outFile << ":#" << $2 << std::endl; line_no++;}
+function_decl:	FUNCTION ident COLON type SEMICOLON {decl_function($2); enterRoutine(); *curr_buffer << ":#" << $2 << std::endl; *curr_buffer << "declare " << "&#" << $2 << ", " << strdup(var_type) << std::endl; line_no++;}
 	     ;
 
-function_end :	END SEMICOLON {symTable.exitScope();}
+function_end :	END SEMICOLON {*curr_buffer << "return " << "&#" << symTable.scopeName() << std::endl; symTable.exitScope(); exitRoutine();}
 	     ;
 
 type    :       INTEGER {var_type = strdup( "integer");}
@@ -191,7 +196,7 @@ expr       :    term {$$ = $1;}
 		;
 term      :	lparen expression rparen   {$$ = $2;}
 		| ident     {$$ = new ParsedValue($1, symTable.typeOf($1).c_str());}
-		| ident LPAREN RPAREN {verify_function($1); $$ = new ParsedValue($1, symTable.typeOfRoutine($1).c_str());}
+		| ident LPAREN RPAREN {verify_function($1); $$ = new ParsedValue(call_func($1), symTable.typeOfRoutine($1).c_str());}
 		| literal	{$$ = $1;}
 		;
 
@@ -291,7 +296,7 @@ void verify_sym_decl(char symbol[]){
 void decl_function(const char name[]){
 	symTable.insertFunction(name, strdup(var_type)); 
 	symTable.enterScope(name); 
-// 	symTable.insertSymbol(funcVar, $4)
+	symTable.insertSymbol(name, strdup(var_type));
 }
 
 void verify_subroutine(const char name[]){
@@ -315,8 +320,41 @@ void exitRoutine(){
 	outFileBuffer.push_front(curr_buffer);
 	curr_buffer = writeBuffer.top();
 	writeBuffer.pop();
+}
+
+char * call_func(const char name[]){
+	std::string type = symTable.typeOfRoutine(name);
+	if(type == "character"){
+		char * tempLabel = strdup(createTempCharacterAddress());
+		*curr_buffer << "call " << ":#" << name << std::endl;
+		*curr_buffer << "store " << "&#" << name << ", " << tempLabel << std::endl;
+		return tempLabel;
+	} else if(type == "string"){
+		char * tempLabel = strdup(createTempStringAddress());
+		*curr_buffer << "call " << ":#" << name << std::endl;
+                *curr_buffer << "store " << "&#" << name << ", " << tempLabel << std::endl;
+		return tempLabel;
+	} else if(type == "boolean"){
+		char * tempLabel = strdup(createTempIntegerAddress());
+		*curr_buffer << "call " << ":#" << name << std::endl;
+                *curr_buffer << "store " << "&#" << name << ", " << tempLabel << std::endl;
+		return tempLabel;
+	} else if(type == "integer"){
+		char * tempLabel = strdup(createTempIntegerAddress());
+		*curr_buffer << "call " << ":#" << name << std::endl;
+                *curr_buffer << "store " << "&#" << name << ", " << tempLabel << std::endl;
+		return tempLabel;
+	} else if(type == "real"){
+		char * tempLabel = strdup(createTempRealAddress());
+		*curr_buffer << "call " << ":#" << name << std::endl;
+                *curr_buffer << "store " << "&#" << name << ", " << tempLabel << std::endl;
+		return tempLabel;
+	} else {	
+		yyerror("Unrecognized function return type.");
+	}
 
 }
+
 void error( const char msg[] )
 {
 	std::cout << "ERROR : LINE " << line_no << " : " << msg << std::endl;

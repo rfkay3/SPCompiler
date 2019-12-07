@@ -1,10 +1,11 @@
 #include <iostream>
 #include <fstream>
+#include <sstream>
 #include <string.h>
 #include "symbolTable.h"
 #include "parsedValue.h"
 
-extern std::ofstream outFile;
+extern std::stringstream * curr_buffer;
 extern SymbolTable symTable;
 extern char * createTempIntegerAddress();
 extern char * createTempRealAddress();
@@ -19,7 +20,7 @@ extern void yyerror(const char s[]);
  */
 char * storeIntegerTemp(char source[]){
 	char * tempAddr = createTempIntegerAddress();
-	outFile << "store " << source << ", " << tempAddr << std::endl;
+	*curr_buffer << "store " << source << ", " << tempAddr << std::endl;
 	return tempAddr;
 }
 
@@ -31,7 +32,7 @@ char * storeIntegerTemp(char source[]){
  */
 char * storeRealTemp(char source[]){
 	char * tempAddr = createTempRealAddress();
-	outFile << "store " << source << ", " << tempAddr << std::endl;
+	*curr_buffer << "store " << source << ", " << tempAddr << std::endl;
 	return tempAddr;
 }
 
@@ -46,7 +47,7 @@ char * storeRealTemp(char source[]){
 char * realToInteger(char source[]){
 	char * firstTemp = storeRealTemp(source);
 	char * secondTemp = createTempIntegerAddress();
-	outFile << "rtoi " << firstTemp << ", " << secondTemp << std::endl;
+	*curr_buffer << "rtoi " << firstTemp << ", " << secondTemp << std::endl;
 	return secondTemp;
 }
 
@@ -61,41 +62,45 @@ char * realToInteger(char source[]){
 char * integerToReal(char source[]){
 	char * firstTemp = storeIntegerTemp(source);
 	char * secondTemp = createTempRealAddress();
-	outFile << "itor " << firstTemp << ", " << secondTemp << std::endl;
+	*curr_buffer << "itor " << firstTemp << ", " << secondTemp << std::endl;
 	return secondTemp;
 }
 
 void assign (char target[], ParsedValue * source)
 {
-	//NEEDS FINISHING
+	/*throws std::logic_error basic_string::_M_construct null not valid
 	if(strcmp(symTable.scopeName(), "program") != 0){
-		std::string newTarget(symTable.scopeName());
-		newTarget += ".";
-		newTarget += target;
+		std::string newTarget = symTable.scopeName();
+		newTarget.append(".");
+		newTarget.append(target);
+		const char * s = newTarget.c_str();
+		std::cout << strdup(s) << std::endl;
 
 	}
+	*/
+
 	// Derive types of source and target.
 	const char * target_type = symTable.typeOf(target).c_str();
 	const char * source_type = source->getType();
 
 	// Types of source and target match, perform normal assignment.
 	if( strcmp(target_type, source_type) == 0) {
-    	outFile << "store " << source->getValue() /*Addr*/ << ", " << target << std::endl;
+    	*curr_buffer << "store " << source->getValue() /*Addr*/ << ", " << target << std::endl;
 	} else {
 
 		// Types of source and target are not the same and are of real or integer, perform type coercion.
 		if (strcmp(target_type, "real") == 0 && strcmp(source_type, "integer") == 0) {
 			char * convertAddr = integerToReal(source->getValue());
-			outFile << "store " << convertAddr << ", " << target << std::endl;
+			*curr_buffer << "store " << convertAddr << ", " << target << std::endl;
 
 		// Types of source and target are not the same and are of real or integer, perform type coercion.
 		} else if (strcmp(target_type, "integer") == 0 && strcmp(source_type, "real") == 0) {
 			char * convertAddr = realToInteger(source->getValue());
-			outFile << "store " << convertAddr << ", " << target << std::endl;
+			*curr_buffer << "store " << convertAddr << ", " << target << std::endl;
 
 		// Types of source and target are not the same, and are invalid for type coercion.
 		} else if (strcmp(target_type, "boolean") == 0 && strcmp(source_type, "integer") == 0) {
-		       outFile << "store " << source->getValue() /*Addr*/ << ", " << target << std::endl;
+		       *curr_buffer << "store " << source->getValue() /*Addr*/ << ", " << target << std::endl;
 		} else {
 			char buff[128];
 			sprintf(buff, "Cannot store %s in %s.", source->getType(), symTable.typeOf(target).c_str());

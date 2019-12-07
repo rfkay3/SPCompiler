@@ -50,3 +50,4 @@ jmp :&temp1
 :&temp2
 store a, d
 halt
+
