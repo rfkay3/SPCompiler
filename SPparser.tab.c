@@ -1651,7 +1651,7 @@ yyreduce:
 
   case 49:
 #line 161 "SPparser.y"
-    {write_expr((yyvsp[0].rawval)->getValue());}
+    {write_expr((yyvsp[0].rawval)->getValue()); (yyval.rawval) = (yyvsp[0].rawval);}
 #line 1656 "SPparser.tab.c"
     break;
 
@@ -2205,10 +2205,7 @@ void printSymbolTable(){
 
 void verify_sym_decl(char symbol[]){
 	if(!symTable.lookupSymbol(symbol)){
-		std::stringstream ss;
-		ss << "Symbol " << symbol << " not declared in this scope";
-		std::string msg = ss.str();
-		error(msg.c_str());
+		yyerror("symbol not declared in scope");
 	}
 	//Don't need to do anything if the symbol is found
 }

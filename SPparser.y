@@ -71,7 +71,7 @@ ParsedValue * jump (char * label);
 %type <sval>and or not add_op mult_op relation
 
 %type <rawval>literal
-%type <rawval>expression expr term
+%type <rawval>expression expr expr_list term
 %type <rawval>math_expr rel_expr boolean_and boolean_not
 %type <rawval>do_expr
 %type <rawval>if_then else_match
@@ -158,7 +158,7 @@ repeat	   :	REPEAT {char * temp = strdup(createTempLabel()); write_label(temp); 
 id_list    :	ident      {verify_sym_decl($1); read_id($1);}
 		| id_list COMMA ident {verify_sym_decl($3); read_id($3);}
 		;
-expr_list  :	expression   {write_expr($1->getValue());}
+expr_list  :	expression   {write_expr($1->getValue()); $$ = $1;}
                 | expr_list COMMA expression {write_expr($3->getValue());}
 		;
 
@@ -285,10 +285,7 @@ void printSymbolTable(){
 
 void verify_sym_decl(char symbol[]){
 	if(!symTable.lookupSymbol(symbol)){
-		std::stringstream ss;
-		ss << "Symbol " << symbol << " not declared in this scope";
-		std::string msg = ss.str();
-		error(msg.c_str());
+		yyerror("symbol not declared in scope");
 	}
 	//Don't need to do anything if the symbol is found
 }

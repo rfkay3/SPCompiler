@@ -1,5 +1,6 @@
 ProgRaM
 VAr
+integer p := 8;
 	function topScope: integer;
 	vAr	
 	integer a := 1;
@@ -13,5 +14,6 @@ VAr
 	topScope := 6;
 	end;
 begin
-	;
+	p := 2;
+	//write(f);
 end.

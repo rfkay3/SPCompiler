@@ -1,3 +1,6 @@
+declare p, integer
+store 8, p
+store 2, p
 halt
 
 :#topScope

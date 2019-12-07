@@ -9,6 +9,7 @@ ScopeNode::ScopeNode(std::string name){
 }
 
 bool ScopeNode::lookup(const char symbol[]){
+	if(strlen(symbol) == 0){ return false; }
 	std::string sym_str(symbol);
 	return scopeTable.count(sym_str) > 0;
 }
