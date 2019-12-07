@@ -1495,13 +1495,13 @@ yyreduce:
 
   case 15:
 #line 102 "SPparser.y"
-    {decl_function((yyvsp[-3].sval)); enterRoutine(); *curr_buffer << ":#" << (yyvsp[-3].sval) << std::endl; *curr_buffer << "declare " << "&#" << (yyvsp[-3].sval) << ", " << strdup(var_type) << std::endl; line_no++;}
+    {decl_function((yyvsp[-3].sval)); enterRoutine(); *curr_buffer << ":#" << (yyvsp[-3].sval) << std::endl; *curr_buffer << "declare " << (yyvsp[-3].sval) << ", " << strdup(var_type) << std::endl; line_no++;}
 #line 1500 "SPparser.tab.c"
     break;
 
   case 16:
 #line 105 "SPparser.y"
-    {*curr_buffer << "return " << "&#" << symTable.scopeName() << std::endl; symTable.exitScope(); exitRoutine();}
+    {*curr_buffer << "return " << symTable.scopeName() << std::endl; symTable.exitScope(); exitRoutine();}
 #line 1506 "SPparser.tab.c"
     break;
 
@@ -2215,7 +2215,7 @@ void verify_sym_decl(char symbol[]){
 
 void decl_function(const char name[]){
 	symTable.insertFunction(name, strdup(var_type)); 
-	symTable.enterScope(name); 
+	symTable.enterScope(name);
 	symTable.insertSymbol(name, strdup(var_type));
 }
 
@@ -2247,27 +2247,27 @@ char * call_func(const char name[]){
 	if(type == "character"){
 		char * tempLabel = strdup(createTempCharacterAddress());
 		*curr_buffer << "call " << ":#" << name << std::endl;
-		*curr_buffer << "store " << "&#" << name << ", " << tempLabel << std::endl;
+		*curr_buffer << "store " << name << ", " << tempLabel << std::endl;
 		return tempLabel;
 	} else if(type == "string"){
 		char * tempLabel = strdup(createTempStringAddress());
 		*curr_buffer << "call " << ":#" << name << std::endl;
-                *curr_buffer << "store " << "&#" << name << ", " << tempLabel << std::endl;
+                *curr_buffer << "store " << name << ", " << tempLabel << std::endl;
 		return tempLabel;
 	} else if(type == "boolean"){
 		char * tempLabel = strdup(createTempIntegerAddress());
 		*curr_buffer << "call " << ":#" << name << std::endl;
-                *curr_buffer << "store " << "&#" << name << ", " << tempLabel << std::endl;
+                *curr_buffer << "store " << name << ", " << tempLabel << std::endl;
 		return tempLabel;
 	} else if(type == "integer"){
 		char * tempLabel = strdup(createTempIntegerAddress());
 		*curr_buffer << "call " << ":#" << name << std::endl;
-                *curr_buffer << "store " << "&#" << name << ", " << tempLabel << std::endl;
+                *curr_buffer << "store " << name << ", " << tempLabel << std::endl;
 		return tempLabel;
 	} else if(type == "real"){
 		char * tempLabel = strdup(createTempRealAddress());
 		*curr_buffer << "call " << ":#" << name << std::endl;
-                *curr_buffer << "store " << "&#" << name << ", " << tempLabel << std::endl;
+                *curr_buffer << "store " << name << ", " << tempLabel << std::endl;
 		return tempLabel;
 	} else {	
 		yyerror("Unrecognized function return type.");
